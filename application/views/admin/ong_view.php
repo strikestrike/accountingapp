@@ -1,0 +1,967 @@
+
+<?php include 'layout/sidebar.php'; ?>
+        <!--Start: Page main heading -->
+        
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="list">
+                        <div class="tab-content project-list-group" id="ListViewTabLink">
+                            <div class="tab-pane fade" id="navpills-1">
+                                <div class="project-main2">
+                                    <span class="arrow-up-back"></span>
+                                    <span class="arrow-up"></span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        Personal tab
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="navpills-2">
+                                <div class="project-main2">
+                                    <span class="arrow-up-back"></span>
+                                    <span class="arrow-up"></span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        income tab
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade active show" id="navpills-3">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="project-main2">
+                                            <span class="arrow-up-back"></span>
+                                            <span class="arrow-up"></span>
+
+
+
+
+                                            <div class="basic-form">
+                                                <form method="POST" action="<?php echo base_url().'Admin/ong_view'.base64_encode($ong_list['id']); ?>">
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Salutation</label>
+                                                        <div class="col-sm-9">
+                                                           <div>
+                                                                <label class="radio-inline me-3">
+                     <input type="radio" name="salutation" <?= ($ong_list['salutation']=="Mr")?"checked":"" ?> readonly value="Mr">  
+                                                                Mr</label>
+                                                                <label class="radio-inline me-3">
+                    <input type="radio" name="salutation" <?= ($ong_list['salutation']== "Mrs")?'checked':''?> readonly value="Mrs"> 
+                                                                Mrs</label>
+                                                                <?php echo form_error('salutation');?>
+                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <d <div class="row form-group">
+
+                                                        <?php
+                                                      $str=$ong_list['name_surname'];
+                                                      $name =explode(" ",$str);
+                                                        ?>
+
+                                             <label class="col-sm-3 col-form-label">Name Surname  <span
+                                                style="color:red; font-size: 12px"> *</span></label>
+                                                        <div class="col-sm-9">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" onkeypress="return /[a-z]/i.test(event.key)" name="name" id="name" class="form-control" placeholder="" value="<?= $srname=$name[0]?>">
+                                                                <span style="color:red; font-size: 12px">
+                                                    <?php echo form_error('name'); ?></span>
+                                                                </div> 
+
+                                                                <div class="col-sm-6 mt-2 mt-sm-0">
+                                                                    <input type="text" onkeypress="return /[a-z]/i.test(event.key)" name="surname" id="surname" class="form-control" placeholder=""  value="<?=$srname=$name[1]?>" >
+                                                                    <span style="color:red; font-size: 12px">
+                                                    <?php echo form_error('surname'); ?></span>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Personal number</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <input  name="per_number" value="<?=$ong_list['per_number']?>" class="form-control" placeholder="">
+                                                                    <?php echo form_error('per_number'); ?>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Address</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="row">
+                                                                <div class="col-sm-6 mt-2 mt-sm-0">
+                                                                    <label class="form-label">Country</label>
+                                                                    <input   value="<?=$ong_list['country']?>" readonly  class="form-control" placeholder="">
+                                                                    <?php echo form_error('country'); ?>
+
+                                                                </div>
+                                                                <div class="col-sm-6 mt-2 mt-sm-0">
+                                                                    <label class="form-label">City</label>
+                                                                    <input readonly value="<?=$ong_list['city']?>" class="form-control" placeholder="Enter City name">
+                                                                    <?php echo form_error('city'); ?>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Address</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <input readonly value="<?=$ong_list['address']?>" class="form-control" placeholder="Address">
+                                                                    <?php echo form_error('address'); ?>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr>
+                                                    <h6>Information "Product name" 2021</h6>
+
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Income</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['income1']?>" class="form-control">
+                                                            <?php echo form_error('income1'); ?>
+                                                        </div>
+                                                       <!--  <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Taxable income</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['taxable_income']?>" class="form-control" placeholder="">
+                                                            <?php echo form_error('taxable_income'); ?>
+                                                        </div>
+                                                       <!--  <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Tax</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['tax']?>" class="form-control" placeholder="">
+                                                            <?php echo form_error('tax'); ?>
+                                                        </div>
+                                                       <!--  <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Total income for health</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['total_income_for_health']?>"  class="form-control" placeholder="">
+                                                            <?php echo form_error('total_income_for_health'); ?>
+                                                        </div>
+                                                       <!--  <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Health insurance tax</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['health_insurance_tax']?>" name="health_insurance_tax" class="form-control" placeholder="">
+                                                            <?php echo form_error('health_insurance_tax'); ?>
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">To be paid</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <input readonly name="to_be_paid" value="<?=$ong_list['to_be_paid']?>" class="form-control" name="to_be_paid" placeholder="">
+                                                                    <?php echo form_error('to_be_paid'); ?>
+                                                                </div>
+                                                                <!-- <div class="col-sm-6 mt-2 mt-sm-0">
+                                                                    <select class="default-select form-control" >
+                                                                        <option value="17.372 RON">17.372 RON</option>
+                                                                        <option value="1">option</option>
+                                                                        <option value="2">option</option>
+                                                                       
+                                                                    </select>
+
+                                                                </div> -->
+
+                                                            </div>
+                                                        </div>
+                                                       <!--  <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Redirect 3.5% to one ONG</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="row">
+                                                                <div class="col-sm-12 mt-2 mt-sm-0">
+                                                                    <label class="form-label">Choose from list</label>
+                                                                    <input readonly name="choose_from_list" value="<?=$ong_list['choose_from_list']?>" class="form-control" placeholder="">
+                                                                    <?php echo form_error('choose_from_list'); ?>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                     <!--    <div class="col-sm-2">
+                                                            <div class="tooltip-info" style="position:absolute;width: auto;">
+                                                                <a href="javascript:void(0);" class="info-close-btn">&times;</a>
+                                                                <p>I don't want to redirect 3.5% to support a humanitarian project</p>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label"></label>
+                                                        <div class="col-sm-7">
+                                                            <label class="form-label">OMG Name</label>
+                                                <input readonly class="form-control"value="<?=$ong_list['omg_name']?>" placeholder="">
+                                                            <?php echo form_error('omg_name'); ?>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label"></label>
+                                                        <div class="col-sm-7">
+                                                            <label class="form-label">Registration No.</label>
+                                                            <input readonly value="<?=$ong_list['registration_no']?>" class="form-control" placeholder="">
+                                                             <?php echo form_error('registration_no'); ?>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label"></label>
+                                                        <div class="col-sm-7">
+                                                            <label class="form-label">Bank Account</label>
+                                                            <input readonly value="<?=$ong_list['bank_account']?>"  class="form-control" placeholder="">
+                                                             <?php echo form_error('bank_account'); ?>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <h6>Informations "Product name" 2022</h6>
+
+                                              <div class="row form-group">
+                                            <label class="col-sm-3 col-form-label">Do you need health insurance ?</label>
+                                                        <div class="col-sm-7">
+                                          <select class="default-select form-control" value="<?=$ong_list['do_you_need_health_insurance']?>" readonly>
+                                                                <option value="YES">YES</option>
+                                                                <option value="1">option</option>
+                                                                <option value="2">option</option>
+                                                                 <?php echo form_error('do_you_need_health_insurance'); ?>
+                                                            </select>
+                                                        </div>
+                                                        <!-- <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Income</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['income2']?>" class="form-control" placeholder="">
+                                                             <?php echo form_error('income2'); ?>
+                                                        </div>
+                                                     <!--    <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label">Health insurance tax</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['health_insurance_tax2']?>" class="form-control" placeholder="">
+                                                             <?php echo form_error('health_insurance_tax2'); ?>
+                                                        </div>
+                                                      <!--   <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label class="col-sm-3 col-form-label text-danger">To be paid till 2023</label>
+                                                        <div class="col-sm-7">
+                                                            <input readonly value="<?=$ong_list['to_be_paid_till_2023']?>"  class="form-control" placeholder="">
+                                                             <?php echo form_error('to_be_paid_till_2023'); ?>
+                                                        </div>
+                                                     <!--    <div class="col-sm-2">
+                                                            <div class="tooltip-info">
+                                                                <span><a href="javascript:void(0);" class="info-btn"><i class="fa fa-info"></i></a></span>
+                                                                <div class="main">
+                                                                    <p>Password should be at least 10 characters long and include 1 uppercase and 1 lower case alpha character, 1 number and 1 special character . Passwords are case sensitive.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+
+                                                    <div class="row form-group">
+                                                        <div class="col-sm-10">
+                                                            <a href="http://localhost/Accounting-App-php/accountingapp/home/admin_ong"><button type="button" src="" class="btn btn-primary"><img  alt="">&nbsp;&nbsp; Back</button></a>
+                                                        </div>
+                                                    </div>
+                                                </form> 
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="navpills-4">
+                                <div class="project-main2">
+                                    <span class="arrow-up-back"></span>
+                                    <span class="arrow-up"></span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        doc release tab
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="boxed">
+                        <div class="tab-content" id="BoxedViewTabLink">
+                            <div class="tab-pane fade show active" id="boxed_navpills-1">
+                                <div class="row">
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-info">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-primary">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-warning">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-danger">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-info">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="boxed_navpills-2">
+                                <div class="row">
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-info">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-info">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="boxed_navpills-3">
+                                <div class="row">
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-warning">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-warning">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-warning">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-warning">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="boxed_navpills-4">
+                                <div class="row">
+                                    <div class="col-xl-3 col-xxl-4">
+                                        <div class="card project-boxed">
+                                            <div class="img-bx">
+                                                <img src="images/big/img1.jpg" alt="" class="w-100 ">
+                                                <span class="badge badge-danger">Progress</span>
+                                            </div>
+                                            <div class="card-header align-items-start">
+                                                <div>
+                                                    <p class="fs-14 mb-2 text-primary">#P-000441425</p>
+                                                    <h6 class="fs-18 font-w500 mb-3">
+                                                        <a href="javascript:void(0);" class="text-black user-name">Build Branding Persona for Etza.id</a>
+                                                    </h6>
+                                                    <div class="text-dark fs-14 text-nowrap">
+                                                        <i class="fa fa-calendar-o mr-3" aria-hidden="true"></i> Created on Sep 8th, 2020
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <a href="javascript:void(0);" data-toggle="dropdown" aria-expanded="false">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 pb-3">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Deadline</span> :
+                                                        <span class="text-black ml-2">Monday, Sep 26th 2020</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Client</span> :
+                                                        <span class="text-black ml-2">Kevin Sigh</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <span class="mb-0 title">Person in charge</span> :
+                                                        <span class="text-black desc-text ml-2">Yuri Hanako</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
