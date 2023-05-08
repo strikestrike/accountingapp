@@ -3341,11 +3341,48 @@ class User extends CI_Controller
 	public function getDownloadLink() {
 		$this->user_auth();
 
+		$links = [];
+
+		$payload = $this->generatePDFParams(212);
+		$payload['doc_type'] = '212';
+		$response = $this->fetchPDFLink(json_encode($payload));
+		if ($response['success'] && !empty($response['pdf_link'])) {
+			array_push($links, $response['pdf_link']);
+		}
+		if ($response['success'] && !empty($response['invoice_link'])) {
+			array_push($links, $response['invoice_link']);
+		}
+
+		$is168 = $this->check168DocType();
+		if ($is168) {
+			$payload_168 = $this->generatePDFParams(168);
+			$payload_168['doc_type'] = '168';
+			$response = $this->fetchPDFLink(json_encode($payload_168));
+			if ($response['success'] && !empty($response['pdf_link'])) {
+				array_push($links, $response['pdf_link']);
+			}
+		}
+
+		if (empty($links)) {
+			echo json_encode([
+				'success' => false,
+				'params' => $payload,
+				'message' => $response['message'],
+			]);
+		} else {
+			echo json_encode([
+				'success' => true,
+				'params' => $payload,
+				'links' => $links,
+			]);
+		}
+	}
+
+	private function fetchPDFLink($payload) {
 		$url = 'http://89.117.54.26/api/documents/generate';
 //		$url = 'http://localhost:8000/api/documents/generate';
 		$ch = curl_init($url);
 
-		$payload = $this->generatePDFParams();
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -3353,41 +3390,23 @@ class User extends CI_Controller
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if ( $status != 201 && $status != 200 ) {
 			$error = "Error: call to URL $url failed with status $status, response $result, curl_error " . curl_error($ch) . ", curl_errno " . curl_errno($ch);
-			echo json_encode([
+			return [
 				'success' => false,
-				'message' => "Can not generate PDF.",
+				'message' => "Can not generate PDF. " . $error,
 				'error' => $error,
-			]);
-			return;
+			];
 		}
-
 		curl_close($ch);
-
-		$response = json_decode($result, true);
-
-		if ($response['success']) {
-			echo json_encode([
-				'success' => true,
-				'params' => $payload,
-				'link' => $response['pdf_link'],
-			]);
-		} else {
-			echo json_encode([
-				'success' => false,
-				'params' => $payload,
-				'message' => $response['message'],
-			]);
-		}
+		return json_decode($result, true);
 	}
 
-	private function generatePDFParams()
+	private function generatePDFParams($doc_type)
 	{
 		$apiParams =  [];
 		$pdfParams = [];
 		$xmlParams = [];
 		$invoiceParams = [];
 
-		$doc_type = $this->getDocType();
 		$mapping_rules = $this->admin_model->getMappingRulesByDocType($doc_type);
 		if (!empty($mapping_rules)) {
 			foreach ($mapping_rules as $key => $value) {
@@ -3411,35 +3430,32 @@ class User extends CI_Controller
 			}
 		}
 
-		$apiParams['doc_type'] = $doc_type;
 		$apiParams['pdfs'] = $pdfParams;
 		$apiParams['xmls'] = $xmlParams;
-		$apiParams['invoice'] = (object)$invoiceParams;
+//		if ($doc_type == 212) {
+			$apiParams['invoice'] = (object)$invoiceParams;
+//		}
 
-		return json_encode($apiParams);
+		return $apiParams;
 	}
 
-	private function getDocType() {
+	private function check168DocType() {
 		$personal_data_id = $this->session->userdata('personal_data_id');
-		$total_count = 0;
-		$income_tables = [/*'crypto_income_type', 'divident_income_type', 'hotel_rental_income_type', 'norma_income_type', */'rent_income_type'/*, 'stocks_income_type'*/];
-		foreach($income_tables as $table_name) {
-			$query = $this->db
-				->select('count(*) AS cnt')
-				->where("personal_data_id=" . $personal_data_id)
-				->group_by('personal_data_id')
-				->get($table_name, 1);
-			$result = $query->row_array();
-			if (isset($result['cnt']) && !empty($result['cnt'])) {
-				$count = (int)$result['cnt'];
-				$total_count += $count;
-			}
-			if ($total_count > 1) {
-				return '212, 168';
-			}
+		$count = 0;
+		$query = $this->db
+			->select('count(*) AS cnt')
+			->where("personal_data_id=" . $personal_data_id)
+			->group_by('personal_data_id')
+			->get('rent_income_type', 1);
+		$result = $query->row_array();
+		if (isset($result['cnt']) && !empty($result['cnt'])) {
+			$count = (int)$result['cnt'];
+		}
+		if ($count > 0) {
+			return true;
 		}
 
-		return '168';
+		return false;
 	}
 
 	private function generateButtonParams($rule) {

@@ -237,13 +237,14 @@
 		$.get(getDownloadLinkUrl).done((resp) => {
 			let result = JSON.parse(resp);
 			if (result.success) {
-				var file_path = result.link;
-				var a = document.createElement('A');
-				a.href = file_path;
-				a.download = file_path.substr(file_path.lastIndexOf('/') + 1);
-				document.body.appendChild(a);
-				a.click();
-				document.body.removeChild(a);
+
+
+				for (let link of result.links) {
+					if (!link) {
+						continue;
+					}
+					downloadUrl(link);
+				}
 			} else {
 				toastr.error(result.message);
 			}
@@ -251,5 +252,12 @@
 			$(this).html('Make Featured').removeClass('disabled');
 			manageAjaxErrors(error);
 		});
+	}
+
+	function downloadUrl(url) {
+		var iframe = document.createElement("iframe");
+		iframe.src = url;
+		iframe.style.display = "none";
+		document.body.appendChild(iframe);
 	}
 </script>
