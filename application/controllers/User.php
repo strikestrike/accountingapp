@@ -3343,7 +3343,7 @@ class User extends CI_Controller
 
 		$links = [];
 
-		$payload = $this->generatePDFParams(212);
+		$payload = $this->generatePDFParams('212');
 		$payload['doc_type'] = '212';
 		$response = $this->fetchPDFLink(json_encode($payload));
 		if ($response['success'] && !empty($response['pdf_link'])) {
@@ -3355,7 +3355,7 @@ class User extends CI_Controller
 
 		$is168 = $this->check168DocType();
 		if ($is168) {
-			$payload_168 = $this->generatePDFParams(168);
+			$payload_168 = $this->generatePDFParams('168');
 			$payload_168['doc_type'] = '168';
 			$response = $this->fetchPDFLink(json_encode($payload_168));
 			if ($response['success'] && !empty($response['pdf_link'])) {
@@ -3379,6 +3379,7 @@ class User extends CI_Controller
 	}
 
 	private function fetchPDFLink($payload) {
+		log_message('error', 'params: ' . $payload);
 		$url = 'http://89.117.54.26/api/documents/generate';
 //		$url = 'http://localhost:8000/api/documents/generate';
 		$ch = curl_init($url);
@@ -3422,7 +3423,9 @@ class User extends CI_Controller
 					}
 				} else if ($mapping_rules[$key]['rule_type'] == 'xml') {
 					$param = $this->generateXMLParams($mapping_rules[$key]);
-					array_push($xmlParams, $param);
+					if (!empty($param)) {
+						array_push($xmlParams, $param);
+					}
 				} else if ($mapping_rules[$key]['rule_type'] == 'invoice') {
 					$param = $this->generateInvoiceParams($mapping_rules[$key]);
 					$invoiceParams = array_merge($invoiceParams, $param);
@@ -3486,34 +3489,34 @@ class User extends CI_Controller
 	}
 
 	private function generateCheckboxParams($rule) {
-//		$msg = $this->checkConditions($rule['id']);
 		if (!empty($rule['action_type'])) {
 			if (!$this->checkConditions($rule['id'])) {
 				return [];
 			}
 		}
 
-		return array('path' => $rule['path'], 'type' => 'checkbox'/*, 'msg' => $msg*/);
+		return array('path' => $rule['path'], 'type' => 'checkbox');
 	}
 
 	private function generateXMLParams($rule) {
-		$value = '';
+		if (!$this->checkConditions($rule['id'])) {
+			return [];
+		}
 
-		if ($this->checkConditions($rule['id'])) {
-			if ($rule['action_type'] == 'copy') {
-				$value = $this->getDataSourceValue($rule['field_mappings_ids']);
-			} else if ($rule['action_type'] == 'concat') {
-				$ids = explode(",", $rule['field_mappings_ids']);
-				foreach ($ids as $id) {
-					$ret = $this->getDataSourceValue($id);
-					if (isset($ret)) {
-						$value = (empty($value) ? '' : ' ') . $ret;
-					}
+		$value = '';
+		if ($rule['action_type'] == 'copy') {
+			$value = $this->getDataSourceValue($rule['field_mappings_ids']);
+		} else if ($rule['action_type'] == 'concat') {
+			$ids = explode(",", $rule['field_mappings_ids']);
+			foreach ($ids as $id) {
+				$ret = $this->getDataSourceValue($id);
+				if (isset($ret)) {
+					$value = (empty($value) ? '' : ' ') . $ret;
 				}
 			}
 		}
 
-		return array('path' => $rule['path'], 'value' => $value/*, 'msg' => $msg*/);
+		return array('path' => $rule['path'], 'value' => $value);
 	}
 
 	private function generateInvoiceParams($rule) {
@@ -3525,7 +3528,12 @@ class User extends CI_Controller
 	private function checkConditions($rule_id) {
 		$personal_data_id = $this->session->userdata('personal_data_id');
 		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule_id);
+		if (empty($rule_conditions)) {
+			return true;
+		}
+
 		$matching_exists = false;
+		$any_condition_type_exists = false;
 		foreach ($rule_conditions as $condition) {
 			$fieldMapping = $this->admin_model->fetchMappingById($condition['field_mappings_id']);
 			if (empty($fieldMapping) && $condition['matching_mode'] == 'all') {
@@ -3568,12 +3576,15 @@ class User extends CI_Controller
 			if ($count == 0 && $condition['matching_mode'] == 'all') {
 				return false;
 			}
-			if ($count > 0 && $condition['matching_mode'] == 'any') {
-				$matching_exists = true;
+			if ($condition['matching_mode'] == 'any') {
+				if ($count > 0) {
+					$matching_exists = true;
+				}
+				$any_condition_type_exists = true;
 			}
 		}
 
-		if ($condition['matching_mode'] == 'any' && !$matching_exists) {
+		if ($any_condition_type_exists && !$matching_exists) {
 			return false;
 		}
 
