@@ -3514,6 +3514,8 @@ class User extends CI_Controller
 					$value = (empty($value) ? '' : ' ') . $ret;
 				}
 			}
+		} else if ($rule['action_type'] == 'value') {
+			$value = $rule['field_mappings_ids'];
 		}
 
 		return array('path' => $rule['path'], 'value' => $value);

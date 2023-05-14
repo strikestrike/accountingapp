@@ -249,10 +249,11 @@
 										<select class="default-select form-control xml_action_type">
 											<option value="copy">Copy</option>
 											<option value="concat" <?php echo $action_type == 'concat' ? 'selected' : ''; ?> >Concat</option>
+											<option value="value" <?php echo $action_type == 'value' ? 'selected' : ''; ?> >Value</option>
 										</select>
 									</div>
 								</div>
-								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $action_type != 'concat' ? '' : 'd-none'; ?> copy_field_wrap">
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
 									<div class="form-group">
 										<select class="default-select form-control xml_copy_field">
 											<?php foreach($webfields as $row) { ?>
@@ -268,6 +269,11 @@
 												<option value="<?php echo $row['id'] ?>" <?php echo in_array($row['id'], $selected_fields) ? 'selected' : ''; ?> ><?php echo $row['field_label'] ?></option>
 											<?php } ?>
 										</select>
+									</div>
+								</div>
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $action_type == 'value' ? '' : 'd-none'; ?> value_field_wrap">
+									<div class="form-group">
+										<input type="text" class="form-control xml_value_field" placeholder="value" value="<?php echo isset($mappingrule) ? $mappingrule['field_mappings_ids'] : ''; ?>">
 									</div>
 								</div>
 								<div class="col-auto">
@@ -555,12 +561,17 @@
 			let action_type = $(xmlPathWrappers[i]).find('select.xml_action_type').val();
 			let copy_field = $(xmlPathWrappers[i]).find('select.xml_copy_field').val();
 			let concat_fields = $(xmlPathWrappers[i]).find('select.xml_concat_field').val();
+			let value_field = $(xmlPathWrappers[i]).find('input.xml_value_field').val();
 			let field_mappings_ids = '';
 			if (action_type == 'copy') {
 				field_mappings_ids = copy_field;
 			} else if (action_type == 'concat') {
 				if (concat_fields.length > 0) {
 					field_mappings_ids = concat_fields.join();
+				}
+			} else if (action_type == "value") {
+				if (value_field) {
+					field_mappings_ids = value_field;
 				}
 			}
 			if (path) {
@@ -700,10 +711,13 @@
 				$('.default-select').selectpicker('refresh');
 				$(this).parents('.path_field_wrap').find('.copy_field_wrap').addClass('d-none');
 				$(this).parents('.path_field_wrap').find('.concat_fields_wrap').addClass('d-none');
+				$(this).parents('.path_field_wrap').find('.value_field_wrap').addClass('d-none');
 				if (val == 'copy') {
 					$(this).parents('.path_field_wrap').find('.copy_field_wrap').removeClass('d-none');
 				} else if (val == 'concat') {
 					$(this).parents('.path_field_wrap').find('.concat_fields_wrap').removeClass('d-none');
+				} else if (val == 'value') {
+					$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
 				}
 			}
 		});
@@ -779,6 +793,11 @@
 									<option value="<?php echo $row['id'] ?>"><?php echo $row['field_label'] ?></option>\
 									<?php } ?>\
 								</select>\
+							</div>\
+						</div>\
+						<div class="col-md-4 col-sm-6 col-xs-12 d-none value_field_wrap">\
+							<div class="form-group">\
+								<input type="text" class="form-control xml_value_field" placeholder="Value">\
 							</div>\
 						</div>\
 						<div class="col-auto">\
