@@ -3522,7 +3522,7 @@ class User extends CI_Controller
 			$value = $rule['field_mappings_ids'];
 		}
 
-		return array('path' => $rule['path'], 'value' => $value);
+		return array('path' => $rule['path'], 'type' => $rule['component'], 'value' => $value);
 	}
 
 	private function generateInvoiceParams($rule) {

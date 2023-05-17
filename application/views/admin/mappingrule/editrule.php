@@ -242,8 +242,8 @@
 								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<select class="default-select form-control xml_component_type">
-											<option value="textbox">Text Box</option>
-											<option value="radio">Radio</option>
+											<option value="textbox" <?php echo $mappingrule['component'] == 'textbox' ? 'selected' : ''; ?>>Text Box</option>
+											<option value="radio" <?php echo $mappingrule['component'] == 'radio' ? 'selected' : ''; ?>>Radio</option>
 										</select>
 									</div>
 								</div>
@@ -254,7 +254,7 @@
 								</div>
 								<div class="col-auto ">
 									<div class="form-group">
-										<select class="default-select form-control xml_action_type">
+										<select class="default-select form-control xml_action_type <?php echo $mappingrule['component'] == 'radio' ? 'd-none' : ''; ?>">
 											<option value="copy">Copy</option>
 											<option value="concat" <?php echo $action_type == 'concat' ? 'selected' : ''; ?> >Concat</option>
 											<option value="value" <?php echo $action_type == 'value' ? 'selected' : ''; ?> >Value</option>
