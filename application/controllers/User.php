@@ -3482,14 +3482,14 @@ class User extends CI_Controller
 							->get($tablecolumns[0], 1);
 						$result = $query->row_array();
 						if (isset($result['cnt']) && !empty($result['cnt'])) {
-							$count = (int)$result['cnt'];
+							$count = $result['cnt'];
 						}
 					}
 				}
 			}
 		}
 
-		return array('path' => $rule['path'], 'type' => 'button', 'times' => $count);
+		return array('path' => $rule['path'], 'type' => 'button', 'times' => $count.'');
 	}
 
 	private function generateCheckboxParams($rule) {
