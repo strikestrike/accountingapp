@@ -132,11 +132,11 @@
 									</div>
 								</div>
 							</div>
-							<div class="row <?php echo $component == 'checkbox' ? '' : 'd-none'; ?>" id="condition_wrap">
+							<div class="row" id="condition_wrap">
 								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" value="" id="condition_checkbox" <?php echo $action_type == 'condition' && !empty($rule_conditions) ? 'checked' : ''; ?>>
+											<input class="form-check-input" type="checkbox" value="" id="condition_checkbox" <?php echo !empty($rule_conditions) ? 'checked' : ''; ?>>
 											<label class="form-check-label" for="condition_checkbox">
 												Conditions
 											</label>
@@ -152,7 +152,7 @@
 									</div>
 								</div>
 							</div>
-							<?php if ($action_type == 'condition') { ?>
+							<?php if (isset($rule_conditions)) { ?>
 								<?php foreach ($rule_conditions as $key => $value): ?>
 									<div class="row condition_field_wrap">
 									<div class="col-md-3 col-sm-6 col-xs-12">
@@ -429,7 +429,7 @@
 	$("input[name=component_type]").change(function() {
 		$('#count_wrap').addClass('d-none');
 		$('#count_field_wrap').addClass('d-none');
-		$('#condition_wrap').addClass('d-none');
+		// $('#condition_wrap').addClass('d-none');
 		$('.pdf-rule-wrap .condition_field_wrap').addClass('d-none');
 		$('#count_checkbox').prop('checked', false);
 		$('#condition_checkbox').prop('checked', false);
@@ -438,7 +438,7 @@
 		if (val == 'button') {
 			$('#count_wrap').removeClass('d-none');
 		} else if (val == 'checkbox') {
-			$('#condition_wrap').removeClass('d-none');
+			// $('#condition_wrap').removeClass('d-none');
 		}
 	})
 
@@ -481,8 +481,11 @@
 		let isConditionChecked = $('#condition_checkbox').is(':checked');
 		if (isCountChecked) {
 			action_type = 'count';
-		} else if (isConditionChecked) {
-			action_type = 'condition'
+		}
+
+		if (isConditionChecked) {
+			if(!action_type) action_type = 'condition';
+
 			let condition_field_wraps = $('.pdf-rule-wrap .condition_field_wrap');
 			for(let i = 0; i < condition_field_wraps.length; i++) {
 				let condition_field = $(condition_field_wraps[i]).find('select.condition-field').val();
