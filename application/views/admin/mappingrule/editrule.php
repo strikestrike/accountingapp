@@ -239,7 +239,15 @@
 					<div class="tab-pane fade <?php echo $rule_type == 'xml' ? 'active' : ''; ?> show xml-rule-wrap" id="navpills-2">
 						<div class="project-main2">
 							<div class="row path_field_wrap">
-								<div class="col-md-4 col-sm-6 col-xs-12">
+								<div class="col-md-3 col-sm-6 col-xs-12">
+									<div class="form-group">
+										<select class="default-select form-control xml_component_type">
+											<option value="textbox">Text Box</option>
+											<option value="radio">Radio</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<input type="text" class="form-control xml-path-field" placeholder="Path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
 									</div>
@@ -253,7 +261,7 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
+								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
 									<div class="form-group">
 										<select class="default-select form-control xml_copy_field">
 											<?php foreach($webfields as $row) { ?>
@@ -262,7 +270,7 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $action_type == 'concat' ? '' : 'd-none'; ?> concat_fields_wrap">
+								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo $action_type == 'concat' ? '' : 'd-none'; ?> concat_fields_wrap">
 									<div class="form-group">
 										<select class="default-select form-control xml_concat_field" multiple>
 											<?php foreach($webfields as $row) { ?>
@@ -271,9 +279,9 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $action_type == 'value' ? '' : 'd-none'; ?> value_field_wrap">
+								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo $action_type == 'value' ? '' : 'd-none'; ?> value_field_wrap">
 									<div class="form-group">
-										<input type="text" class="form-control xml_value_field" placeholder="value" value="<?php echo isset($mappingrule) ? $mappingrule['field_mappings_ids'] : ''; ?>">
+										<input type="text" class="form-control xml_value_field" placeholder="Value" value="<?php echo isset($mappingrule) ? $mappingrule['field_mappings_ids'] : ''; ?>">
 									</div>
 								</div>
 								<div class="col-auto">
@@ -561,11 +569,18 @@
 		let path_fields_list = [];
 		for (let i = 0; i < xmlPathWrappers.length; i++) {
 			let path = $(xmlPathWrappers[i]).find('input').val();
+			let component_type = $(xmlPathWrappers[i]).find('select.xml_component_type').val();
 			let action_type = $(xmlPathWrappers[i]).find('select.xml_action_type').val();
 			let copy_field = $(xmlPathWrappers[i]).find('select.xml_copy_field').val();
 			let concat_fields = $(xmlPathWrappers[i]).find('select.xml_concat_field').val();
 			let value_field = $(xmlPathWrappers[i]).find('input.xml_value_field').val();
 			let field_mappings_ids = '';
+
+			// If component type is radio then action type is only value.
+			if (component_type == 'radio') {
+				action_type = 'value';
+			}
+
 			if (action_type == 'copy') {
 				field_mappings_ids = copy_field;
 			} else if (action_type == 'concat') {
@@ -577,9 +592,11 @@
 					field_mappings_ids = value_field;
 				}
 			}
+
 			if (path) {
 				path_fields_list.push({
 					"path": path,
+					"component_type": component_type,
 					"action_type": action_type,
 					'field_mappings_ids': field_mappings_ids
 				});
@@ -708,6 +725,32 @@
 			initAddRemoveHandlers();
 		});
 
+		$('.xml_component_type').change(function() {
+			let val = $(this).val();
+			let actionType = $(this).parents('.path_field_wrap').find('select.xml_action_type').val();
+
+			if (val) {
+				$('.default-select').selectpicker('refresh');
+				$(this).parents('.path_field_wrap').find('.copy_field_wrap').addClass('d-none');
+				$(this).parents('.path_field_wrap').find('.concat_fields_wrap').addClass('d-none');
+				$(this).parents('.path_field_wrap').find('.value_field_wrap').addClass('d-none');
+				if (val == 'radio') {
+					$(this).parents('.path_field_wrap').find('.xml_action_type').addClass('d-none');
+					$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
+				} else {
+					$(this).parents('.path_field_wrap').find('.xml_action_type').removeClass('d-none');
+
+					if (actionType == 'copy') {
+						$(this).parents('.path_field_wrap').find('.copy_field_wrap').removeClass('d-none');
+					} else if (actionType == 'concat') {
+						$(this).parents('.path_field_wrap').find('.concat_fields_wrap').removeClass('d-none');
+					} else if (actionType == 'value') {
+						$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
+					}
+				}
+			}
+		});
+
 		$('.xml_action_type').change(function() {
 			let val = $(this).val();
 			if (val) {
@@ -767,7 +810,15 @@
 
 	function generateXMLPathFieldWrap() {
 		let elem = '<div class="row path_field_wrap">\
-						<div class="col-md-4 col-sm-6 col-xs-12">\
+						<div class="col-md-3 col-sm-6 col-xs-12">\
+							<div class="form-group">\
+								<select class="default-select form-control xml_component_type">\
+									<option value="textbox">Text Box</option>\
+									<option value="radio">Radio</option>\
+								</select>\
+							</div>\
+						</div>\
+						<div class="col-md-3 col-sm-6 col-xs-12">\
 							<div class="form-group">\
 								<input type="text" class="form-control xml-path-field" placeholder="Path">\
 							</div>\
@@ -777,10 +828,11 @@
 								<select class="default-select form-control xml_action_type">\
 									<option value="copy">Copy</option>\
 									<option value="concat">Concat</option>\
+									<option value="value">Value</option>\
 								</select>\
 							</div>\
 						</div>\
-						<div class="col-md-4 col-sm-6 col-xs-12 copy_field_wrap">\
+						<div class="col-md-3 col-sm-6 col-xs-12 copy_field_wrap">\
 							<div class="form-group">\
 								<select class="default-select form-control xml_copy_field">\
 									<?php foreach($webfields as $row) { ?>\
@@ -789,7 +841,7 @@
 								</select>\
 							</div>\
 						</div>\
-						<div class="col-md-4 col-sm-6 col-xs-12 d-none concat_fields_wrap">\
+						<div class="col-md-3 col-sm-6 col-xs-12 d-none concat_fields_wrap">\
 							<div class="form-group">\
 								<select class="default-select form-control xml_concat_field" multiple>\
 									<?php foreach($webfields as $row) { ?>\
@@ -798,7 +850,7 @@
 								</select>\
 							</div>\
 						</div>\
-						<div class="col-md-4 col-sm-6 col-xs-12 d-none value_field_wrap">\
+						<div class="col-md-3 col-sm-6 col-xs-12 d-none value_field_wrap">\
 							<div class="form-group">\
 								<input type="text" class="form-control xml_value_field" placeholder="Value">\
 							</div>\

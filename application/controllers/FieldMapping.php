@@ -233,7 +233,6 @@ class FieldMapping extends Admin
 		} else {
 			$updata['document_type'] = $data['document_type'];
 			$updata['rule_type'] = $data['rule_type'];
-			$updata['component'] = $data['component'];
 			if (isset($data['id'])) {
 				$this->admin_model->deleteRuleById($data['id']);
 				$this->admin_model->deleteConditionsByRuleId($data['id']);
@@ -242,6 +241,9 @@ class FieldMapping extends Admin
 			foreach ($data['path_fields'] as $key => $row) {
 				if (!empty($row['path'])) {
 					$updata['path'] = $row['path'];
+					if (!empty($row['component_type'])) {
+						$updata['component'] = $row['component_type'];
+					}
 					if (!empty($row['action_type'])) {
 						$updata['action_type'] = $row['action_type'];
 					}

@@ -3462,6 +3462,10 @@ class User extends CI_Controller
 	}
 
 	private function generateButtonParams($rule) {
+		if (!$this->checkConditions($rule['id'])) {
+			return [];
+		}
+
 		$count = 1;
 		if (!empty($rule['action_type'])) {
 			$personal_data_id = $this->session->userdata('personal_data_id');
