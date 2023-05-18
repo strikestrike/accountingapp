@@ -236,14 +236,15 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="tab-pane fade <?php echo $rule_type == 'xml' ? 'active' : ''; ?> show xml-rule-wrap" id="navpills-2">
 						<div class="project-main2">
 							<div class="row path_field_wrap">
 								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<select class="default-select form-control xml_component_type">
-											<option value="textbox" <?php echo $mappingrule['component'] == 'textbox' ? 'selected' : ''; ?>>Text Box</option>
-											<option value="radio" <?php echo $mappingrule['component'] == 'radio' ? 'selected' : ''; ?>>Radio</option>
+											<option value="textbox" <?php echo isset($mappingrule) && $mappingrule['component'] == 'textbox' ? 'selected' : ''; ?>>Text Box</option>
+											<option value="radio" <?php echo isset($mappingrule) && $mappingrule['component'] == 'radio' ? 'selected' : ''; ?>>Radio</option>
 										</select>
 									</div>
 								</div>
