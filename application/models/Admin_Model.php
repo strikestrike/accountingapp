@@ -1916,6 +1916,36 @@ class Admin_Model extends CI_Model
 	}
 
 	/**
+	 * Country List
+	 */
+	public function getCountryList() {
+		$q = $this->db->get('country_list');
+		if ($q->num_rows() > 0) {
+			return $q->result_array();
+		} else {
+			return [];
+		}
+	}
+
+	public function deleteCountryById($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete('country_list');
+	}
+
+	public function insertCountryDataFromExcel($data) {
+		$this->db->truncate('country_list');
+
+		$res = $this->db->insert_batch('country_list', $data);
+
+		if($res){
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	/**
 	 * 
 	 * ########## Field Mappings ##########
 	 * 

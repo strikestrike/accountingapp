@@ -3367,12 +3367,14 @@ class User extends CI_Controller
 			echo json_encode([
 				'success' => false,
 				'params' => $payload,
+				'params1' => $payload_168,
 				'message' => $response['message'],
 			]);
 		} else {
 			echo json_encode([
 				'success' => true,
 				'params' => $payload,
+				'params1' => $payload_168,
 				'links' => $links,
 			]);
 		}

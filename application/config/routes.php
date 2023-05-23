@@ -190,3 +190,9 @@ $route['user/getDownloadLink'] = 'user/getDownloadLink';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+/**
+ * ######## Admin Country List ########
+ */
+$route['admin/country'] = 'AdminCountry/index';
+$route['admin/country/delete'] = 'AdminCountry/delete';
+$route['admin/country/import'] = 'AdminCountry/import';

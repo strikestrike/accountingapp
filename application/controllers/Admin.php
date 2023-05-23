@@ -2364,7 +2364,7 @@ class Admin extends CI_Controller
 
 		$config['upload_path'] = $uploadPath;
 		$config['allowed_types'] = 'csv|xlsx|xls';
-		$config['max_size'] = 1000000;
+		$config['max_size'] = 100000000000000000000000;
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config);
 		if ($this->upload->do_upload('upload_excel')) {

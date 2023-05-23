@@ -228,6 +228,17 @@
 						<!-- <div class="nov-sub-text">From 190 Ron</div> -->
 					</a>
 				</li>
+				<li>
+					<a href="<?= base_url() ?>admin/country" class="ai-icon" aria-expanded="false">
+						<!-- <div class="form-check checkbox55">
+							<label class="form-check-label">
+								<input type="checkbox" class="form-check-input" value="">
+							</label>
+						</div> -->
+						<span class="nav-text">Country List</span>
+						<!-- <div class="nov-sub-text">From 190 Ron</div> -->
+					</a>
+				</li>
 			</ul>
 
 		</div>
