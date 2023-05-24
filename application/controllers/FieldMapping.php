@@ -171,6 +171,21 @@ class FieldMapping extends Admin
 	public function mappingrule()
 	{
 		$data['mappingrules'] = $this->admin_model->getAllMappingRule();
+		if ($data['mappingrules']) {
+			foreach ($data['mappingrules'] as $key => $rule) {
+				$data['mappingrules'][$key]['path'] = '';
+				$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
+				foreach ($pdf_rule_paths as $web_path) {
+					if (!empty($web_path['pdf_field_path'])) {
+						if (empty($data['mappingrules'][$key]['path'])) {
+							$data['mappingrules'][$key]['path'] = $web_path['pdf_field_path'];
+						} else {
+							$data['mappingrules'][$key]['path'] .= '<br/>' . $web_path['pdf_field_path'];
+						}
+					}
+				}
+			}
+		}
 		$this->admin_auth();
 		$this->load->view('admin/layout/header1');
 		$this->load->view('admin/mappingrule/mappingrules', $data);
@@ -180,14 +195,18 @@ class FieldMapping extends Admin
 	public function editrule()
 	{
 		$data['webfields'] = $this->admin_model->getAllFieldMapping();
+		$data['rule_conditions'] = [];
+		$data['web_paths'] = [];
 		$data['selected_fields'] = [];
 		$id = $this->input->get('id');
 		if (!empty($id)) {
 			$mappingrule = $this->admin_model->fetchMappingRuleById($id);
 			$rule_conditions = $this->admin_model->fetchConditionsByRuleId($id);
-			$selected_fields = !empty($mappingrule['field_mappings_ids']) ? explode(',', $mappingrule['field_mappings_ids']) : [];
+			$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($id);
 			$data['mappingrule'] = $mappingrule;
 			$data['rule_conditions'] = $rule_conditions;
+			$data['web_paths'] = $pdf_rule_paths;
+			$selected_fields = !empty($mappingrule['field_mappings_ids']) ? explode(',', $mappingrule['field_mappings_ids']) : [];
 			$data['selected_fields'] = $selected_fields;
 		}
 		$this->admin_auth();
@@ -231,34 +250,38 @@ class FieldMapping extends Admin
 				'message' => validation_errors(),
 			]);
 		} else {
-			$updata['document_type'] = $data['document_type'];
-			$updata['rule_type'] = $data['rule_type'];
 			if (isset($data['id'])) {
 				$this->admin_model->deleteRuleById($data['id']);
 				$this->admin_model->deleteConditionsByRuleId($data['id']);
+				$this->admin_model->deletePathsByRuleId($data['id']);
 			}
 
-			foreach ($data['path_fields'] as $key => $row) {
-				if (!empty($row['path'])) {
-					$updata['path'] = $row['path'];
-					if (!empty($row['component_type'])) {
-						$updata['component'] = $row['component_type'];
-					}
-					if (!empty($row['action_type'])) {
-						$updata['action_type'] = $row['action_type'];
-					}
-					if (!empty($row['field_mappings_ids'])) {
-						$updata['field_mappings_ids'] = $row['field_mappings_ids'];
-					}
-					$rule_id = $this->admin_model->insertRule($updata);
+			$updata['document_type'] = $data['document_type'];
+			$updata['rule_type'] = $data['rule_type'];
+			$updata['component'] = $data['component'];
+			if (isset($data['field_mappings_ids'])) {
+				$updata['field_mappings_ids'] = $data['field_mappings_ids'];
+			}
+			if (isset($data['action_type'])) {
+				$updata['action_type'] = $data['action_type'];
+			}
+			$rule_id = $this->admin_model->insertRule($updata);
 
-					$this->admin_model->deleteConditionsByRuleId($rule_id);
-					if (!empty($data['conditions']) && !empty($rule_id)) {
-						foreach ($data['conditions'] as $key => $condition) {
-							$condition['mapping_rules_id'] = $rule_id;
-							$this->admin_model->insertCondition($condition);
-						}
+			if (!empty($data['path_fields']) && !empty($rule_id)) {
+				foreach ($data['path_fields'] as $key => $value) {
+					$web_path['rule_id'] = $rule_id;
+					$web_path['pdf_field_path'] = $value['pdf_field_path'];
+					if (!empty($value['value'])) {
+						$web_path['value'] = $value['value'];
 					}
+					$this->admin_model->insertWebPath($web_path);
+				}
+			}
+
+			if (!empty($data['conditions']) && !empty($rule_id)) {
+				foreach ($data['conditions'] as $key => $condition) {
+					$condition['mapping_rules_id'] = $rule_id;
+					$this->admin_model->insertCondition($condition);
 				}
 			}
 

@@ -2048,9 +2048,24 @@ class Admin_Model extends CI_Model
 		$this->db->insert('rule_conditions', $data);
 	}
 
+	public function insertWebPath($data)
+	{
+		$this->db->insert('web_pdf_mapping', $data);
+	}
+
 	public function fetchConditionsByRuleId($rule_id)
 	{
 		$q = $this->db->get_where('rule_conditions', ['mapping_rules_id' => $rule_id]);
+		if ($q->num_rows() > 0) {
+			return $q->result_array();
+		} else {
+			return [];
+		}
+	}
+
+	public function fetchPathsByRuleId($rule_id)
+	{
+		$q = $this->db->get_where('web_pdf_mapping', ['rule_id' => $rule_id]);
 		if ($q->num_rows() > 0) {
 			return $q->result_array();
 		} else {
@@ -2062,5 +2077,11 @@ class Admin_Model extends CI_Model
 	{
 		$this->db->where('mapping_rules_id', $rule_id);
 		$this->db->delete('rule_conditions');
+	}
+
+	public function deletePathsByRuleId($rule_id)
+	{
+		$this->db->where('rule_id', $rule_id);
+		$this->db->delete('web_pdf_mapping');
 	}
 }

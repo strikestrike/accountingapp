@@ -41,7 +41,7 @@
 						<ul class="nav nav-tabs style-1 w-100 w-scroll-new" id="ListViewTabLink">
 							<?php
 							$rule_type = 'pdf';
-							$action_type = '';
+							$action_type = 'count';
 							$component = 'button';
 							if (isset($mappingrule)) {
 								$rule_type = $mappingrule['rule_type'];
@@ -78,28 +78,44 @@
 										<div>
 											<?php
 											$component = 'button';
-											if (isset($mappingrule) && $mappingrule['component'] == 'checkbox') {
-												$component = 'checkbox';
+											if (isset($mappingrule)) {
+												$component = $mappingrule['component'];
 											}
 											?>
 											<div class="form-check form-check-inline">
 												<label class="form-check-label">
-													<input type="radio" name="component_type" value="button" class="form-check-input form-check-inputblue" <?php echo $component == 'button' ? 'checked' : ''; ?>>Button
+													<input type="radio" name="pdf_component_type" value="button" class="form-check-input form-check-inputblue" <?php echo $component != 'checkbox' ? 'checked' : ''; ?>>Button
 												</label>
 											</div>
 											<div class="form-check form-check-inline">
 												<label class="form-check-label">
-													<input type="radio" name="component_type" value="checkbox" class="form-check-input form-check-inputblue" <?php echo $component == 'checkbox' ? 'checked' : ''; ?>>Checkbox
+													<input type="radio" name="pdf_component_type" value="checkbox" class="form-check-input form-check-inputblue" <?php echo $component == 'checkbox' ? 'checked' : ''; ?>>Checkbox
 												</label>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+							<?php if ($rule_type == 'pdf') { ?>
+								<?php foreach ($web_paths as $key => $value): ?>
+									<div class="row path_field_wrap">
+										<div class="col-md-4 col-sm-6 col-xs-12">
+											<div class="form-group">
+												<input type="text" class="form-control pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
+											</div>
+										</div>
+										<div class="col-auto">
+											<div class="form-group">
+												<button type="button" class="btn btn-outline-primary path-remove"> - </button>
+											</div>
+										</div>
+									</div>
+								<?php endforeach; ?>
+							<?php } ?>
 							<div class="row path_field_wrap">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<input type="text" class="form-control pdf-path-field" placeholder="Path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
+										<input type="text" class="form-control pdf-path-field" placeholder="Path">
 									</div>
 								</div>
 								<div class="col-auto">
@@ -108,35 +124,11 @@
 									</div>
 								</div>
 							</div>
-							<div class="row d-none <?php echo $component == 'button' ? '' : 'd-none'; ?>" id="count_wrap">
-								<div class="col-md-4 col-sm-6 col-xs-12">
-									<div class="form-group">
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" id="count_checkbox" <?php echo $action_type == 'count' ? 'checked' : ''; ?>>
-											<label class="form-check-label" for="count_checkbox">
-												Count
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row <?php echo $action_type == 'count' ? '' : 'd-none'; ?>" id="count_field_wrap">
-								<div class="col-md-4 col-sm-6 col-xs-12">
-									<div class="form-group">
-										<label class="form-label">Web Field</label>
-										<select class="default-select form-control" id="count_field">
-											<?php foreach($webfields as $row) { ?>
-												<option value="<?php echo $row['id'] ?>" <?php echo (isset($mappingrule) && ($mappingrule['field_mappings_ids'] == $row['id'])) ? 'selected' : ''; ?>><?php echo $row['field_label'] ?></option>
-											<?php } ?>
-										</select>
-									</div>
-								</div>
-							</div>
 							<div class="row" id="condition_wrap">
 								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" value="" id="condition_checkbox" <?php echo !empty($rule_conditions) ? 'checked' : ''; ?>>
+											<input class="form-check-input" type="checkbox" value="" id="condition_checkbox" <?php echo $rule_type == 'pdf' && !empty($rule_conditions) ? 'checked' : ''; ?>>
 											<label class="form-check-label" for="condition_checkbox">
 												Conditions
 											</label>
@@ -152,7 +144,7 @@
 									</div>
 								</div>
 							</div>
-							<?php if (isset($rule_conditions)) { ?>
+							<?php if ($rule_type == 'pdf') { ?>
 								<?php foreach ($rule_conditions as $key => $value): ?>
 									<div class="row condition_field_wrap">
 									<div class="col-md-3 col-sm-6 col-xs-12">
@@ -239,55 +231,101 @@
 
 					<div class="tab-pane fade <?php echo $rule_type == 'xml' ? 'active' : ''; ?> show xml-rule-wrap" id="navpills-2">
 						<div class="project-main2">
-							<div class="row path_field_wrap">
-								<div class="col-md-3 col-sm-6 col-xs-12">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<select class="default-select form-control xml_component_type">
-											<option value="textbox" <?php echo isset($mappingrule) && $mappingrule['component'] == 'textbox' ? 'selected' : ''; ?>>Text Box</option>
-											<option value="radio" <?php echo isset($mappingrule) && $mappingrule['component'] == 'radio' ? 'selected' : ''; ?>>Radio</option>
-										</select>
+										<label class="form-label">Component Type</label>
+										<div>
+											<div class="form-check form-check-inline">
+												<label class="form-check-label">
+													<input type="radio" name="xml_component_type" value="textbox" class="form-check-input form-check-inputblue" <?php echo $component != 'radio' ? 'checked' : ''; ?>>Text Box
+												</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<label class="form-check-label">
+													<input type="radio" name="xml_component_type" value="radio" class="form-check-input form-check-inputblue" <?php echo $component == 'radio' ? 'checked' : ''; ?>>Radio
+												</label>
+											</div>
+										</div>
 									</div>
 								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
+							</div>
+							<div class="row">
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' && $action_type != 'concat' ? '' : 'd-none'; ?>" id="copy_field_wrap">
 									<div class="form-group">
-										<select class="default-select form-control xml_copy_field">
+										<label class="form-label">Web Field</label>
+										<select class="default-select form-control" id="copy_field">
 											<?php foreach($webfields as $row) { ?>
-												<option value="<?php echo $row['id'] ?>" <?php echo in_array($row['id'], $selected_fields) ? 'selected' : ''; ?>><?php echo $row['field_label']?></option>
+												<option value="<?php echo $row['id'] ?>" <?php echo (isset($mappingrule) && ($mappingrule['field_mappings_ids'] == $row['id'])) ? 'selected' : ''; ?>><?php echo $row['field_label'] ?></option>
 											<?php } ?>
 										</select>
 									</div>
 								</div>
-								<div class="col-auto ">
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' && $action_type == 'concat' ? '' : 'd-none'; ?>" id="concat_fields_wrap">
 									<div class="form-group">
-										<select class="default-select form-control xml_action_type <?php echo $mappingrule['component'] == 'radio' ? 'd-none' : ''; ?>">
-											<option value="copy">Copy</option>
-											<option value="concat" <?php echo $action_type == 'concat' ? 'selected' : ''; ?> >Concat</option>
-											<option value="value" <?php echo $action_type == 'value' ? 'selected' : ''; ?> >Value</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12">
-									<div class="form-group">
-										<input type="text" class="form-control xml-path-field" placeholder="Path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
-									</div>
-								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo $action_type == 'concat' ? '' : 'd-none'; ?> concat_fields_wrap">
-									<div class="form-group">
-										<select class="default-select form-control xml_concat_field" multiple>
+										<label class="form-label">Web Fields</label>
+										<select class="default-select form-control" id="concat_field" multiple>
 											<?php foreach($webfields as $row) { ?>
 												<option value="<?php echo $row['id'] ?>" <?php echo in_array($row['id'], $selected_fields) ? 'selected' : ''; ?> ><?php echo $row['field_label'] ?></option>
 											<?php } ?>
 										</select>
 									</div>
 								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo $action_type == 'value' ? '' : 'd-none'; ?> value_field_wrap">
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' ? '' : 'd-none'; ?>" id="xml_action_type_wrap">
 									<div class="form-group">
-										<input type="text" class="form-control xml_value_field" placeholder="Value" value="<?php echo isset($mappingrule) ? $mappingrule['field_mappings_ids'] : ''; ?>">
+										<label class="form-label">Action Type</label>
+										<select class="default-select form-control" id="xml_action_type">
+											<option value="copy" <?php echo $action_type != 'concat' ? 'selected' : ''; ?> >Copy</option>
+											<option value="concat" <?php echo $action_type == 'concat' ? 'selected' : ''; ?> >Concat</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<?php if ($rule_type == 'xml') { ?>
+								<?php foreach ($web_paths as $key => $value): ?>
+									<div class="row path_field_wrap textbox_path_wrap <?php echo $component != 'radio' ? '' : 'd-none'; ?>">
+										<div class="col-md-4 col-sm-6 col-xs-12">
+											<div class="form-group">
+												<input type="text" class="form-control pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
+											</div>
+										</div>
+										<div class="col-auto">
+											<div class="form-group">
+												<button type="button" class="btn btn-outline-primary path-remove"> - </button>
+											</div>
+										</div>
+									</div>
+								<?php endforeach; ?>
+							<?php } ?>
+							<div class="row path_field_wrap textbox_path_wrap <?php echo $component != 'radio' ? '' : 'd-none'; ?>">
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<div class="form-group">
+										<input type="text" class="form-control pdf-path-field" placeholder="Path">
 									</div>
 								</div>
 								<div class="col-auto">
 									<div class="form-group">
 										<button type="button" class="btn btn-outline-primary path-add"> + </button>
+									</div>
+								</div>
+							</div>
+							<div class="row radio_path_wrap <?php echo $component == 'radio' ? '' : 'd-none'; ?>">
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<div class="form-group">
+										<?php if ($component == 'radio' && !empty($web_paths)) { ?>
+											<input type="text" class="form-control" id="radio_field_path" placeholder="Path" value="<?php echo $web_paths[0]['pdf_field_path']; ?>">
+										<?php } else { ?>
+											<input type="text" class="form-control" id="radio_field_path" placeholder="Path">
+										<?php } ?>
+									</div>
+								</div>
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<div class="form-group">
+										<?php if ($component == 'radio' && !empty($web_paths)) { ?>
+											<input type="text" class="form-control" id="radio_field_value" placeholder="Value" value="<?php echo $web_paths[0]['value']; ?>">
+										<?php } else { ?>
+											<input type="text" class="form-control" id="radio_field_value" placeholder="Value">
+										<?php } ?>
 									</div>
 								</div>
 							</div>
@@ -395,13 +433,18 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="tab-pane fade <?php echo $rule_type == 'invoice' ? 'active' : ''; ?> show invoice-rule-wrap" id="navpills-3">
 						<div class="project-main2">
 							<div class="row">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<label class="form-label">Label</label>
-										<input type="text" class="form-control" id="invoice_path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
+										<?php if ($rule_type == 'invoice' && !empty($web_paths)) { ?>
+											<input type="text" class="form-control" id="invoice_path" placeholder="Value" value="<?php echo $web_paths[0]['pdf_field_path']; ?>">
+										<?php } else { ?>
+											<input type="text" class="form-control" id="invoice_path" placeholder="Value">
+										<?php } ?>
 									</div>
 								</div>
 							</div>
@@ -434,29 +477,14 @@
 <!-- End: Content body -->
 
 <script>
-
-	$("input[name=component_type]").change(function() {
-		$('#count_wrap').addClass('d-none');
-		$('#count_field_wrap').addClass('d-none');
-		// $('#condition_wrap').addClass('d-none');
+	//////////////////////////// PDF ////////////////////////////
+	$("input[name=pdf_component_type]").change(function() {
 		$('.pdf-rule-wrap .condition_field_wrap').addClass('d-none');
-		$('#count_checkbox').prop('checked', false);
 		$('#condition_checkbox').prop('checked', false);
 
 		let val = $(this).val();
 		if (val == 'button') {
-			$('#count_wrap').removeClass('d-none');
 		} else if (val == 'checkbox') {
-			// $('#condition_wrap').removeClass('d-none');
-		}
-	})
-
-	$("#count_checkbox").change(function() {
-		let isChecked = $(this).is(':checked');
-		if(isChecked) {
-			$('#count_field_wrap').removeClass('d-none');
-		} else {
-			$('#count_field_wrap').addClass('d-none');
 		}
 	});
 
@@ -469,32 +497,17 @@
 		}
 	});
 
-	$("#xml_condition_checkbox").change(function() {
-		let isChecked = $(this).is(':checked');
-		if(isChecked) {
-			$('.xml-rule-wrap .condition_field_wrap').removeClass('d-none');
-		} else {
-			$('.xml-rule-wrap .condition_field_wrap').addClass('d-none');
-		}
-	});
-
 	$('#submit_pdf_rule').click(function() {
 		let document_type = $('#document_type').val();
 		let id = $('#id').val();
-		let component_type = $('input[name=component_type]:checked').val();
+		let component_type = $('input[name=pdf_component_type]:checked').val();
 		let matching_mode = $('#pdf_matching_mode').val();
-		let count_field = $('#count_field').val();
-		let action_type = '';
 		let conditions = [];
-		let isCountChecked = $('#count_checkbox').is(':checked');
 		let isConditionChecked = $('#condition_checkbox').is(':checked');
-		if (isCountChecked) {
-			action_type = 'count';
-		}
+		let action_type = 'count';
 
 		if (isConditionChecked) {
-			if(!action_type) action_type = 'condition';
-
+			let action_type = 'condition';
 			let condition_field_wraps = $('.pdf-rule-wrap .condition_field_wrap');
 			for(let i = 0; i < condition_field_wraps.length; i++) {
 				let condition_field = $(condition_field_wraps[i]).find('select.condition-field').val();
@@ -517,9 +530,7 @@
 			let path = $(pathFields[i]).val();
 			if (path) {
 				path_fields_list.push({
-					"path": path,
-					"action_type": action_type,
-					'field_mappings_ids': isCountChecked ? count_field : '',
+					"pdf_field_path": path,
 				});
 			}
 		}
@@ -529,6 +540,7 @@
 			"document_type": document_type,
 			"rule_type": "pdf",
 			"component": component_type,
+			"action_type": action_type,
 			"path_fields": path_fields_list,
 			"conditions": conditions,
 		}
@@ -542,15 +554,6 @@
 			{
 				let resp = JSON.parse(response)
 				if (resp.success) {
-					$('#pdf_rule_id').val('');
-					$('#count_checkbox').prop('checked', false);
-					$('#condition_checkbox').prop('checked', false);
-
-					$('#count_field_wrap').addClass('d-none');
-					$('.pdf-rule-wrap .condition_field_wrap').addClass('d-none');
-
-					$('.pdf-rule-wrap .path_field_wrap:not(:last)').remove();
-					$('.pdf-rule-wrap .condition_field_wrap:not(:last)').remove();
 					toastr.success('Successfully saved!');
 					setTimeout(function () {
 						window.location.href = "<?= base_url() ?>admin/mappingrule";
@@ -562,44 +565,80 @@
 		});
 	});
 
+	/////////////////////////////// XML /////////////////////////////////
+	$("input[name=xml_component_type]").change(function() {
+		$('#copy_field_wrap').addClass('d-none');
+		$('#concat_fields_wrap').addClass('d-none');
+		$('#xml_action_type_wrap').addClass('d-none');
+		$('.textbox_path_wrap').addClass('d-none');
+		$('.radio_path_wrap').addClass('d-none');
+
+		let val = $(this).val();
+		if (val == 'textbox') {
+			$('#xml_action_type_wrap').removeClass('d-none');
+			if ($('#xml_action_type_wrap').val() == 'copy') {
+				$('#copy_field_wrap').removeClass('d-none');
+			} else {
+				$('#concat_fields_wrap').removeClass('d-none');
+			}
+		} else if (val == 'radio') {
+			$('.radio_path_wrap').removeClass('d-none');
+		}
+	});
+
+	$("#xml_action_type_wrap").change(function() {
+		$('.xml-rule-wrap #copy_field_wrap').addClass('d-none');
+		$('.xml-rule-wrap #concat_fields_wrap').removeClass('d-none');
+		if($("#xml_action_type_wrap").val() == 'copy') {
+			$('.xml-rule-wrap #copy_field_wrap').removeClass('d-none');
+		} else if($("#xml_action_type_wrap").val() == 'concat') {
+			$('.xml-rule-wrap #concat_fields_wrap').addClass('d-none');
+		}
+	});
+
+	$("#xml_condition_checkbox").change(function() {
+		let isChecked = $(this).is(':checked');
+		if(isChecked) {
+			$('.xml-rule-wrap .condition_field_wrap').removeClass('d-none');
+		} else {
+			$('.xml-rule-wrap .condition_field_wrap').addClass('d-none');
+		}
+	});
+
 	$('#submit_xml_rule').click(function() {
-		let document_type = $('#document_type').val();
 		let id = $('#id').val();
+		let document_type = $('#document_type').val();
+		let component_type = $('input[name=xml_component_type]:checked').val();
+		let action_type = $('#xml_action_type').val();
 		let matching_mode = $('#xml_matching_mode').val();
-		let xmlPathWrappers = $('.xml-rule-wrap .path_field_wrap');
+		let textbox_path_wrappers = $('.xml-rule-wrap .pdf-path-field');
 		let path_fields_list = [];
-		for (let i = 0; i < xmlPathWrappers.length; i++) {
-			let path = $(xmlPathWrappers[i]).find('input').val();
-			let component_type = $(xmlPathWrappers[i]).find('select.xml_component_type').val();
-			let action_type = $(xmlPathWrappers[i]).find('select.xml_action_type').val();
-			let copy_field = $(xmlPathWrappers[i]).find('select.xml_copy_field').val();
-			let concat_fields = $(xmlPathWrappers[i]).find('select.xml_concat_field').val();
-			let value_field = $(xmlPathWrappers[i]).find('input.xml_value_field').val();
-			let field_mappings_ids = '';
-
-			// If component type is radio then action type is only value.
-			if (component_type == 'radio') {
-				action_type = 'value';
-			}
-
+		let web_field = '';
+		if (component_type == 'textbox') {
 			if (action_type == 'copy') {
-				field_mappings_ids = copy_field;
+				web_field = $('#copy_field').val();
 			} else if (action_type == 'concat') {
-				if (concat_fields.length > 0) {
-					field_mappings_ids = concat_fields.join();
-				}
-			} else if (action_type == "value") {
-				if (value_field) {
-					field_mappings_ids = value_field;
+				let concat_fields = $('#concat_field').val();
+				if (concat_fields) {
+					web_field = concat_fields.join();
 				}
 			}
-
-			if (path) {
+			for (let i = 0; i < textbox_path_wrappers.length; i++) {
+				let path = $(textbox_path_wrappers[i]).val();
+				if (path) {
+					path_fields_list.push({
+						"pdf_field_path": path,
+					});
+				}
+			}
+		} else if (component_type == 'radio') {
+			action_type = 'value';
+			let radio_field_path = $('#radio_field_path').val();
+			let radio_field_value = $('#radio_field_value').val();
+			if (radio_field_path) {
 				path_fields_list.push({
-					"path": path,
-					"component_type": component_type,
-					"action_type": action_type,
-					'field_mappings_ids': field_mappings_ids
+					"pdf_field_path": radio_field_path,
+					"value": radio_field_value,
 				});
 			}
 		}
@@ -627,12 +666,14 @@
 			"id": id,
 			"document_type": document_type,
 			"rule_type": "xml",
-			"component": 'textbox',
+			"component": component_type,
+			"action_type": action_type,
+			"field_mappings_ids": web_field,
 			"path_fields": path_fields_list,
 			"conditions": conditions,
-		}
+		};
 
-		var url = 'saveMappingRule'
+		var url = 'saveMappingRule';
 		$.ajax({
 			url: url,
 			method: "POST",
@@ -641,11 +682,6 @@
 			{
 				let resp = JSON.parse(response)
 				if (resp.success) {
-					$('#xml_rule_id').val('');
-					$('#xml_condition_checkbox').prop('checked', false);
-					$('.xml-rule-wrap .path_field_wrap:not(:last)').remove();
-					$('.xml-rule-wrap .condition_field_wrap').addClass('d-none');
-					$('.xml-rule-wrap .condition_field_wrap:not(:last)').remove();
 					toastr.success('Successfully saved!');
 					setTimeout(function () {
 						window.location.href = "<?= base_url() ?>admin/mappingrule";
@@ -654,9 +690,10 @@
 					toastr.error(resp.message);
 				}
 			}
-		})
+		});
 	});
 
+	//////////////////// INVOICE ///////////////////////
 	$('#submit_invoice_rule').click(function() {
 		let document_type = $('#document_type').val();
 		let id = $('#id').val();
@@ -665,9 +702,7 @@
 		let path_fields_list = [];
 		if (path) {
 			path_fields_list.push({
-				"path": path,
-				"action_type": "copy",
-				'field_mappings_ids': invoice_field
+				"pdf_field_path": path,
 			});
 		}
 		let data = {
@@ -675,9 +710,11 @@
 			"document_type": document_type,
 			"rule_type": "invoice",
 			"component": 'textbox',
+			"action_type": 'copy',
+			"field_mappings_ids": invoice_field,
 			"path_fields": path_fields_list,
-		}
-		var url = 'saveMappingRule'
+		};
+		var url = 'saveMappingRule';
 		$.ajax({
 			url: url,
 			method: "POST",
@@ -686,8 +723,6 @@
 			{
 				let resp = JSON.parse(response)
 				if (resp.success) {
-					$('#invoice_rule_id').val('');
-					$('#invoice_path').val('');
 					toastr.success('Successfully saved!');
 					setTimeout(function () {
 						window.location.href = "<?= base_url() ?>admin/mappingrule";
@@ -705,7 +740,7 @@
 		$(".pdf-rule-wrap .path-add").off('click');
 		$(".xml-rule-wrap .path-add").off('click');
 		$(".path-remove").off('click');
-		$('.xml_action_type').off('change');
+		$('#xml_action_type').off('change');
 
 		$(".xml-rule-wrap .condition-add").click(function() {
 			handleConditionAdd('xml');
@@ -721,57 +756,56 @@
 
 		$(".pdf-rule-wrap .path-add").click(function() {
 			$('.pdf-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generatePDFPathFieldWrap();
+			let field_wrap = generatePathFieldWrap();
 			$('.pdf-rule-wrap .path_field_wrap:last').after(field_wrap);
 			initAddRemoveHandlers();
 		});
 
 		$('.xml_component_type').change(function() {
 			let val = $(this).val();
-			let actionType = $(this).parents('.path_field_wrap').find('select.xml_action_type').val();
+			let actionType = $('#xml_action_type').val();
 
 			if (val) {
 				$('.default-select').selectpicker('refresh');
-				$(this).parents('.path_field_wrap').find('.copy_field_wrap').addClass('d-none');
-				$(this).parents('.path_field_wrap').find('.concat_fields_wrap').addClass('d-none');
-				$(this).parents('.path_field_wrap').find('.value_field_wrap').addClass('d-none');
-				if (val == 'radio') {
-					$(this).parents('.path_field_wrap').find('.xml_action_type').addClass('d-none');
-					$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
-				} else {
-					$(this).parents('.path_field_wrap').find('.xml_action_type').removeClass('d-none');
 
+				$('.copy_field_wrap').addClass('d-none');
+				$('.concat_fields_wrap').addClass('d-none');
+				$('#xml_action_type_wrap').addClass('d-none');
+				$('.textbox_path_wrap').addClass('d-none');
+				$('.radio_path_wrap').addClass('d-none');
+
+				if (val == 'radio') {
+					$('.radio_path_wrap').removeClass('d-none');
+				} else if (val == 'textbox') {
+					$('#xml_action_type_wrap').removeClass('d-none');
+					$('.textbox_path_wrap').removeClass('d-none');
 					if (actionType == 'copy') {
-						$(this).parents('.path_field_wrap').find('.copy_field_wrap').removeClass('d-none');
+						$('.copy_field_wrap').removeClass('d-none');
 					} else if (actionType == 'concat') {
-						$(this).parents('.path_field_wrap').find('.concat_fields_wrap').removeClass('d-none');
-					} else if (actionType == 'value') {
-						$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
+						$('.concat_fields_wrap').removeClass('d-none');
 					}
 				}
 			}
 		});
 
-		$('.xml_action_type').change(function() {
+		$('#xml_action_type').change(function() {
 			let val = $(this).val();
 			if (val) {
 				$('.default-select').selectpicker('refresh');
-				$(this).parents('.path_field_wrap').find('.copy_field_wrap').addClass('d-none');
-				$(this).parents('.path_field_wrap').find('.concat_fields_wrap').addClass('d-none');
-				$(this).parents('.path_field_wrap').find('.value_field_wrap').addClass('d-none');
+
+				$('.copy_field_wrap').addClass('d-none');
+				$('.concat_fields_wrap').addClass('d-none');
 				if (val == 'copy') {
-					$(this).parents('.path_field_wrap').find('.copy_field_wrap').removeClass('d-none');
+					$('.copy_field_wrap').removeClass('d-none');
 				} else if (val == 'concat') {
-					$(this).parents('.path_field_wrap').find('.concat_fields_wrap').removeClass('d-none');
-				} else if (val == 'value') {
-					$(this).parents('.path_field_wrap').find('.value_field_wrap').removeClass('d-none');
+					$('.concat_fields_wrap').removeClass('d-none');
 				}
 			}
 		});
 
 		$(".xml-rule-wrap .path-add").click(function() {
 			$('.xml-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generateXMLPathFieldWrap();
+			let field_wrap = generatePathFieldWrap();
 			$('.xml-rule-wrap .path_field_wrap:last').after(field_wrap);
 			$('.default-select').selectpicker();
 			initAddRemoveHandlers();
@@ -792,68 +826,11 @@
 		initAddRemoveHandlers();
 	}
 
-	function generatePDFPathFieldWrap() {
+	function generatePathFieldWrap() {
 		let elem = '<div class="row path_field_wrap">\
 						<div class="col-md-4 col-sm-6 col-xs-12">\
 							<div class="form-group">\
 								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
-							</div>\
-						</div>\
-						<div class="col-auto">\
-							<div class="form-group">\
-								<button type="button" class="btn btn-outline-primary path-add"> + </button>\
-							</div>\
-						</div>\
-					</div>';
-
-		return elem;
-	}
-
-	function generateXMLPathFieldWrap() {
-		let elem = '<div class="row path_field_wrap">\
-						<div class="col-md-3 col-sm-6 col-xs-12">\
-							<div class="form-group">\
-								<select class="default-select form-control xml_component_type">\
-									<option value="textbox">Text Box</option>\
-									<option value="radio">Radio</option>\
-								</select>\
-							</div>\
-						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12 copy_field_wrap">\
-							<div class="form-group">\
-								<select class="default-select form-control xml_copy_field">\
-									<?php foreach($webfields as $row) { ?>\
-									<option value="<?php echo $row['id'] ?>"><?php echo $row['field_label']?></option>\
-									<?php } ?>\
-								</select>\
-							</div>\
-						</div>\
-						<div class="col-auto ">\
-							<div class="form-group">\
-								<select class="default-select form-control xml_action_type">\
-									<option value="copy">Copy</option>\
-									<option value="concat">Concat</option>\
-									<option value="value">Value</option>\
-								</select>\
-							</div>\
-						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12">\
-							<div class="form-group">\
-								<input type="text" class="form-control xml-path-field" placeholder="Path">\
-							</div>\
-						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12 d-none concat_fields_wrap">\
-							<div class="form-group">\
-								<select class="default-select form-control xml_concat_field" multiple>\
-									<?php foreach($webfields as $row) { ?>\
-									<option value="<?php echo $row['id'] ?>"><?php echo $row['field_label'] ?></option>\
-									<?php } ?>\
-								</select>\
-							</div>\
-						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12 d-none value_field_wrap">\
-							<div class="form-group">\
-								<input type="text" class="form-control xml_value_field" placeholder="Value">\
 							</div>\
 						</div>\
 						<div class="col-auto">\
