@@ -108,7 +108,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row <?php echo $component == 'button' ? '' : 'd-none'; ?>" id="count_wrap">
+							<div class="row d-none <?php echo $component == 'button' ? '' : 'd-none'; ?>" id="count_wrap">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
 										<div class="form-check">
@@ -248,9 +248,13 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12">
+								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
 									<div class="form-group">
-										<input type="text" class="form-control xml-path-field" placeholder="Path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
+										<select class="default-select form-control xml_copy_field">
+											<?php foreach($webfields as $row) { ?>
+												<option value="<?php echo $row['id'] ?>" <?php echo in_array($row['id'], $selected_fields) ? 'selected' : ''; ?>><?php echo $row['field_label']?></option>
+											<?php } ?>
+										</select>
 									</div>
 								</div>
 								<div class="col-auto ">
@@ -262,13 +266,9 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo empty($action_type) || $action_type == 'copy' ? '' : 'd-none'; ?> copy_field_wrap">
+								<div class="col-md-3 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<select class="default-select form-control xml_copy_field">
-											<?php foreach($webfields as $row) { ?>
-												<option value="<?php echo $row['id'] ?>" <?php echo in_array($row['id'], $selected_fields) ? 'selected' : ''; ?>><?php echo $row['field_label']?></option>
-											<?php } ?>
-										</select>
+										<input type="text" class="form-control xml-path-field" placeholder="Path" value="<?php echo isset($mappingrule) ? $mappingrule['path'] : ''; ?>">
 									</div>
 								</div>
 								<div class="col-md-3 col-sm-6 col-xs-12 <?php echo $action_type == 'concat' ? '' : 'd-none'; ?> concat_fields_wrap">
@@ -819,9 +819,13 @@
 								</select>\
 							</div>\
 						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12">\
+						<div class="col-md-3 col-sm-6 col-xs-12 copy_field_wrap">\
 							<div class="form-group">\
-								<input type="text" class="form-control xml-path-field" placeholder="Path">\
+								<select class="default-select form-control xml_copy_field">\
+									<?php foreach($webfields as $row) { ?>\
+									<option value="<?php echo $row['id'] ?>"><?php echo $row['field_label']?></option>\
+									<?php } ?>\
+								</select>\
 							</div>\
 						</div>\
 						<div class="col-auto ">\
@@ -833,13 +837,9 @@
 								</select>\
 							</div>\
 						</div>\
-						<div class="col-md-3 col-sm-6 col-xs-12 copy_field_wrap">\
+						<div class="col-md-3 col-sm-6 col-xs-12">\
 							<div class="form-group">\
-								<select class="default-select form-control xml_copy_field">\
-									<?php foreach($webfields as $row) { ?>\
-									<option value="<?php echo $row['id'] ?>"><?php echo $row['field_label']?></option>\
-									<?php } ?>\
-								</select>\
+								<input type="text" class="form-control xml-path-field" placeholder="Path">\
 							</div>\
 						</div>\
 						<div class="col-md-3 col-sm-6 col-xs-12 d-none concat_fields_wrap">\
