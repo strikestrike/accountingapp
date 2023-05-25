@@ -281,7 +281,7 @@
 									</div>
 								</div>
 							</div>
-							<?php if ($rule_type == 'xml') { ?>
+							<?php if ($rule_type == 'xml' && $component == 'textbox') { ?>
 								<?php foreach ($web_paths as $key => $value): ?>
 									<div class="row path_field_wrap textbox_path_wrap <?php echo $component != 'radio' ? '' : 'd-none'; ?>">
 										<div class="col-md-4 col-sm-6 col-xs-12">
@@ -567,22 +567,23 @@
 
 	/////////////////////////////// XML /////////////////////////////////
 	$("input[name=xml_component_type]").change(function() {
-		$('#copy_field_wrap').addClass('d-none');
-		$('#concat_fields_wrap').addClass('d-none');
-		$('#xml_action_type_wrap').addClass('d-none');
-		$('.textbox_path_wrap').addClass('d-none');
-		$('.radio_path_wrap').addClass('d-none');
+		$('.xml-rule-wrap #copy_field_wrap').addClass('d-none');
+		$('.xml-rule-wrap #concat_fields_wrap').addClass('d-none');
+		$('.xml-rule-wrap #xml_action_type_wrap').addClass('d-none');
+		$('.xml-rule-wrap .textbox_path_wrap').addClass('d-none');
+		$('.xml-rule-wrap .radio_path_wrap').addClass('d-none');
 
 		let val = $(this).val();
 		if (val == 'textbox') {
-			$('#xml_action_type_wrap').removeClass('d-none');
+			$('.xml-rule-wrap #xml_action_type_wrap').removeClass('d-none');
+			$('.xml-rule-wrap .textbox_path_wrap').removeClass('d-none');
 			if ($('#xml_action_type_wrap').val() == 'copy') {
-				$('#copy_field_wrap').removeClass('d-none');
+				$('.xml-rule-wrap #copy_field_wrap').removeClass('d-none');
 			} else {
-				$('#concat_fields_wrap').removeClass('d-none');
+				$('.xml-rule-wrap #concat_fields_wrap').removeClass('d-none');
 			}
 		} else if (val == 'radio') {
-			$('.radio_path_wrap').removeClass('d-none');
+			$('.xml-rule-wrap .radio_path_wrap').removeClass('d-none');
 		}
 	});
 
@@ -756,7 +757,7 @@
 
 		$(".pdf-rule-wrap .path-add").click(function() {
 			$('.pdf-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generatePathFieldWrap();
+			let field_wrap = generatePathFieldWrap(false);
 			$('.pdf-rule-wrap .path_field_wrap:last').after(field_wrap);
 			initAddRemoveHandlers();
 		});
@@ -805,7 +806,7 @@
 
 		$(".xml-rule-wrap .path-add").click(function() {
 			$('.xml-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generatePathFieldWrap();
+			let field_wrap = generatePathFieldWrap(true);
 			$('.xml-rule-wrap .path_field_wrap:last').after(field_wrap);
 			$('.default-select').selectpicker();
 			initAddRemoveHandlers();
@@ -826,8 +827,8 @@
 		initAddRemoveHandlers();
 	}
 
-	function generatePathFieldWrap() {
-		let elem = '<div class="row path_field_wrap">\
+	function generatePathFieldWrap(isTextboxPath) {
+		let elem = '<div class="row path_field_wrap ' + (isTextboxPath ? 'textbox_path_wrap' : '') +  '">\
 						<div class="col-md-4 col-sm-6 col-xs-12">\
 							<div class="form-group">\
 								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
