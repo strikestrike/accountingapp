@@ -3464,7 +3464,7 @@ class User extends CI_Controller
 	}
 
 	private function generateButtonParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule['id']);
+		$minMatchingCount = $this->checkConditions($rule);
 		if ($minMatchingCount == 0) {
 			return [];
 		}
@@ -3486,7 +3486,7 @@ class User extends CI_Controller
 	}
 
 	private function generateCheckboxParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule['id']);
+		$minMatchingCount = $this->checkConditions($rule);
 		if ($minMatchingCount == 0) {
 			return [];
 		}
@@ -3507,7 +3507,7 @@ class User extends CI_Controller
 	}
 
 	private function generateXMLParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule['id']);
+		$minMatchingCount = $this->checkConditions($rule);
 		if ($minMatchingCount == 0) {
 			return [];
 		}
@@ -3563,11 +3563,11 @@ class User extends CI_Controller
 		return $params;
 	}
 
-	private function checkConditions($rule_id) {
+	private function checkConditions($rule) {
 		$minMatchingCount = 0;
 
 		$personal_data_id = $this->session->userdata('personal_data_id');
-		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule_id);
+		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule['id']);
 		if (empty($rule_conditions)) {
 			return 1;
 		}
@@ -3611,7 +3611,11 @@ class User extends CI_Controller
 			$count = 0;
 			if (isset($result['cnt']) && !empty($result['cnt'])) {
 				$count = (int)$result['cnt'];
-				if ($minMatchingCount > $count && $count > 0) {
+				if ($rule['component'] == 'button') {
+					if ($minMatchingCount > $count && $count > 0) {
+						$minMatchingCount = $count;
+					}
+				} else {
 					$minMatchingCount = $count;
 				}
 			}

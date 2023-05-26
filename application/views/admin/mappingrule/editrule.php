@@ -309,23 +309,41 @@
 									</div>
 								</div>
 							</div>
-							<div class="row radio_path_wrap <?php echo $component == 'radio' ? '' : 'd-none'; ?>">
+							<?php if ($rule_type == 'xml' && $component == 'radio') { ?>
+								<?php foreach ($web_paths as $key => $value): ?>
+									<div class="row path_field_wrap radio_path_wrap">
+										<div class="col-md-4 col-sm-6 col-xs-12">
+											<div class="form-group">
+												<input type="text" class="form-control" name="radio_field_path" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
+											</div>
+										</div>
+										<div class="col-md-4 col-sm-6 col-xs-12">
+											<div class="form-group">
+												<input type="text" class="form-control" name="radio_field_value" placeholder="Value" value="<?php echo $value['value']; ?>">
+											</div>
+										</div>
+										<div class="col-auto">
+											<div class="form-group">
+												<button type="button" class="btn btn-outline-primary path-remove"> - </button>
+											</div>
+										</div>
+									</div>
+								<?php endforeach; ?>
+							<?php } ?>
+							<div class="row path_field_wrap radio_path_wrap <?php echo $component == 'radio' ? '' : 'd-none'; ?>">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<?php if ($component == 'radio' && !empty($web_paths)) { ?>
-											<input type="text" class="form-control" id="radio_field_path" placeholder="Path" value="<?php echo $web_paths[0]['pdf_field_path']; ?>">
-										<?php } else { ?>
-											<input type="text" class="form-control" id="radio_field_path" placeholder="Path">
-										<?php } ?>
+										<input type="text" class="form-control" name="radio_field_path" placeholder="Path">
 									</div>
 								</div>
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<?php if ($component == 'radio' && !empty($web_paths)) { ?>
-											<input type="text" class="form-control" id="radio_field_value" placeholder="Value" value="<?php echo $web_paths[0]['value']; ?>">
-										<?php } else { ?>
-											<input type="text" class="form-control" id="radio_field_value" placeholder="Value">
-										<?php } ?>
+										<input type="text" class="form-control" name="radio_field_value" placeholder="Value">
+									</div>
+								</div>
+								<div class="col-auto">
+									<div class="form-group">
+										<button type="button" class="btn btn-outline-primary path-add"> + </button>
 									</div>
 								</div>
 							</div>
@@ -612,7 +630,8 @@
 		let component_type = $('input[name=xml_component_type]:checked').val();
 		let action_type = $('#xml_action_type').val();
 		let matching_mode = $('#xml_matching_mode').val();
-		let textbox_path_wrappers = $('.xml-rule-wrap .pdf-path-field');
+		let textbox_path_wrappers = $('.xml-rule-wrap .textbox_path_wrap');
+		let radio_path_wrappers = $('.xml-rule-wrap .radio_path_wrap');
 		let path_fields_list = [];
 		let web_field = '';
 		if (component_type == 'textbox') {
@@ -625,7 +644,7 @@
 				}
 			}
 			for (let i = 0; i < textbox_path_wrappers.length; i++) {
-				let path = $(textbox_path_wrappers[i]).val();
+				let path = $(textbox_path_wrappers[i]).find('input[name=pdf-path-field]').val();
 				if (path) {
 					path_fields_list.push({
 						"pdf_field_path": path,
@@ -634,13 +653,15 @@
 			}
 		} else if (component_type == 'radio') {
 			action_type = 'value';
-			let radio_field_path = $('#radio_field_path').val();
-			let radio_field_value = $('#radio_field_value').val();
-			if (radio_field_path) {
-				path_fields_list.push({
-					"pdf_field_path": radio_field_path,
-					"value": radio_field_value,
-				});
+			for (let i = 0; i < radio_path_wrappers.length; i++) {
+				let radio_field_path = $(radio_path_wrappers[i]).find('input[name=radio_field_path]').val();
+				let radio_field_value = $(radio_path_wrappers[i]).find('input[name=radio_field_value]').val();
+				if (radio_field_path) {
+					path_fields_list.push({
+						"pdf_field_path": radio_field_path,
+						"value": radio_field_value,
+					});
+				}
 			}
 		}
 
@@ -757,7 +778,7 @@
 
 		$(".pdf-rule-wrap .path-add").click(function() {
 			$('.pdf-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generatePathFieldWrap(false);
+			let field_wrap = generatePathFieldWrap();
 			$('.pdf-rule-wrap .path_field_wrap:last').after(field_wrap);
 			initAddRemoveHandlers();
 		});
@@ -804,10 +825,18 @@
 			}
 		});
 
-		$(".xml-rule-wrap .path-add").click(function() {
-			$('.xml-rule-wrap .path_field_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
-			let field_wrap = generatePathFieldWrap(true);
-			$('.xml-rule-wrap .path_field_wrap:last').after(field_wrap);
+		$(".xml-rule-wrap .textbox_path_wrap .path-add").click(function() {
+			$('.xml-rule-wrap .textbox_path_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
+			let field_wrap = generateTextboxPathFieldWrap();
+			$('.xml-rule-wrap .textbox_path_wrap:last').after(field_wrap);
+			$('.default-select').selectpicker();
+			initAddRemoveHandlers();
+		});
+
+		$(".xml-rule-wrap .radio_path_wrap .path-add").click(function() {
+			$('.xml-rule-wrap .radio_path_wrap:last .path-add').replaceWith('<button type="button" class="btn btn-outline-danger path-remove"> - </button>');
+			let field_wrap = generateRadioPathFieldWrap();
+			$('.xml-rule-wrap .radio_path_wrap:last').after(field_wrap);
 			$('.default-select').selectpicker();
 			initAddRemoveHandlers();
 		});
@@ -827,11 +856,50 @@
 		initAddRemoveHandlers();
 	}
 
-	function generatePathFieldWrap(isTextboxPath) {
-		let elem = '<div class="row path_field_wrap ' + (isTextboxPath ? 'textbox_path_wrap' : '') +  '">\
+	function generatePathFieldWrap() {
+		let elem = '<div class="row path_field_wrap">\
 						<div class="col-md-4 col-sm-6 col-xs-12">\
 							<div class="form-group">\
 								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
+							</div>\
+						</div>\
+						<div class="col-auto">\
+							<div class="form-group">\
+								<button type="button" class="btn btn-outline-primary path-add"> + </button>\
+							</div>\
+						</div>\
+					</div>';
+
+		return elem;
+	}
+
+	function generateTextboxPathFieldWrap() {
+		let elem = '<div class="row path_field_wrap textbox_path_wrap">\
+						<div class="col-md-4 col-sm-6 col-xs-12">\
+							<div class="form-group">\
+								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
+							</div>\
+						</div>\
+						<div class="col-auto">\
+							<div class="form-group">\
+								<button type="button" class="btn btn-outline-primary path-add"> + </button>\
+							</div>\
+						</div>\
+					</div>';
+
+		return elem;
+	}
+
+	function generateRadioPathFieldWrap() {
+		let elem = '<div class="row path_field_wrap radio_path_wrap">\
+						<div class="col-md-4 col-sm-6 col-xs-12">\
+							<div class="form-group">\
+								<input type="text" class="form-control" name="radio_field_path" placeholder="Path">\
+							</div>\
+						</div>\
+						<div class="col-md-4 col-sm-6 col-xs-12">\
+							<div class="form-group">\
+								<input type="text" class="form-control" name="radio_field_value" placeholder="Value">\
 							</div>\
 						</div>\
 						<div class="col-auto">\
