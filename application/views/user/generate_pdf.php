@@ -95,7 +95,7 @@
                                         <p class="mb-4 small">Your document was generated. Please pay the invoice so you can download the file.</p>
                                         <?php if (!empty($final_cost)) {
                                             if ($final_cost['status'] == 0) { ?>
-                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="downloadPDF()/*promptPayment()*/">
+                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="promptPayment()">
                                                     <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
                                                     <strong>Download</strong>
                                                 </a>

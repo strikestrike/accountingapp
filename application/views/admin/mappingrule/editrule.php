@@ -101,7 +101,7 @@
 									<div class="row path_field_wrap">
 										<div class="col-md-4 col-sm-6 col-xs-12">
 											<div class="form-group">
-												<input type="text" class="form-control pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
+												<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
 											</div>
 										</div>
 										<div class="col-auto">
@@ -115,7 +115,7 @@
 							<div class="row path_field_wrap">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<input type="text" class="form-control pdf-path-field" placeholder="Path">
+										<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path">
 									</div>
 								</div>
 								<div class="col-auto">
@@ -286,7 +286,7 @@
 									<div class="row path_field_wrap textbox_path_wrap <?php echo $component != 'radio' ? '' : 'd-none'; ?>">
 										<div class="col-md-4 col-sm-6 col-xs-12">
 											<div class="form-group">
-												<input type="text" class="form-control pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
+												<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path" value="<?php echo $value['pdf_field_path']; ?>">
 											</div>
 										</div>
 										<div class="col-auto">
@@ -300,7 +300,7 @@
 							<div class="row path_field_wrap textbox_path_wrap <?php echo $component != 'radio' ? '' : 'd-none'; ?>">
 								<div class="col-md-4 col-sm-6 col-xs-12">
 									<div class="form-group">
-										<input type="text" class="form-control pdf-path-field" placeholder="Path">
+										<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path">
 									</div>
 								</div>
 								<div class="col-auto">
@@ -860,7 +860,7 @@
 		let elem = '<div class="row path_field_wrap">\
 						<div class="col-md-4 col-sm-6 col-xs-12">\
 							<div class="form-group">\
-								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
+								<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path">\
 							</div>\
 						</div>\
 						<div class="col-auto">\
@@ -877,7 +877,7 @@
 		let elem = '<div class="row path_field_wrap textbox_path_wrap">\
 						<div class="col-md-4 col-sm-6 col-xs-12">\
 							<div class="form-group">\
-								<input type="text" class="form-control pdf-path-field" placeholder="Path">\
+								<input type="text" class="form-control pdf-path-field" name="pdf-path-field" placeholder="Path">\
 							</div>\
 						</div>\
 						<div class="col-auto">\

@@ -1,4 +1,6 @@
 <style>
+	input[name="da_nu_start_date"],
+	input[name="da_nu_end_date"],
 	input[name="da_nu_dd_date"],
 	input[name="no_special_from_date"],
 	input[name="no_special_to_date"] {
@@ -37,7 +39,7 @@
 						<a href="#navpills-2" class="nav-link active" data-bs-toggle="tab" aria-expanded="false">Income Type</a>
 					</li>
 					<li class="nav-item">
-						<a href="javascript:void(0);" class="nav-link">Information Verification </a>
+						<a href="<?= $existing_income ?  base_url('user/normaInfoVerification')  : 'javascript:void(0);' ?>" class="nav-link">Information Verification </a>
 					</li>
 					<li class="nav-item">
 						<a href="<?= base_url('user/generatePdf') ?>" class="nav-link">Document Release </a>
@@ -298,6 +300,82 @@
 												</div>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col">
+												<div class="card">
+													<!-- <div class="card-header  blue-header">
+														<h4 class="mx-lg-auto"><span class="las la-angle-left"></span> Selecteaza una din</h4>
+													</div> -->
+													<div class="card-body">
+														<h5>Selecteaza una din optiunile de mai jos care ti se potriveste:</h5>
+
+														<?php
+														if (!empty($pfa_data_variables)) {
+															$i = 10;
+															$j = 100;
+															$k = 1;
+															foreach ($pfa_data_variables['variants'] as $pfa_v) { ?>
+																<div class="form-group">
+																	<div class="d-flex justify-content-between">
+																		<label class="form-label mb-1"><?= $pfa_v['name'] ?></label><span class="tooltip-info"><i class="fa fa-info" title="<?= $pfa_v['tooltip'] ?>"></i></span>
+																	</div>
+																	<!-- <input type="text" class="form-control" id="pfaDataVariable" name="pfaDataOptiuneVarbl" placeholder="Variable 1 - Name" readonly> -->
+																	<!-- <pre>
+																		<?php 
+																			// print_r($pfa_v);
+																		?>
+																	</pre> -->
+																	<?php
+																		if($pfa_v['frontend_interaction'] == '(Yes/No) Function dropdown') { ?>
+																			<div class="row <?= $pfa_v['variant_option'] == "Optional" ? '' : "recomnd_vrnt" ?>">
+																				<div class="col-md-4">
+																					<select class="checkDD default-select form-control wide" data-target=".ddTarget<?= $k ?>">
+																						<option>Nu</option>
+																						<option>Da</option>
+																					</select>
+																				</div>
+																				<?php
+																				if ($pfa_v['one_date'] != '') { ?>
+																					<div class="col-md-4 ddTarget<?= $k ?> d-none">
+																						<div class="input-group">
+																							<input type="text" class="form-control" placeholder="De la data" id="dateChange<?= $i ?>" data-dtp="dtp_LHLxo" required>
+																							<span class="input-group-text"><i class="far fa-calendar"></i></span>
+																							<input type="date" class="dateChange" data-targetInput="dateChange<?= $i++ ?>" name="da_nu_start_date" id="" data-cvar="<?= $pfa_v['row'] != '' ? ($pfa_v['row'] == 'Inside_0' ? 'Inside_'.($pfa_v['days_intervals'] != 'Inside 0' ? $pfa_v['days_intervals'] : '0') : 'Outside_'.($pfa_v['days_intervals'] != 'Outside 0' ? $pfa_v['days_intervals'] : '0')) : ($pfa_v['one_date'] ?? '') ?>">
+																						</div>
+																					</div>
+																				<?php } 
+																				else { ?>
+																					<div class="col-md-4 ddTarget<?= $k ?> d-none">
+																						<div class="input-group">
+																							<input type="text" class="form-control" placeholder="De la data" id="dateChange<?= $i ?>" data-dtp="dtp_LHLxo" required>
+																							<span class="input-group-text"><i class="far fa-calendar"></i></span>
+																							<input type="date" class="dateChange" data-targetInput="dateChange<?= $i++ ?>" name="da_nu_start_date" id="" data-cvar="<?= $pfa_v['row'] != '' ? ($pfa_v['row'] == 'Inside_0' ? 'Inside_'.($pfa_v['days_intervals'] != 'Inside 0' ? $pfa_v['days_intervals'] : '0') : 'Outside_'.($pfa_v['days_intervals'] != 'Outside 0' ? $pfa_v['days_intervals'] : '0')) : ($pfa_v['one_date'] ?? '') ?>">
+																						</div>
+																					</div>
+																					<div class="col-md-4 ddTarget<?= $k ?> d-none">
+																						<div class="input-group">
+																							<input type="text" class="form-control" placeholder="Pana la data" id="dateChange<?= $j ?>" data-dtp="dtp_LHLxo" required>
+																							<span class="input-group-text"><i class="far fa-calendar"></i></span>
+																							<input type="date" class="dateChange" data-targetInput="dateChange<?= $j++ ?>" name="da_nu_end_date" id="">
+																						</div>
+																					</div>
+																				<?php }
+																				$k++;
+																				?>
+																			</div>
+																	<?php }
+																		else if($pfa_v['frontend_interaction'] == 'Empty box for value') { ?>
+																			<div class="col-md-4"><input type="text" class="form-control <?= $pfa_v['variant_option'] == 'Necessary' ? 'requiredVariant' : '' ?>"></div>
+																		<?php }
+																	?>
+																</div>
+														<?php }
+														}
+														?>
+													</div>
+												</div>
+											</div>
+										</div>
 										<div class="row pfa-data-row hideThis" style="display: none;">
 											<div class="col-md-6">
 												<div class="card">
@@ -378,86 +456,101 @@
 											</div>
 										</div>
 										<div class="row mb-4 pfa-spec-row hideThis" style="display: none;">
-											<div class="col-md-6">
-												<div class="crest">
-													<div class="form-group">
-														<label class="form-label mb-1">Factori pentru cresterea normei de venit</label>
-														<input type="text" class="form-control" id="factori_pentru_cresterea_variable" placeholder="Variable 1 - Name" readonly>
-													</div>
+											<div class="col">
+												<div class="card">
+													<div class="card-body">
+														<div class="row">
+															<div class="col-xl-6">
+																<div class="crest" style="display: none;">
+																	<div class="form-group crst_var_group">
+																		<label class="form-label mb-1">Factori pentru cresterea normei de venit</label>
+																	</div>
+																	<div class="inc_var_row">
+																		<input type="text" class="form-control" id="factori_pentru_cresterea_variable" placeholder="Variable 1 - Name" readonly>
+																		<div class="variant-selector mb-4 pfaSpecCresterea_vrnts">
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio41" name="selector" class="selector-item_radio">
+																				<label for="radio41" class="selector-item_label">Variant 1</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio42" name="selector" class="selector-item_radio">
+																				<label for="radio42" class="selector-item_label">Variant 2</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio43" name="selector" class="selector-item_radio" checked="">
+																				<label for="radio43" class="selector-item_label">Variant 3</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio44" name="selector" class="selector-item_radio">
+																				<label for="radio44" class="selector-item_label">Variant 4</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio45" name="selector" class="selector-item_radio">
+																				<label for="radio45" class="selector-item_label">Variant 5</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																		</div>
+																	</div>
+																</div>
 
-													<div class="variant-selector mb-4 pfaSpecCresterea_vrnts">
-														<div class="selecotr-item">
-															<input type="radio" id="radio41" name="selector" class="selector-item_radio">
-															<label for="radio41" class="selector-item_label">Variant 1</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio42" name="selector" class="selector-item_radio">
-															<label for="radio42" class="selector-item_label">Variant 2</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio43" name="selector" class="selector-item_radio" checked="">
-															<label for="radio43" class="selector-item_label">Variant 3</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio44" name="selector" class="selector-item_radio">
-															<label for="radio44" class="selector-item_label">Variant 4</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio45" name="selector" class="selector-item_radio">
-															<label for="radio45" class="selector-item_label">Variant 5</label>
-															<i class="fa fa-info"></i>
+																<div class="dimin" style="display: none;">
+																	<div class="form-group mb-1">
+																		<label class="form-label">Factori pentru diminuarea normei de venit</label>
+																	</div>
+																	<div class="dec_var_row">
+																		<input type="text" class="form-control mb-3" name="dec_var" id="" placeholder="Variable 1 - Name" readonly>
+																		<div class="variant-selector diminVarnts">
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio11" name="selector1" class="selector-item_radio">
+																				<label for="radio11" class="selector-item_label">Variant 1</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio12" name="selector1" class="selector-item_radio">
+																				<label for="radio12" class="selector-item_label">Variant 2</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio13" name="selector1" class="selector-item_radio" checked="">
+																				<label for="radio13" class="selector-item_label">Variant 3</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio14" name="selector1" class="selector-item_radio">
+																				<label for="radio14" class="selector-item_label">Variant 4</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																			<div class="selecotr-item">
+																				<input type="radio" id="radio15" name="selector1" class="selector-item_radio">
+																				<label for="radio15" class="selector-item_label">Variant 5</label>
+																				<i class="fa fa-info"></i>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+
+															</div>
 														</div>
 													</div>
 												</div>
-
-												<div class="dimin">
-													<div class="form-group">
-														<label class="form-label mb-1">Factori pentru diminuarea normei de venit</label>
-														<input type="text" class="form-control" id="pfaSpecDiminVarbl" placeholder="Variable 1 - Name" readonly>
-													</div>
-													<div class="variant-selector diminVarnts">
-														<div class="selecotr-item">
-															<input type="radio" id="radio11" name="selector1" class="selector-item_radio">
-															<label for="radio11" class="selector-item_label">Variant 1</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio12" name="selector1" class="selector-item_radio">
-															<label for="radio12" class="selector-item_label">Variant 2</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio13" name="selector1" class="selector-item_radio" checked="">
-															<label for="radio13" class="selector-item_label">Variant 3</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio14" name="selector1" class="selector-item_radio">
-															<label for="radio14" class="selector-item_label">Variant 4</label>
-															<i class="fa fa-info"></i>
-														</div>
-														<div class="selecotr-item">
-															<input type="radio" id="radio15" name="selector1" class="selector-item_radio">
-															<label for="radio15" class="selector-item_label">Variant 5</label>
-															<i class="fa fa-info"></i>
-														</div>
-													</div>
-												</div>
-
 											</div>
 										</div>
 										<div class="row mb-4">
 											<div class="col text-center text-lg-start px-lg-2 px-0">
 												<?php
-												if (!empty($existing_income)) { ?>
-													<a href="<?= base_url('user/normaInfoVerification') ?>" class="btn btn-primary btn-square">Mergi mai departe</a>
-												<?php } else { ?>
-													<button type="button" id="submitNormaBtn" class="btn btn-primary btn-square">Mergi mai departe</button>
-												<?php	}
+												// if (!empty($existing_income)) { 
+												?>
+												<!-- <a href="<?= base_url('user/normaInfoVerification') ?>" class="btn btn-primary btn-square">Mergi mai departe</a> -->
+												<?php
+												// } else { 
+												?>
+												<button type="button" id="submitNormaBtn" class="btn btn-primary btn-square">Mergi mai departe</button>
+												<?php
+												// }
 												?>
 											</div>
 										</div>
@@ -542,6 +635,9 @@
 
 	window.addEventListener('load', function() {
 
+		$(document).on('click', '.restrict', function(e) {
+			e.preventDefault();
+		})
 
 		$(".county_select").change(() => {
 
@@ -606,6 +702,12 @@
 			}
 		})
 
+		$(document).on('change', '.dateChange', function() {
+			// console.log(this)
+			let target = $(this).attr("data-targetinput")
+			$("#" + target).val($(this).val());
+		})
+
 		$("#addMoreNormaBtn").click(() => {
 			let county = $("select[name=county_select]").val()[0]
 			let city = $("#city_select").val()
@@ -623,12 +725,112 @@
 			let factori_pentru_cresterea_variant = $("input[name='pfaSpecCrestVarnt']:checked").val()
 			let factori_pentru_dimin_var = $("#pfaSpecDiminVarbl").val()
 			let factori_pentru_dimin_variant = $("input[name='pfaSpecDiminVarnt']:checked").val()
+			let nVariants = $(".ncssaryVrnt")
+			let necessaryVariant = $(".ncssaryVrnt:checked")
+			let high_inc = $(".high_inc_var:checked").val()
+			let high_dec = $(".high_dec_var:checked").val()
+			let requiredVariant = $(".requiredVariant")
+			let startDate = ''
+			let endDate = $("input[name='da_nu_end_date']")?.val();
+			let cvar = ''
+
+			$("input[name='da_nu_start_date']").each((i, el) => {
+				if($(el).val() != '') {
+					startDate = $(el).val()
+					cvar = $(el).attr('data-cvar')
+				}
+			})
 
 			if (county !== '' && county !== null && county !== undefined) {
 				if (city) {
 					if (caen) {
 						if (norma) {
-							if (variable_frontend_name) {
+							if (nVariants.length > 0) {
+								if (necessaryVariant.length > 0) {
+									if(requiredVariant.length > 0) {
+										let empty = 0;
+										// alert(empty)
+										requiredVariant.each(function(i, el) {
+											if($(el).val() == '') {
+												$(el).after(`<span class='text-danger hidemsg'>This field is required!</span>`)
+												setTimeout(() => {
+													$(".hidemsg").fadeOut(800)
+												}, 3000);
+												empty++;
+											}
+										})
+										if(empty == 0) {
+											let arr = {};
+											arr.personal_data_id = "<?= $_SESSION['personal_data_id'] ?>"
+											arr.county = county
+											arr.city = city
+											arr.caen = caen
+											arr.norma_de_venit = norma
+											arr.variable_frontend_name = variable_frontend_name
+											arr.da_nu_function_dropdown = dd_func
+											arr.high_decrease = high_dec
+											arr.high_increase = high_inc
+											arr.start_date = startDate
+											arr.end_date = endDate
+											arr.cvar = cvar
+											if (dd_func === "Da") {
+												arr.norma_venit_initiata = norma_venit_initiata
+												arr.norma_venit_initiata_variant = nv_initiata_variant
+												arr.optiune_standard_variable = optiune_standard_variable
+												arr.optiune_standard_variant = optiune_standard_variant
+												arr.exceptii_variable = exceptii_variable
+												arr.exceptii_variant = exceptii_variant
+												arr.factori_pentru_cresterea_variable = factori_pentru_cresterea_variable
+												arr.factori_pentru_cresterea_variant = factori_pentru_cresterea_variant
+												arr.factori_pentru_dimin_var = factori_pentru_dimin_var
+												arr.factori_pentru_dimin_variant = factori_pentru_dimin_variant
+		
+											}
+											arr.created_at = "<?= date("Y-m-d H:i:s") ?>"
+											normaFinalArr.push(arr);
+											addToTable(arr)
+											resetNormaForm()
+											requiredVariant.val('')
+										}
+									}
+									else {
+										let arr = {};
+										arr.personal_data_id = "<?= $_SESSION['personal_data_id'] ?>"
+										arr.county = county
+										arr.city = city
+										arr.caen = caen
+										arr.norma_de_venit = norma
+										arr.variable_frontend_name = variable_frontend_name
+										arr.da_nu_function_dropdown = dd_func
+										arr.high_decrease = high_dec
+										arr.high_increase = high_inc
+										arr.start_date = startDate
+										arr.end_date = endDate
+										arr.cvar = cvar
+										if (dd_func === "Da") {
+											arr.norma_venit_initiata = norma_venit_initiata
+											arr.norma_venit_initiata_variant = nv_initiata_variant
+											arr.optiune_standard_variable = optiune_standard_variable
+											arr.optiune_standard_variant = optiune_standard_variant
+											arr.exceptii_variable = exceptii_variable
+											arr.exceptii_variant = exceptii_variant
+											arr.factori_pentru_cresterea_variable = factori_pentru_cresterea_variable
+											arr.factori_pentru_cresterea_variant = factori_pentru_cresterea_variant
+											arr.factori_pentru_dimin_var = factori_pentru_dimin_var
+											arr.factori_pentru_dimin_variant = factori_pentru_dimin_variant
+
+										}
+										arr.created_at = "<?= date("Y-m-d H:i:s") ?>"
+										normaFinalArr.push(arr);
+										addToTable(arr)
+										resetNormaForm()
+									}
+								} else {
+									$(".ncssaryVrnt").parents('.variant-selector').before(`<span class='text-danger hidemsg'>Please select one of the options!</span>`)
+									$(".ncssaryVrnt").focus()
+									$(".hidemsg").delay(3000).fadeOut(800)
+								}
+							} else {
 								let arr = {};
 								arr.personal_data_id = "<?= $_SESSION['personal_data_id'] ?>"
 								arr.county = county
@@ -637,6 +839,11 @@
 								arr.norma_de_venit = norma
 								arr.variable_frontend_name = variable_frontend_name
 								arr.da_nu_function_dropdown = dd_func
+								arr.high_decrease = high_dec
+								arr.high_increase = high_inc
+								arr.start_date = startDate
+								arr.end_date = endDate
+								arr.cvar = cvar
 								if (dd_func === "Da") {
 									arr.norma_venit_initiata = norma_venit_initiata
 									arr.norma_venit_initiata_variant = nv_initiata_variant
@@ -672,10 +879,34 @@
 		$("#submitNormaBtn").click(() => {
 			if (normaFinalArr.length > 0) {
 				let $data = normaFinalArr
-
 				submitNormaIncome($data)
 			} else {
-				toastr.warning('Please add income record!')
+				$("#addMoreNormaBtn").click()
+				if (normaFinalArr.length > 0) {
+					let $data = normaFinalArr
+					submitNormaIncome($data)
+				}
+			}
+		})
+
+		$(document).on('change', ".checkDD", function(e) {
+			e.stopPropagation()
+			// console.log($(e.target).val());
+			let val = $(e.target).val()
+			let target = $(e.target).attr('data-target')
+			// console.log($(target));
+			if (val == "Nu") {
+				$(target).each((i, el) => {
+					if (!($(el).hasClass('d-none'))) {
+						$(el).addClass('d-none')
+					}
+				})
+			} else {
+				$(target).each((i, el) => {
+					if ($(el).hasClass('d-none')) {
+						$(el).removeClass('d-none')
+					}
+				})
 			}
 		})
 
@@ -721,7 +952,7 @@
 			},
 			url: url,
 			success: function(data) {
-				// console.log(data);
+				console.log(data);
 				if (data) {
 					window.location.href = "<?= base_url() ?>user/normaInfoVerification"
 				}
@@ -850,32 +1081,137 @@
 	}
 
 	function showIncome(data) {
-		if(data !== 'error') {
+		console.log(data);
+		if (data !== 'error') {
 			selectionData = data;
 			if (data) {
 				$("#normaField").val(data.normaIncome)
-				if (data.variablesInfo?.variables[0]) {
-					$(".variableNameRow").slideDown(300)
-					$(".variableNameRow input").val(data.variablesInfo.variables[0].name)
-					$(".variableNameRow input").attr('data-id', data.variablesInfo.variables[0].id)
+				$(".pfa-spec-row").slideDown()
+				if (data.variablesInfo?.dec_variables.length > 0) {
+					$(".dimin").show()
+					let vi = 1;
+					let vc = 1;
+					let p_age = '<?= $age ?? '' ?>'
+					$(".dec_var_row").html('')
+					data.variablesInfo?.dec_variables.forEach(dec_var => {
+						let cls = ''
+						// console.log(dec_var);
+						$(".dec_var_row").append(`<input type="text" class="form-control mb-3" name="dec_var[]" value="${dec_var.name}" id="" placeholder="Variable 1 - Name" readonly>`)
+						let vrnt_row = `<div class="variant-selector diminVarnts mb-3"></div>`;
+						$(".dec_var_row").append(vrnt_row)
+
+						if (!dec_var.name.includes('<?= $genre ?? '' ?>'))
+							cls = 'restrict'
+
+						let i = 0;
+						data.variablesInfo?.variants.forEach(v => {
+							let age_restrict = ''
+							if (i < 5) {
+								// alert("less")
+								if (v.variable_id == dec_var.variable_id) {
+									if (!(p_age >= v.name_on_frontend)) {
+										age_restrict = 'restrict'
+									}
+									// alert("here")
+									let vrntTmplt = `
+									<div class="selecotr-item">
+										<input type="radio" id="dimin${vi}" name="selector${vc}" value="${v.coef_value}" class="selector-item_radio high_dec_var ${v.variant_option == 'Optional'? '':'ncssaryVrnt'}">
+										<label for="dimin${vi}" class="selector-item_label ${cls} ${age_restrict}">${v.name_on_frontend}</label>
+										<i class="fa fa-info" title="${v.tooltip}"></i>
+									</div>
+									`;
+									$(".dec_var_row .diminVarnts:last-child").append(vrntTmplt)
+									i++;
+									vi++;
+								}
+							}
+						})
+						vc++;
+					})
 				}
-				if (data.variablesInfo?.variants) {
-					// alert(data.variablesInfo?.variants.frontend_interaction)
-					if (data.variablesInfo?.variants.frontend_interaction == '(Yes/No) Function dropdown') {
-						$(".dropdownFunctionRow").slideDown(300)
-					} else {
-						$(".dropdownFunctionDateRow").slideDown(300)
-					}
-					if(data.variablesInfo?.variants.frontend_interaction == 'No special') {
-						$(".noSpecialRow").slideDown(300)
-					}
+				if (data.variablesInfo?.inc_variables.length > 0) {
+					$(".crest").show()
+					let vi = 100;
+					let inc = 1;
+					$(".inc_var_row").html('')
+					data.variablesInfo?.inc_variables.forEach(inc_var => {
+
+						$(".inc_var_row").append(`<input type="text" class="form-control mb-3" name="dec_var[]" value="${inc_var.name}" id="" placeholder="Variable 1 - Name" readonly>`)
+						let vrnt_row = `<div class="variant-selector pfaSpecCresterea_vrnts mb-3"></div>`;
+						$(".inc_var_row").append(vrnt_row)
+
+						let i = 100;
+						data.variablesInfo?.variants.forEach(v => {
+							if (i < 105) {
+								if (v.variable_id == inc_var.variable_id) {
+									let vrntTmplt = `
+									<div class="selecotr-item">
+										<input type="radio" id="dimin${vi}" name="high_increase${inc}" value="${v.coef_value}" class="selector-item_radio high_inc_var ${v.variant_option == 'Optional'? '':'ncssaryVrnt'}">
+										<label for="dimin${vi}" class="selector-item_label">${v.name_on_frontend}</label>
+										<i class="fa fa-info" title="${v.tooltip}"></i>
+									</div>
+									`;
+									$(".inc_var_row .pfaSpecCresterea_vrnts:last-child").append(vrntTmplt)
+									i++;
+									vi++;
+								}
+							}
+						})
+						inc++;
+					})
+
+
+
 				}
+
+				// if (data.variablesInfo?.variables[1]) {
+				// 	$("#factori_pentru_cresterea_variable").val(data.variablesInfo?.variables[1].name)
+				// 	$(".crest .pfaSpecCresterea_vrnts").html("")
+				// 	let i = 0;
+				// 	data.variablesInfo?.variants.forEach(v => {
+				// 		if(i < 5) {
+				// 			// alert("less")
+				// 			if(v.variable_id == data.variablesInfo?.variables[1].variable_id) {
+				// 				// alert("here")
+				// 				let vrntTmplt = `
+				// 				<div class="selecotr-item">
+				// 					<input type="radio" id="crest${i}" name="crest1" class="selector-item_radio">
+				// 					<label for="crest${i++}" class="selector-item_label">${v.name_on_frontend}</label>
+				// 					<i class="fa fa-info" title="${v.tooltip}"></i>
+				// 				</div>
+				// 				`;
+				// 				$(".crest .pfaSpecCresterea_vrnts").append(vrntTmplt)
+				// 			}
+				// 		}
+				// 	})
+				// }
+				// if (data.variablesInfo?.variables[0]) {
+				// 	$(".variableNameRow").slideDown(300)
+				// 	$(".variableNameRow input").val(data.variablesInfo.variables[0].name)
+				// 	$(".variableNameRow input").attr('data-id', data.variablesInfo.variables[0].id)
+				// }
+				// if (data.variablesInfo?.variants) {
+				// 	// alert(data.variablesInfo?.variants.frontend_interaction)
+				// 	if (data.variablesInfo?.variants.frontend_interaction == '(Yes/No) Function dropdown') {
+				// 		$(".dropdownFunctionRow").slideDown(300)
+				// 	} else {
+				// 		$(".dropdownFunctionDateRow").slideDown(300)
+				// 	}
+				// 	if(data.variablesInfo?.variants.frontend_interaction == 'No special') {
+				// 		$(".noSpecialRow").slideDown(300)
+				// 	}
+				// }
+
 			}
-		}
-		else {
+		} else {
 			$("#normaField").after(`<div class="normaNotFound text-danger">No data found! Please contact admin</div>`)
 			$(".normaNotFound").delay(3000).fadeOut(800)
 		}
+	}
+
+	function showPfaVariables(data) {
+		console.log(data.name);
+		$("#pfaSpecDiminVarbl").val(data.name)
 	}
 
 	async function fetchVariants(data) {

@@ -745,6 +745,9 @@ class User_Model extends CI_Model
 
 	public function submitNormaIncome($data)
 	{
+		$pid = $data['income'][0]['personal_data_id'];
+		$this->db->where('personal_data_id', $pid);
+		$this->db->delete('norma_income_type');
 		return $this->db->insert_batch('norma_income_type', $data['income']);
 	}
 
@@ -769,5 +772,50 @@ class User_Model extends CI_Model
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	public function getRecommendedVariables()
+	{
+		$q = $this->db->query("SELECT * FROM variable_variants
+									INNER JOIN variants 
+										ON variable_variants.variant_id = variants.id
+									WHERE variants.display_on_frontend = 'Always_Yes'
+							");
+		if ($q->num_rows() > 0) {
+			$relData = $q->result_array();
+			// dd($relData);
+			return $relData;
+		} else {
+			return FALSE;
+		}		
+	}
+
+	public function getPfaDataVariables($income)
+	{
+		$q = $this->db->get_where('pfa_data_income_types', ['income_name' => $income]);
+		if ($q->num_rows() > 0) {
+			$q2 = $this->db->query("SELECT * FROM pfa_data_variable_variants
+									INNER JOIN variables 
+										ON pfa_data_variable_variants.variable_id = variables.id
+							");
+			if ($q2->num_rows() > 0) {
+				$varblData = $q2->result_array();
+				// d($varblData);
+				$q3 = $this->db->query("SELECT * FROM pfa_data_variable_variants
+									INNER JOIN variants 
+										ON pfa_data_variable_variants.variant_id = variants.id
+							");
+				if ($q3->num_rows() > 0) {
+					$varntData = $q3->result_array();
+					$return['variables'] = $varblData;
+					$return['variants'] = $varntData;
+					return $return;			
+				}
+				
+			}
+			
+		} else {
+			return FALSE;
+		}
 	}
 }

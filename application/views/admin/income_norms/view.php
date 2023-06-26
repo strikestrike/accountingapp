@@ -731,7 +731,7 @@
 	}
 
 	async function submitTemplate(data) {
-		// addOverlay()
+		addOverlay()
 		let url = '<?= base_url() ?>admin/updateIncomeNormTemplate'
 
 		const response = await fetch(url, {

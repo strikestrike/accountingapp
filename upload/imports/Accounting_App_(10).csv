@@ -1,0 +1,562 @@
+Id,Code,Description
+21,1011,lorem ipsum
+22,1012,lorem ipsum 2 
+23,1013,Fabricarea produselor din carne (inclusiv din carne de pas?re
+24,1020,Prelucrarea ?i conservarea pe?telui
+2,1031,Prelucrarea ?i conservarea cartofilor
+3,1032,Fabricarea sucurilor de fructe ?i legume
+4,1039,Prelucrarea ?i conservarea fructelor ?i legumelor
+5,1041,Fabricarea uleiurilor ?i gr?similor
+6,1042,Fabricarea margarinei ?i a altor produse comestibile similare
+7,1051,Fabricarea produselor lactate ?i a br?nzeturilor
+8,1052,Fabricarea ?nghe?atei
+9,1061,Fabricarea produselor de mor?rit
+10,1062,Fabricarea amidonului ?i a produselor din amidon
+11,1071,Fabricarea p?inii; fabricarea pr?jiturilor ?i a produselor proaspete de patiserie
+12,1072,Fabricarea biscui?ilor ?i pi?coturilor; fabricarea pr?jiturilor ?i a produselor conservate de patiserie
+13,1073,Fabricarea macaroanelor
+14,1081,Fabricarea zah?rului
+15,1082,Fabricarea produselor din cacao
+16,1083,Prelucrarea ceaiului ?i cafelei
+17,1084,Fabricarea condimentelor ?i ingredientelor
+18,1085,Fabricarea de m?nc?ruri preparate
+19,1086,Fabricarea preparatelor alimentare omogenizate ?i alimentelor dietetice
+25,1089,Fabricarea altor produse alimentare n.c.a.
+26,1091,Fabricarea preparatelor pentru hrana animalelor de ferm?
+27,1092,Fabricarea preparatelor pentru hrana animalelor de companie
+28,1101,Distilarea
+29,1102,Fabricarea vinurilor din struguri
+30,1103,Fabricarea cidrului ?i a altor vinuri din fructe
+31,1104,Fabricarea altor b?uturi nedistilate
+32,1105,Fabricarea berii
+33,1106,Fabricarea mal?ului
+34,1107,Produc?ia de b?uturi r?coritoare nealcoolice; produc?ia de ape minerale ?i alte ape ?mbuteliate
+35,1200,Fabricarea produselor din tutun
+36,1310,Preg?tirea fibrelor ?i filarea fibrelor textile
+37,1320,Produc?ia de ?es?turi
+38,1330,Finisarea materialelor textile
+39,1391,Fabricarea de metraje prin tricotare sau cro?etare
+40,1392,Fabricarea de articole confec?ionate din textile (cu excep?ia ?mbr?c?mintei ?i lenjeriei de corp
+41,1393,Fabricarea de covoare ?i mochete
+42,1394,Fabricarea de odgoane
+43,1395,Fabricarea de textile ne?esute ?i articole din acestea
+44,1396,Fabricarea de articole tehnice ?i industriale din textile
+45,1399,Fabricarea altor articole textile n.c.a.
+46,1411,Fabricarea articolelor de ?mbr?c?minte din piele
+47,1412,Fabricarea articolelor de ?mbr?c?minte pentru lucru
+48,1413,Fabricarea altor articole de ?mbr?c?minte (exclusiv lenjeria de corp
+49,1414,Fabricarea de articole de lenjerie de corp
+50,1419,Fabricarea altor articole de ?mbr?c?minte ?i accesorii n.c.a.
+51,1420,Fabricarea articolelor din blan?
+52,1431,Fabricarea prin tricotare sau cro?etare a ciorapilor ?i articolelor de galanterie
+53,1439,Fabricarea prin tricotare sau cro?etare a altor articole de ?mbr?c?minte
+54,1511,T?b?cirea ?i finisarea pieilor; prepararea ?i vopsirea bl?nurilor
+55,1512,Fabricarea articolelor de voiaj ?i marochin?rie ?i a articolelor de harna?ament
+56,1520,Fabricarea ?nc?l??mintei
+57,1610,T?ierea ?i rindeluirea lemnului
+58,1621,Fabricarea de furnire ?i a panourilor de lemn
+59,1622,Fabricarea parchetului asamblat ?n panouri
+133,1623,Fabricarea altor elemente de dulgherie ?i t?mpl?rie
+134,1624,Fabricarea ambalajelor din lemn
+135,1629,Fabricarea altor produse din lemn; fabricarea articolelor din plut?
+136,1711,Fabricarea celulozei
+137,1712,Fabricarea h?rtiei ?i cartonului
+60,1721,Fabricarea h?rtiei ?i cartonului ondulat ?i a ambalajelor din h?rtie ?i carton
+61,1722,Fabricarea produselor de uz gospod?resc ?i sanitar
+62,1723,Fabricarea articolelor de papet?rie
+63,1724,Fabricarea tapetului
+64,1729,Fabricarea altor articole din h?rtie ?i carton n.c.a.
+65,1811,Tip?rirea ziarelor
+66,1812,Alte activit??i de tip?rire n.c.a.
+67,1813,Servicii preg?titoare pentru pretip?rire
+68,1814,Leg?torie ?i servicii conexe
+69,1820,Reproducerea ?nregistr?rilor
+70,1910,Fabricarea produselor de cocserie
+422,1920,Fabricarea produselor ob?inute din prelucrarea ?i?eiului
+71,2011,Fabricarea gazelor industriale
+72,2012,Fabricarea coloran?ilor ?i a pigmen?ilor
+73,2013,Fabricarea altor produse chimice anorganice
+74,2014,Fabricarea altor produse chimice organice
+75,2015,Fabricarea ?ngr???mintelor ?i produselor azotoase
+76,2016,Fabricarea materialelor plastice ?n forme primare
+77,2017,Fabricarea cauciucului sintetic ?n forme primare
+78,2020,Fabricarea pesticidelor ?i a altor produse agrochimice
+79,2030,Fabricarea vopselelor
+80,2041,Fabricarea s?punurilor
+81,2042,Fabricarea parfumurilor ?i a produselor cosmetice (de toalet?
+82,2051,Fabricarea explozivilor
+83,2052,Fabricarea cleiurilor
+84,2053,Fabricarea uleiurilor esen?iale
+85,2059,Fabricarea altor produse chimice n.c.a.
+86,2060,Fabricarea fibrelor sintetice ?i artificiale
+87,2110,Fabricarea produselor farmaceutice de baz?
+88,2120,Fabricarea preparatelor farmaceutice
+89,2211,Fabricarea anvelopelor ?i a camerelor de aer; re?aparea ?i refacerea anvelopelor
+90,2219,Fabricarea altor produse din cauciuc
+91,2221,Fabricarea pl?cilor
+92,2222,Fabricarea articolelor de ambalaj din material plastic
+93,2223,Fabricarea articolelor din material plastic pentru construc?ii
+94,2229,Fabricarea altor produse din material plastic
+95,2311,Fabricarea sticlei plate
+96,2312,Prelucrarea ?i fasonarea sticlei plate
+97,2313,Fabricarea articolelor din sticl?
+98,2314,Fabricarea fibrelor din sticl?
+99,2319,Fabricarea de sticl?rie tehnic?
+100,2320,Fabricarea de produse refractare
+101,2331,Fabricarea pl?cilor ?i dalelor din ceramic?
+102,2332,Fabricarea c?r?mizilor
+103,2341,Fabricarea articolelor ceramice pentru uz gospod?resc ?i ornamental
+104,2342,Fabricarea de obiecte sanitare din ceramic?
+105,2343,Fabricarea izolatorilor ?i pieselor izolante din ceramic?
+106,2344,Fabricarea altor produse tehnice din ceramic?
+107,2349,Fabricarea altor produse ceramice n.c.a.
+108,2351,Fabricarea cimentului
+109,2352,Fabricarea varului ?i ipsosului
+110,2361,Fabricarea produselor din beton pentru construc?ii
+111,2362,Fabricarea produselor din ipsos pentru construc?ii
+112,2363,Fabricarea betonului
+113,2364,Fabricarea mortarului
+114,2365,Fabricarea produselor din azbociment
+115,2369,Fabricarea altor articole din beton
+116,2370,T?ierea
+117,2391,Fabricarea de produse abrazive
+118,2399,Fabricarea altor produse din minerale nemetalice
+119,2410,Produc?ia de metale feroase sub forme primare ?i de feroaliaje
+120,2420,Produc?ia de tuburi
+121,2431,Tragere la rece a barelor
+122,2432,Laminare la rece a benzilor ?nguste
+123,2433,Produc?ia de profiluri ob?inute la rece
+124,2434,Trefilarea firelor la rece
+125,2441,Produc?ia metalelor pre?ioase
+126,2442,Metalurgia aluminiului
+127,2443,Produc?ia plumbului
+128,2444,Metalurgia cuprului
+129,2445,Produc?ia altor metale neferoase
+130,2446,Prelucrarea combustibililor nucleari
+131,2451,Turnarea fontei
+132,2452,Turnarea o?elului
+138,2453,Turnarea metalelor neferoase u?oare
+139,2454,Turnarea altor metale neferoase
+140,2511,Fabricarea de construc?ii metalice ?i p?r?i componente ale structurilor metalice
+141,2512,Fabricarea de u?i ?i ferestre din metal
+142,2521,Produc?ia de radiatoare ?i cazane pentru ?nc?lzire central?
+143,2529,Produc?ia de rezervoare
+144,2530,Produc?ia generatoarelor de aburi (cu excep?ia cazanelor pentru ?nc?lzire central?
+145,2540,Fabricarea armamentului ?i muni?iei
+146,2550,Fabricarea produselor metalice ob?inute prin deformare plastic?; metalurgia pulberilor
+147,2561,Tratarea ?i acoperirea metalelor
+148,2562,Opera?iuni de mecanic? general?
+149,2571,Fabricarea produselor de t?iat
+150,2572,Fabricarea articolelor de feronerie
+151,2573,Fabricarea uneltelor
+152,2591,Fabricarea de recipien?i
+153,2592,Fabricarea ambalajelor u?oare din metal
+154,2593,Fabricarea articolelor din fire metalice; fabricarea de lan?uri ?i arcuri
+155,2594,Fabricarea de ?uruburi
+156,2599,Fabricarea altor articole din metal n.c.a.
+157,2611,Fabricarea subansamblurilor electronice (module
+158,2612,Fabricarea altor componente electronice
+159,2620,Fabricarea calculatoarelor ?i a echipamentelor periferice
+160,2630,Fabricarea echipamentelor de comunica?ii
+161,2640,Fabricarea produselor electronice de larg consum
+162,2651,Fabricarea de instrumente ?i dispozitive pentru m?sur?
+163,2652,Productia de ceasuri
+164,2660,Fabricarea de echipamente pentru radiologie
+165,2670,Fabricarea de instrumente optice ?i echipamente fotografice
+166,2680,Fabricarea suporturilor  magnetice ?i optice destinate ?nregistr?rilor
+167,2711,Fabricarea motoarelor
+168,2712,Fabricarea aparatelor de control ?i distribu?ie a electricit??ii
+169,2720,Fabricarea de acumulatori ?i baterii
+170,2731,Fabricarea de cabluri cu fibr? optic?
+171,2732,Fabricarea altor fire ?i cabluri electrice ?i electrocasnice
+172,2733,Fabricarea dispozitivelor de conexiune pentru fire ?i cabluri electrice ?i electronice
+173,2740,Fabricarea de echipamente electrice de iluminat
+174,2751,Fabricarea de aparate electrocasnice
+175,2752,Fabricarea de echipamente casnice neelectrice
+176,2790,Fabricarea altor echipamente electrice
+177,2811,Fabricarea de motoare ?i turbine (cu excep?ia celor pentru avioane
+178,2812,Fabricarea de motoare hidraulice
+179,2813,Fabricarea de pompe ?i compresoare
+180,2814,Fabricarea de articole de robinet?rie
+181,2815,Fabricarea lag?relor
+182,2821,Fabricarea cuptoarelor
+183,2822,Fabricarea echipamentelor de ridicat ?i manipulat
+184,2823,Fabricarea ma?inilor ?i echipamentelor de birou (exclusiv fabricarea calculatoarelor ?i a echipamentelor periferice
+185,2824,Fabricarea ma?inilor-unelte portabile ac?ionate electric
+186,2825,Fabricarea ehipamentelor de ventila?ie ?i frigorifice
+187,2829,Fabricarea altor ma?ini ?i utilaje de utilizare general? n.c.a.
+188,2830,Fabricarea ma?inilor ?i utilajelor pentru agricultur? ?i exploat?ri forestiere
+189,2841,Fabricarea utilajelor ?i a ma?inilor-unelte pentru prelucrarea metalului
+190,2849,Fabricarea altor ma?ini-unelte n.c.a.
+191,2891,Fabricarea utilajelor pentru metalurgie
+192,2892,Fabricarea utilajelor pentru extrac?ie ?i construc?ii
+193,2893,Fabricarea utilajelor pentru prelucrarea produselor alimentare
+194,2894,Fabricarea utilajelor pentru industria textil?
+195,2895,Fabricarea utilajelor pentru industria h?rtiei ?i cartonului
+196,2896,Fabricarea utilajelor pentru prelucrarea maselor plastice ?i a cauciucului
+197,2899,Fabricarea altor ma?ini ?i utilaje specifice n.c.a.
+198,2910,Fabricarea autovehiculelor de transport rutier
+199,2920,Produc?ia de caroserii pentru autovehicule; fabricarea de remorci ?i semiremorci
+200,2931,Fabricarea de echipamente electrice ?i electronice pentru autovehicule ?i pentru motoare de autovehicule
+201,2932,Fabricarea altor piese ?i accesorii pentru autovehicule ?i pentru motoare de autovehicule
+202,3011,Construc?ia de nave ?i structuri plutitoare
+203,3012,Construc?ia de ambarca?iuni sportive ?i de agrement
+204,3020,Fabricarea materialului rulant
+205,3030,Fabricarea de aeronave ?i nave spa?iale
+206,3040,Fabricarea vehiculelor militare de lupt?
+207,3091,Fabricarea de motociclete
+208,3092,Fabricarea de biciclete ?i de vehicule pentru invalizi
+209,3099,Fabricarea altor mijloace de transport n.c.a.
+210,3101,Fabricarea de mobil? pentru birouri ?i magazine
+211,3102,Fabricarea de mobil? pentru buc?t?rii
+212,3103,Fabricarea de saltele ?i somiere
+213,3109,Fabricarea de mobil? n.c.a.
+214,3211,Baterea monedelor
+215,3212,Fabricarea bijuteriilor ?i articolelor similare din metale ?i pietre pre?ioase
+216,3213,Fabricarea imita?iilor de bijuterii ?i articole similare
+217,3220,Fabricarea instrumentelor muzicale
+218,3230,Fabricarea articolelor pentru sport
+219,3240,Fabricarea jocurilor ?i juc?riilor
+220,3250,Produc?ia de dispozitive
+221,3291,Fabricarea m?turilor ?i periilor
+222,3299,Fabricarea altor produse manufacturiere n.c.a.
+223,3311,Repararea articolelor fabricate din metal
+224,3312,Repararea ma?inilor
+225,3313,Repararea echipamentelor electronice ?i optice
+226,3314,Repararea echipamentelor electrice
+227,3315,Repararea ?i ?ntre?inerea navelor ?i b?rcilor
+228,3316,Repararea ?i ?ntre?inerea aeronavelor ?i navelor spa?iale
+229,3317,Repararea ?i ?ntre?inerea altor echipamente de transport n.c.a.
+230,3319,Repararea altor echipamente
+231,3320,Instalarea ma?inilor ?i echipamentelor industriale
+232,3511,Produc?ia de energie electric?
+233,3512,Transportul energiei electrice
+234,3513,Distribu?ia energiei electrice
+235,3514,Comercializarea energiei electrice
+236,3521,Produc?ia gazelor
+237,3522,Distribu?ia combustibililor gazo?i prin conducte
+238,3523,Comercializarea combustibililor gazo?i prin conducte
+239,3530,Furnizarea de abur ?i aer condi?ionat
+240,3600,Captarea
+241,3700,Colectarea ?i epurarea apelor uzate
+242,3811,Colectarea de?eurilor nepericuloase
+243,3812,Colectarea de?eurilor periculoase
+244,3821,Tratarea ?i eliminarea de?eurilor nepericuloase
+245,3822,Tratarea ?i eliminarea de?eurilor periculoase
+246,3831,Demontarea (dezasamblarea ma?inilor ?i echipamentelor scoase din uz pentru recuperarea materialelor
+247,3832,Recuperarea materialelor reciclabile sortate
+248,3900,Activit??i ?i servicii de decontaminare
+249,4110,Dezvoltare (promovare imobiliar?
+250,4120,Lucr?ri de construc?ii a cl?dirilor reziden?iale ?i nereziden?iale
+251,4211,Lucr?ri de construc?ii a drumurilor ?i autostr?zilor
+252,4212,Lucr?ri de construc?ii a c?ilor ferate de suprafa??  ?i subterane
+253,4213,Costruc?ia de poduri ?i tuneluri
+254,4221,Lucr?ri de construc?ii a proiectelor utilitare pentru fluide
+255,4222,Lucr?ri de construc?ii a proiectelor utilitare pentru electricitate ?i telecomunica?ii
+256,4291,Construc?ii hidrotehnice
+257,4299,Lucr?ri de construc?ii a altor proiecte inginere?ti n.c.a
+258,4311,Lucr?ri de demolare a construc?iilor
+259,4312,Lucr?ri de preg?tire a terenului
+260,4313,Lucr?ri de foraj ?i sondaj pentru construc?ii
+261,4321,Lucr?ri de instala?ii electrice
+262,4322,Lucr?ri de instala?ii sanitare
+263,4329,Alte lucr?ri de instala?ii pentru construc?ii
+264,4331,Lucr?ri de ipsoserie
+265,4332,Lucr?ri de t?mpl?rie ?i dulgherie
+266,4333,Lucr?ri de pardosire ?i placare a pere?ilor
+267,4334,Lucr?ri de vopsitorie
+268,4339,Alte lucr?ri de finisare
+269,4391,Lucr?ri de ?nvelitori
+270,4399,Alte lucr?ri speciale de construc?ii n.c.a.
+271,4511,Comer? cu autoturisme ?i autovehicule u?oare (sub 3
+272,4519,Comer? cu alte autovehicule
+273,4520,?ntre?inerea ?i repararea autovehiculelor
+274,4531,Comer? cu ridicata de piese ?i accesorii pentru autovehicule
+275,4532,Comer? cu am?nuntul de piese ?i accesorii pentru autovehicule
+276,4540,Comer? cu motociclete
+277,4611,Intermedieri ?n comer?ul cu materii prime agricole
+278,4612,Intermedieri ?n comer?ul cu combustibili
+279,4613,Intermedieri ?n comer?ul cu material lemnos ?i materiale de construc?ii
+280,4614,Intermedieri ?n comer?ul cu ma?ini
+281,4615,Intermedieri ?n comer?ul cu mobil?
+282,4616,Intermedieri ?n comer?ul cu textile
+283,4617,Intermedieri ?n comer?ul cu produse alimentare
+284,4618,Intermedieri ?n comer?ul specializat ?n v?nzarea produselor cu caracter specific
+285,4619,Intermedieri ?n comer?ul cu produse diverse
+286,4621,Comer? cu ridicata al cerealelor
+287,4622,Comer? cu ridicata al florilor ?i al plantelor
+288,4623,Comer? cu ridicata al animalelor vii
+289,4624,Comer? cu ridicata al bl?nurilor
+290,4631,Comer? cu ridicata al fructelor ?i legumelor
+291,4632,Comer? cu ridicata al c?rnii ?i produselor din carne
+292,4633,Comer? cu ridicata al produselor lactate
+293,4634,Comer? cu ridicata al b?uturilor
+294,4635,Comer? cu ridicata al produselor din tutun
+295,4636,Comer? cu ridicata al zah?rului
+296,4637,Comer? cu ridicata cu cafea
+297,4638,Comer? cu ridicata specializat al altor alimente
+298,4639,Comer? cu ridicata nespecializat de produse alimentare
+299,4641,Comer? cu ridicata al produselor textile
+300,4642,Comer? cu ridicata al ?mbr?c?mintei ?i ?nc?l??mintei
+301,4643,Comer? cu ridicata al aparatelor electrice de uz gospod?resc
+302,4644,Comer? cu ridicata al produselor din ceramic?
+303,4645,Comer? cu ridicata al produselor cosmetice ?i de parfumerie
+304,4646,Comer? cu ridicata al produselor farmaceutice
+305,4647,Comer? cu ridicata al mobilei
+306,4648,Comer? cu ridicata al ceasurilor ?i bijuteriilor
+307,4649,Comer? cu ridicata al altor bunuri de uz gospod?resc
+308,4651,Comer? cu ridicata al calculatoarelor
+309,4652,Comer? cu ridicata de componente ?i echipamente electronice ?i de telecomunica?ii
+310,4661,Comer? cu ridicata al ma?inilor agricole
+311,4662,Comer? cu ridicata al ma?inilor- unelte
+312,4663,Comer? cu ridicata al ma?inilor pentru industria minier? ?i construc?ii
+313,4664,Comer? cu ridicata al ma?inilor pentru industria textil? ?i al ma?inilor de cusut ?i de tricotat
+314,4665,Comer? cu ridicata al mobilei de birou
+315,4666,Comer? cu ridicata al altor ma?ini ?i echipamente de birou
+359,4669,Comer? cu ridicata al altor ma?ini ?i echipamente
+360,4671,Comer? cu ridicata al combustibililor solizi
+361,4672,Comer? cu ridicata al metalelor ?i minereurilor metalice
+362,4673,Comer? cu ridicata al materialului lemnos ?i al materialelor de construc?ii ?i echipamentelor sanitare
+363,4674,Comer? cu ridicata al echipamentelor ?i furniturilor de fier?rie pentru instala?ii sanitare ?i de ?nc?lzire
+364,4675,Comer? cu ridicata al produselor chimice
+365,4676,Comer? cu ridicata al altor produse intermediare
+366,4677,Comer? cu ridicata al de?eurilor ?i resturilor
+367,4690,Comer? cu ridicata nespecializat
+368,4711,Comer? cu am?nuntul ?n magazine nespecializate
+369,4719,Comer? cu am?nuntul ?n magazine nespecializate
+370,4721,Comer? cu am?nuntul al fructelor ?i legumelor proaspete
+371,4722,Comer? cu am?nuntul al c?rnii ?i al produselor din carne
+372,4723,Comer? cu am?nuntul al pe?telui
+373,4724,Comer? cu am?nuntul al p?inii
+374,4725,Comer? cu am?nuntul al b?uturilor
+375,4726,Comer? cu am?nuntul al produselor din tutun
+376,4729,Comer? cu am?nuntul al altor produse alimentare
+377,4730,Comer? cu am?nuntul al carburan?ilor pentru autovehicule
+378,4741,Comer? cu am?nuntul al calculatoarelor
+379,4742,Comer? cu am?nuntul al echipamentului pentru telecomunica?ii
+380,4743,Comer? cu am?nuntul al echipamentului audio/ video
+381,4751,Comer? cu am?nuntul al textilelor
+382,4752,Comer? cu am?nuntul al articolelor de fier?rie
+383,4753,Comer? cu am?nuntul al covoarelor
+384,4754,Comer? cu am?nuntul al articolelor ?i aparatelor electrocasnice
+385,4759,Comer? cu am?nuntul al mobilei
+386,4761,Comer? cu am?nuntul al c?r?ilor
+387,4762,Comer? cu am?nuntul al ziarelor ?i articolelor de papet?rie
+388,4763,Comer? cu am?nuntul al discurilor ?i benzilor magnetice cu sau f?r? ?nregistr?ri audio/ video
+389,4764,Comer? cu am?nuntul al echipamentelor sportive
+390,4765,Comer? cu am?nuntul al jocurilor ?i juc?riilor
+391,4771,Comer? cu am?nuntul al ?mbr?c?mintei
+392,4772,Comer? cu am?nuntul al ?nc?l??mintei ?i articolelor din piele
+393,4773,Comer? cu am?nuntul al produselor farmaceutice
+394,4774,Comer? cu am?nuntul al articolelor medicale ?i ortopedice
+395,4775,Comer? cu am?nuntul al produselor cosmetice ?i de parfumerie
+396,4776,Comer? cu am?nuntul al florilor
+397,4777,Comer? cu am?nuntul al ceasurilor ?i bijuteriilor
+398,4778,Comer? cu am?nuntul al altor bunuri noi
+399,4779,Comer? cu am?nuntul al bunurilor de ocazie v?ndute prin magazine
+400,4781,Comer? cu am?nuntul al produselor alimentare
+401,4782,Comer? cu am?nuntul al textilelor
+402,4789,Comer? cu am?nuntul prin standuri
+403,4791,Comer? cu am?nuntul prin intermediul caselor de comenzi sau prin internet
+404,4799,Comer? cu am?nuntul altfel efectuat ?n afara  magazinelor
+405,4910,Transporturi interurbane de c?l?tori pe calea ferat?
+316,4920,Transporturi de marf? pe calea ferat?
+317,4931,Transporturi urbane
+318,4932,Transporturi cu taxiuri
+319,4939,Alte transporturi terestre de c?l?tori n.c.a
+320,4941,Transporturi rutiere de m?rfuri
+321,4942,Servicii de mutare
+322,4950,Transporturi prin conducte
+323,5010,Transporturi maritime ?i costiere de pasageri
+324,5020,Transporturi maritime ?i costiere de marf?
+325,5030,Transporturi de pasageri pe c?i navigabile interioare
+326,5040,Transportul de marf? pe c?i navigabile interioare
+327,5110,Transporturi aeriene de pasageri
+328,5121,Transporturi aeriene de marf?
+329,5122,Transporturi spa?iale
+330,5210,Depozit?ri
+331,5221,Activit??i de servicii anexe pentru transporturi terestre
+332,5222,Activit??i de servicii anexe transportului pe ap?
+333,5223,Activit??i de servicii anexe transporturilor aeriene
+334,5224,Manipul?ri
+335,5229,Alte activit??i anexe transporturilor
+336,5310,Activit??i po?tale desf??urate sub obligativitatea serviciului universal
+337,5320,Alte activit??i po?tale ?i de curier
+338,5510,Hoteluri ?i alte facilit??i de cazare similare
+339,5520,Facilit??i de cazare pentru vacan?e ?i perioade de scurt? durat?
+340,5530,Parcuri pentru rulote
+341,5590,Alte servicii de cazare
+342,5610,Restaurante
+343,5621,Activit??i de alimenta?ie (catering pentru evenimente
+344,5629,Alte activit??i de alimenta?ie n.c.a.
+345,5630,Baruri ?i alte activit??i de servire a b?uturilor
+346,5811,Activit??i de editare a c?r?ilor
+347,5812,Activit??i de editare de ghiduri
+1,5813,Activit??i de editare a ziarelor
+348,5814,Activit??i de editare a revistelor ?i periodicelor
+349,5819,Alte activit??i de editare
+350,5821,Activit??i de editare a jocurilor de calculator
+351,5829,Activit??i de editare a altor produse software
+352,5911,Activit??i de produc?ie cinematografic?
+353,5912,Activit??i de postproduc?ie cinematografic?
+354,5913,Activit??i de distribu?ie a filmelor cinematografice
+355,5914,Proiec?ia de filme cinematografice
+356,5920,Activit??i de realizare a ?nregistr?rilor audio ?i activit??i de editare muzical?
+357,6010,Activit??i de difuzare a programelor de radio
+358,6020,Activit??i de difuzare a programelor de televiziune
+423,6110,Activit??i de telecomunica?ii prin re?ele cu cablu
+424,6120,Activit??i de telecomunica?ii prin re?ele f?r? cablu (exclusiv prin satelit
+425,6130,Activit??i de telecomunica?ii prin satelit
+426,6190,Alte activit??i de telecomunica?ii
+427,6201,Activit??i de realizare a soft-ului la comand? (software orientat client
+428,6202,Activit??i de consultan?? ?n tehnologia informa?iei
+429,6203,Activit??i de management (gestiune ?i exploatare al mijloacelor de calcul
+430,6209,Alte activit??i de servicii privind tehnologia informa?iei
+431,6311,Prelucrarea datelor
+432,6312,Activit??i ale portalurilor web
+433,6391,Activit??i ale agen?iilor de ?tiri
+434,6399,Alte activit??i de servicii informa?ionale n.c.a.
+435,6411,Activit??i ale b?ncii centrale (na?ionale
+436,6419,Alte activit??i de intermedieri monetare
+437,6420,Activit??i ale holdingurilor
+438,6430,Fonduri mutuale ?i alte entit??i financiare similare
+439,6491,Leasing financiar
+440,6492,Alte activit??i de creditare
+441,6499,Alte intermedieri financiare n.c.a.
+442,6511,Activit??i de asigur?ri de via??
+443,6512,Alte activit??i de asigur?ri (except?nd asigur?rile de via??
+444,6520,Activit??i de reasigurare
+445,6530,Activit??i ale fondurilor de pensii (cu excep?ia celor din sistemul public de asigur?ri sociale
+446,6611,Administrarea pie?elor financiare
+447,6612,Activit??i de intermediere a tranzac?iilor financiare
+448,6619,Activit??i auxiliare intermedierilor financiare
+449,6621,Activit??i de evaluare a riscului de asigurare ?i a pagubelor
+450,6622,Activit??i ale agen?ilor ?i brokerilor de asigur?ri
+451,6629,Alte activit??i auxiliare activit??ilor de asigur?ri ?i fonduri de pensii
+452,6630,Activit??i de administrare a fondurilor
+453,6810,Cump?rarea ?i v?nzarea de bunuri imobiliare proprii
+454,6820,?nchirierea ?i sub?nchirierea bunurilor imobiliare proprii sau ?n leasing
+455,6831,Agen?ii imobiliare
+456,6832,Administrarea imobilelor pe baz? de comision sau contract
+457,6910,Activit??i juridice
+458,6920,Activit??i de contabilitate ?i audit financiar; consultan?? ?n domeniul fiscal
+459,7010,Activit??i ale direc?iilor (centralelor
+460,7021,Activit??i de consultan?? ?n domeniul rela?iilor publice ?i al comunic?rii
+461,7022,Activit??i de consultan?? pentru afaceri ?i management
+462,7111,Activit??i de arhitectur?
+463,7112,Activit??i de inginerie ?i consultan?? tehnic? legate de acestea
+464,7120,Activit??i de testare ?i analize tehnice
+465,7211,Cercetare-dezvoltare ?n biotehnologie
+466,7219,Cercetare-dezvoltare ?n alte ?tiin?e naturale ?i inginerie
+467,7220,Cercetare-dezvoltare ?n ?tiin?e sociale ?i umaniste
+468,7311,Activit??i ale agen?iilor de publicitate
+469,7312,Servicii de reprezentare media
+470,7320,Activit??i de studiere a pie?ei ?i de sondare a opiniei publice
+471,7410,Activit??i de design specializat
+472,7420,Activit??i fotografice
+473,7430,Activit??i de traducere scris? ?i oral? (interpre?i
+474,7490,Alte activit??i profesionale
+475,7500,Activit??i veterinare
+476,7711,Activit??i de ?nchiriere ?i leasing cu autoturisme ?i autovehicule rutiere u?oare
+477,7712,Activit??i de ?nchiriere ?i leasing cu autovehicule rutiere grele
+478,7721,Activit??i de ?nchiriere ?i leasing cu bunuri recrea?ionale ?i echipament sportiv
+479,7722,?nchirierea de casete video ?i discuri (CD-uri
+480,7729,Activit??i de ?nchiriere ?i leasing cu alte bunuri personale ?i gospod?re?ti n.c.a.
+481,7731,Activit??i de ?nchiriere ?i leasing cu ma?ini ?i echipamente agricole
+482,7732,Activit??i de ?nchiriere ?i leasing cu ma?ini ?i echipamente pentru construc?ii
+483,7733,Activit??i de ?nchiriere ?i leasing cu ma?ini ?i echipamente de birou (inclusiv calculatoare
+484,7734,Activit??i de ?nchiriere ?i leasing cu ma?ini ?i echipamente de transport pe ap?
+485,7735,Activit??i de ?nchiriere ?i leasing cu ma?ini ?i echipamente de transport aerian
+486,7739,Activit??i de ?nchiriere ?i leasing cu alte ma?ini
+487,7740,Leasing cu bunuri intangibile (exclusiv financiare
+488,7810,Activit??i ale agen?iilor de plasare a for?ei de munc?
+489,7820,Activit??i de contractare
+490,7830,Alte servicii de furnizare a for?ei de munc?
+491,7911,Activit??i ale agen?iilor turistice
+492,7912,Activit??i ale tur-operatorilor
+493,7990,Alte servicii de rezervare ?i asisten?? turistic?
+494,8010,Activit??i de protec?ie ?i gard?
+495,8020,Activit??i de servicii privind sistemele de securizare
+496,8030,Activit??i de investiga?ii
+497,8110,Activit??i de servicii suport combinate
+498,8121,Activit??i generale (nespecializate de cur??enie interioar? a cl?dirilor
+499,8122,Activit??i specializate de cur??enie a cl?dirilor
+500,8129,Alte activit??i de cur??enie n.c.a.
+501,8130,Activit??i de ?ntre?inere peisagistic?
+502,8211,Activit??i combinate de secretariat
+503,8219,Activit??i de fotocopiere
+504,8220,Activit??i ale centrelor de intermediere telefonic? (call center
+505,8230,Activit??i de organizare a expozi?iilor
+506,8291,Activit??i ale agen?iilor de colectare ?i a birourilor (oficiilor de raportare a creditului
+507,8292,Activit??i de ambalare
+508,8299,Alte activit??i de servicii suport pentru ?ntreprinderi n.c.a.
+509,8411,Servicii de administra?ie public? general?
+510,8412,Reglementarea activit??ilor organismelor care presteaz? servicii ?n domeniul ?ngrijirii s?n?t??ii
+511,8413,Reglementarea ?i eficientizarea activit??ilor economice
+512,8421,Activit??i de servicii externe
+513,8422,Activit??i de ap?rare na?ional?
+514,8423,Activit??i de justi?ie
+515,8424,Activit??i de ordine public? ?i de protec?ie civil?
+516,8425,Activit??i de lupt? ?mpotriva incendiilor ?i de prevenire a acestora
+517,8430,Activit??i de protec?ie social? obligatorie
+518,8510,?nv???m?nt pre?colar
+519,8520,?nv???m?nt primar
+520,8531,?nv???m?nt secundar general
+521,8532,?nv???m?nt secundar
+522,8541,?nv???m?nt superior nonuniversitar
+523,8542,?nv???m?nt superior universitar
+524,8551,?nv???m?nt ?n domeniul sportiv ?i recrea?ional
+525,8552,?nv???m?nt ?n domeniul cultural (limbi str?ine
+526,8553,?coli de conducere (pilotaj
+527,8559,Alte forme de ?nv???m?nt n.c.a.
+528,8560,Activit??i de servicii suport pentru ?nv???m?nt
+529,8610,Activit??i de asisten?? spitaliceasc?
+530,8621,Activit??i de asisten?? medical? general?
+531,8622,Activit??i de asisten?? medical? specializat?
+532,8623,Activit??i de asisten?? stomatologic?
+533,8690,Alte activit??i referitoare la s?n?tatea uman?
+534,8710,Activit??i ale centrelor de ?ngrijire medical?
+535,8720,Activit??i ale centrelor de recuperare psihic? ?i de dezintoxicare
+536,8730,Activit??i ale c?minelor de b?tr?ni ?i ale c?minelor pentru persoane aflate ?n incapacitate de a se ?ngriji singure
+537,8790,Alte activit??i de asisten?? social?
+538,8810,Activit??i de asisten?? social?
+539,8891,Activit??i de ?ngrijire zilnic? pentru copii
+540,8899,Alte activit??i de asisten?? social?
+541,9001,Activit??i de interpretare artistic? (spectacole
+542,9002,Activit??i suport pentru interpretare artistic? (spectacole
+543,9003,Activit??i de crea?ie artistic?
+544,9004,Activit??i de gestionare a s?lilor de spectacole
+545,9101,Activit??i ale bibliotecilor ?i arhivelor
+546,9102,Activit??i ale muzeelor
+547,9103,Gestionarea monumentelor
+548,9104,Activit??i ale gr?dinilor zoologice
+549,9200,Activit??i de jocuri de noroc ?i pariuri
+550,9311,Activit??i ale bazelor sportive
+551,9312,Activit??i ale cluburilor sportive
+552,9313,Activit??i ale centrelor de fitness
+553,9319,Alte activit??i sportive
+554,9321,B?lciuri ?i parcuri de distrac?ii
+555,9329,lte activit??i recreative ?i distractive n.c.a.
+556,9411,Activit??i ale organiza?iilor economice ?i patronale
+557,9412,Activit??i ale organiza?iilor profesionale
+558,9420,Activit??i ale sindicatelor salaria?ilor
+559,9491,Activit??i ale organiza?iilor religioase
+560,9492,Activit??i ale organiza?iilor politice
+561,9499,Activit??i ale altor organiza?ii n.c.a.;
+406,9511,Repararea calculatoarelor ?i a echipamentelor periferice
+407,9512,Repararea echipamentelor de comunica?ii
+408,9521,Repararea aparatelor electronice
+409,9522,Repararea dispozitivelor de uz gospod?resc ?i a echipamentelor pentru cas? ?i gr?din?
+410,9523,Repararea ?nc?l??mintei ?i a articolelor din piele
+411,9524,Repararea mobilei ?i a furniturilor casnice
+412,9525,Repararea ceasurilor ?i a bijuteriilor
+413,9529,Repararea articolelor de uz personal ?i gospod?resc n.c.a.
+414,9601,Sp?larea ?i cur??area (uscat? articolelor textile ?i a produselor din blan?
+415,9602,Coafur? ?i alte activit??i de ?nfrumuse?are
+416,9603,Activit??i de pompe funebre ?i similare
+417,9604,Activit??i de ?ntre?inere corporal?
+418,9609,Alte activit??i de servicii n.c.a.
+419,9700,Activit??i ale gospod?riilor private ?n calitate de angajator de personal casnic
+420,9810,Activit??i ale gospod?riilor private de producere de bunuri ?i servicii destinate consumului propriu
+421,9820,Activit??i ale gospod?riilor private de producere de servicii pentru scopuri proprii
+20,9900,Activit??i ale organiza?iilor ?i organismelor extrateritoriale

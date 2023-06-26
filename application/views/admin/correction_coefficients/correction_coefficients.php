@@ -128,7 +128,7 @@
 						<div class="col-md-4 col-sm-8 col-xs-12 check-cean-list">
 							<div class="from-group mb-3">
 								<div class="d-flex ">
-									<div class="">
+									<div class="" style="max-width: 250px;">
 										<label class="form-label me-3">CAEN list</label>
 										<select multiple name="caen_codes[]" id="caen_select" data-live-search="true" data-actions-box="true" class="default-select form-control wide">
 											<?php
@@ -351,7 +351,7 @@
 											}
 											?>
 										</td>
-										<td>
+										<td class="limit-text">
 											<?php
 											if (!empty($c['coeff_details']['caen_details'])) {
 												foreach ($c['coeff_details']['caen_details'] as $caen) {

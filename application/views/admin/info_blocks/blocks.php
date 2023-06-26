@@ -136,7 +136,7 @@
 										<div class="form-group">
 											<label class="form-label">Norma de venit</label>
 											<select class="default-select form-control income_field" disabled name="norma_field">
-												<option>Taxable income</option>
+												<option>Venit Impozabil</option>
 											</select>
 										</div>
 									</div>
@@ -258,7 +258,7 @@
 										<div class="form-group">
 											<label class="form-label">Norma de venit</label>
 											<select class="default-select form-control income_field" disabled name="norma_field">
-												<option>Taxable income</option>
+												<option>Venit Impozabil</option>
 											</select>
 										</div>
 									</div>
@@ -382,7 +382,7 @@
 										<div class="form-group">
 											<label class="form-label">Norma de venit</label>
 											<select class="default-select form-control income_field" disabled name="norma_field">
-												<option>Taxable income</option>
+												<option>Venit Impozabil</option>
 											</select>
 										</div>
 									</div>
@@ -506,7 +506,7 @@
 												<div class="form-group">
 													<label class="form-label">Norma de venit</label>
 													<select class="default-select form-control income_field" disabled name="norma_field">
-														<option>Taxable income</option>
+														<option>Venit Impozabil</option>
 													</select>
 												</div>
 											</div>
@@ -957,19 +957,46 @@
 				// alert(targetId)
 				let vrnt_name = $(e.target).attr('data-vname')
 				let vrnt_ID = $(e.target).val()
-				let template = `
-					<div class="col-md-4 col-sm-6 col-xs-12 variantdata1" id="${targetId}">
-						<div class="form-group">
-							<label class="form-label">${vrnt_name}</label>
-							<select class="default-select form-control vrnt_dd_opt" name="vrnt_dd_opt[]" data-vrntid="${vrnt_ID}">
-								<option>Nr zile lucrate</option>
-								<option>Nr zile fara handicap</option>
-								<option>Nr luni pensionar</option>
-							</select>
-						</div>
-					</div>
-					`;
-				rowEl.append(template)
+				let dd_opts = `<?= json_encode($pfa_data['variants_dd_options']) ?>`
+				let pfa_vrnts = `<?= json_encode($pfa_data['variants'])?>`;
+				dd_opts = JSON.parse(dd_opts)
+				pfa_vrnts = JSON.parse(pfa_vrnts);
+				// console.log(pfa_vrnts);
+				if(pfa_vrnts.includes(vrnt_ID)) {
+					dd_opts.forEach(item => {
+						if(vrnt_ID == item.variant_id) {
+							let template = `
+								<div class="col-md-4 col-sm-6 col-xs-12 variantdata1" id="${targetId}">
+									<div class="form-group">
+										<label class="form-label">${vrnt_name}</label>
+										<select class="default-select form-control vrnt_dd_opt" name="vrnt_dd_opt[]" data-vrntid="${vrnt_ID}">
+											<option ${item.variant_dd_option == "Nr zile lucrate" ? 'selected' : ''}>Nr zile lucrate</option>
+											<option ${item.variant_dd_option == "Nr zile fara handicap" ? 'selected' : ''}>Nr zile fara handicap</option>
+											<option ${item.variant_dd_option == "Nr luni pensionar" ? 'selected' : ''}>Nr luni pensionar</option>
+										</select>
+									</div>
+								</div>
+								`;
+							rowEl.append(template)
+						}
+						
+					})
+				}
+				else {
+					let template = `
+								<div class="col-md-4 col-sm-6 col-xs-12 variantdata1" id="${targetId}">
+									<div class="form-group">
+										<label class="form-label">${vrnt_name}</label>
+										<select class="default-select form-control vrnt_dd_opt" name="vrnt_dd_opt[]" data-vrntid="${vrnt_ID}">
+											<option>Nr zile lucrate</option>
+											<option>Nr zile fara handicap</option>
+											<option>Nr luni pensionar</option>
+										</select>
+									</div>
+								</div>
+								`;
+							rowEl.append(template)
+				}
 				$(".vrnt_dd_opt").selectpicker('refresh');
 			} else {
 				// $(targetId).remove();
@@ -996,9 +1023,7 @@
 						<div class="form-group">
 							<label class="form-label">${vrnt_name}</label>
 							<select class="default-select form-control vrnt_spec_dd_opt" name="vrnt_dd_opt[]" data-vrntid="${vrnt_ID}">
-								<option>Nr zile lucrate</option>
-								<option>Nr zile fara handicap</option>
-								<option>Nr luni pensionar</option>
+								<option>Variabila Angajat</option>
 							</select>
 						</div>
 					</div>
@@ -1041,14 +1066,30 @@
 
 					})
 			});
+			let targets_arr = [];
 			setTimeout(() => {
+				let tg = ''
 				<?php
 				foreach ($pfa_data['variables_variants'] as $v) { ?>
 					$(`.variant-check[value='<?= $v['variant_id'] ?>']`).prop('checked', true)
 					$(`.variant-check[value='<?= $v['variant_id'] ?>']`).change()
+					tg = $(`.variant-check[value='<?= $v['variant_id'] ?>']`).attr('data-target');
+					targets_arr.push(tg)
+					<?php 
+						foreach($pfa_data['variants_dd_options'] as $dd_opt) { 
+						if($v['variant_id'] == $dd_opt['variant_id']) { 
+							?>
+							
+						<?php }
+					} ?>
 				<?php }
 				?>
+				console.log(targets_arr);
 			}, 1000);
+
+			// setTimeout(() => {
+			// 	console.log($(targets_arr[0]));
+			// }, 2000);
 
 
 		<?php }

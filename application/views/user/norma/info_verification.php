@@ -24,10 +24,10 @@
 						<a href="<?= base_url('user/verifyPersonalData/' . $_SESSION['personal_data_id']) ?>" class="nav-link">Personal Data </a>
 					</li>
 					<li class="nav-item">
-						<a href="#navpills-2" class="nav-link active" data-bs-toggle="tab" aria-expanded="false">Income Type</a>
+						<a href="#navpills-2" class="nav-link" data-bs-toggle="tab" aria-expanded="false">Income Type</a>
 					</li>
 					<li class="nav-item">
-						<a href="javascript:void(0);" class="nav-link">Information Verification </a>
+						<a href="javascript:void(0);" class="nav-link active">Information Verification </a>
 					</li>
 					<li class="nav-item">
 						<a href="<?= base_url('user/generatePdf') ?>" class="nav-link">Document Release </a>
@@ -115,7 +115,7 @@
 															<label class="form-label mb-1">Personal Number</label>
 														</div>
 														<div class="col-md-9 col-xs-12">
-															<input type="text" class="form-control"  value="<?= $personalData['personal_number'] ?? '' ?>" readonly>
+															<input type="text" class="form-control" value="<?= $personalData['personal_number'] ?? '' ?>" readonly>
 														</div>
 													</div>
 													<div class="row form-group">
@@ -123,7 +123,7 @@
 															<label class="form-label mb-1">Address</label>
 														</div>
 														<div class="col-md-9 col-xs-12">
-															<input type="text" class="form-control"   value="<?= $personalData['address'] ?? '' ?>" readonly>
+															<input type="text" class="form-control" value="<?= $personalData['address'] ?? '' ?>" readonly>
 														</div>
 													</div>
 													<div class="row">
@@ -201,7 +201,7 @@
 															<div class="form-group">
 																<label class="form-label mb-1">Valoare</label>
 																<input type="text" class="form-control" name="venit_impozabil" value="<?= $venit_impozabil ?? '' ?>">
-															</div> 
+															</div>
 														</div>
 														<div class="col-md-3 col-5">
 															<div class="form-group">
@@ -218,118 +218,134 @@
 
 													<!-- <h4 class="mb-4">Blocks</h4> -->
 
-													<!-- Block for pfa data -->
-													<div class="row mt-4 mb-4">
-														<h4 class="mx-lg-auto mb-3">Asigurare pensie obligatorie 2023</h4>
-														<div class="col-md-6 col-xs-12">
-															<div class="form-group pos-rel">
-																<label class="form-label mb-1">Valoare impozabila pentru pensie</label>
-																<input type="number" class="form-control" name="pfa_data_block_valoare" value="<?= $pfa_block['valoare'] ?? '' ?>" data-min="<?= $pfa_block['valoare'] ?? '' ?>" oninput="checkPfaDataInput(event)">
-																<!-- <p class="cover-input"></p> -->
+													<!-- Block for pension mandatory data -->
+													<?php if(!empty($pfa_block) && count($pfa_block) > 0) {
+														if($pfa_block['visible']) { ?>
+															<div class="row mt-4 mb-4">
+																<h4 class="mx-lg-auto mb-3">Asigurare pensie obligatorie 2023</h4>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group pos-rel">
+																		<label class="form-label mb-1">Valoare impozabila pentru pensie</label>
+																		<input type="number" class="form-control" name="pfa_data_block_valoare" value="<?= $pfa_block['valoare'] ?? '' ?>" data-min="<?= $pfa_block['valoare'] ?? '' ?>" oninput="checkPfaDataInput(event)">
+																		<!-- <p class="cover-input"></p> -->
+																	</div>
+																</div>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Taxa</label>
+																		<input type="text" class="form-control" name="pfa_data_block_taxa" value="<?= $pfa_block['taxa'] ?? '' ?>" min="<?= $pfa_block['taxa'] ?? '' ?>" readonly>
+																	</div>
+																</div>
+																<div class="col" id="pfa_data_err" style="display: none;">
+																	<div class="alert alert-danger alert-dismissible fade show">
+																		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+																		</button>
+																		<strong>Note</strong> Valoare minima nu poate fi scazuta, poate fi doar crescuta
+																	</div>
+																</div>
 															</div>
-														</div>
-														<div class="col-md-6 col-xs-12">
-															<div class="form-group">
-																<label class="form-label mb-1">Taxa</label>
-																<input type="text" class="form-control" name="pfa_data_block_taxa" value="<?= $pfa_block['taxa'] ?? '' ?>" min="<?= $pfa_block['taxa'] ?? '' ?>" readonly>
-															</div>
-														</div>
-														<div class="col" id="pfa_data_err" style="display: none;">
-															<div class="alert alert-danger alert-dismissible fade show">
-																<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
-																</button>
-																<strong>Note</strong> Valoare minima nu poate fi scazuta, poate fi doar crescuta
-															</div>
-														</div>
-													</div>
+													<?php }
+													} ?>
 
-													<!-- block for pfa specific data -->
-													<div class="row mt-4 mb-4">
-														<h4 class="mx-lg-auto mb-3">Asigurare pensie optionala 2023</h4>
-														<div class="col-md-6">
-															<div class="form-group d-flex">
-																<label class="form-label mb-1 me-5">Doriti asigurare de pensie?</label>
-																<div class="form-check me-3">
-																	<input class="form-check-input form-check-inputblue" type="radio" name="pfaSpecRadio" value="Da">
-																	<label class="form-label form-check-label">
-																		Da
-																	</label>
+													<!-- block for pension optional data -->
+													<?php if(!empty($pfa_block) && count($pfa_block) > 0) {
+														if(!$pfa_block['visible']) { ?>
+															<div class="row mt-4 mb-4">
+																<h4 class="mx-lg-auto mb-3">Asigurare pensie optionala 2023</h4>
+																<div class="col-md-6">
+																	<div class="form-group d-flex">
+																		<label class="form-label mb-1 me-5">Doriti asigurare de pensie?</label>
+																		<div class="form-check me-3">
+																			<input class="form-check-input form-check-inputblue" type="radio" name="pfaSpecRadio" value="Da">
+																			<label class="form-label form-check-label">
+																				Da
+																			</label>
+																		</div>
+																		<div class="form-check">
+																			<input class="form-check-input form-check-inputblue" type="radio" name="pfaSpecRadio" value="Nu">
+																			<label class="form-label form-check-label">
+																				Nu
+																			</label>
+																		</div>
+																	</div>
 																</div>
-																<div class="form-check">
-																	<input class="form-check-input form-check-inputblue" type="radio" name="pfaSpecRadio" value="Nu">
-																	<label class="form-label form-check-label">
-																		Nu
-																	</label>
+																<div class="row mb-4" id="pfaSpecRow" style="display: none;">
+																	<div class="col-md-6 col-xs-12">
+																		<div class="form-group">
+																			<label class="form-label mb-1">Valoare impozabila pentru pensie</label>
+																			<input type="number" class="form-control" name="pfa_spec_valoare" value="<?= $pfa_spec_block['valoare'] ?? 0 ?>" data-min="<?= $pfa_spec_block['valoare'] ?? 0 ?>" disabled oninput="checkPfaSpecInput(event)">
+																		</div>
+																	</div>
+																	<div class="col-md-6 col-xs-12">
+																		<div class="form-group">
+																			<label class="form-label mb-1">Taxa</label>
+																			<input type="text" class="form-control" name="pfa_spec_taxa" value="<?= $pfa_spec_block['taxa'] ?? 0 ?>" readonly disabled>
+																		</div>
+																	</div>
+																	<div class="col" id="pfaSpecErr" style="display: none;">
+																		<div class="alert alert-danger alert-dismissible fade show">
+																			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+																			</button>
+																			<strong>Note</strong> Valoare minima nu poate fi scazuta, poate fi doar crescuta
+																		</div>
+																	</div>
 																</div>
 															</div>
-														</div>
-														<div class="row mb-4" id="pfaSpecRow" style="display: none;">
-															<div class="col-md-6 col-xs-12">
-																<div class="form-group">
-																	<label class="form-label mb-1">Valoare impozabila pentru pensie</label>
-																	<input type="number" class="form-control" name="pfa_spec_valoare" value="<?= $pfa_spec_block['valoare'] ?? 0 ?>" data-min="<?= $pfa_spec_block['valoare'] ?? 0 ?>" disabled oninput="checkPfaSpecInput(event)">
-																</div>
-															</div>
-															<div class="col-md-6 col-xs-12">
-																<div class="form-group">
-																	<label class="form-label mb-1">Taxa</label>
-																	<input type="text" class="form-control" name="pfa_spec_taxa"  value="<?= $pfa_spec_block['taxa'] ?? 0 ?>" readonly disabled>
-																</div>
-															</div>
-															<div class="col" id="pfaSpecErr" style="display: none;">
-																<div class="alert alert-danger alert-dismissible fade show">
-																	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
-																	</button>
-																	<strong>Note</strong> Valoare minima nu poate fi scazuta, poate fi doar crescuta
-																</div>
-															</div>
-														</div>
-													</div>
+													<?php }
+													} ?>
 
 													<!-- block for total income for health mandatory -->
-													<div class="row mt-4 mb-4">
-														<h4 class="mx-lg-auto mb-3">Asigurare sanatate obligatorie</h4>
-														<div class="col-md-6 col-xs-12">
-															<div class="form-group">
-																<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
-																<input type="number" class="form-control" name="health_mandatory_valoare" value="<?= $health_mandatory_block['valoare'] ?>" readonly>
+													<?php if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
+														if($health_mandatory_block['visible']) { ?>
+															<div class="row mt-4 mb-4">
+																<h4 class="mx-lg-auto mb-3">Asigurare sanatate obligatorie</h4>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
+																		<input type="number" class="form-control" name="health_mandatory_valoare" value="<?= $health_mandatory_block['valoare'] ?>" readonly>
+																	</div>
+																</div>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Taxa</label>
+																		<input type="text" class="form-control" name="health_mandatory_taxa" value="<?= $health_mandatory_block['taxa'] ?>" readonly>
+																	</div>
+																</div>
 															</div>
-														</div>
-														<div class="col-md-6 col-xs-12">
-															<div class="form-group">
-																<label class="form-label mb-1">Taxa</label>
-																<input type="text" class="form-control" name="health_mandatory_taxa" value="<?= $health_mandatory_block['taxa'] ?>" readonly>
-															</div>
-														</div>
-													</div>
+													<?php }
+													} ?>
 
 													<!-- block for total income for health optional -->
-													<div class="row">
-														<div class="col-md-6">
-															<div class="form-group d-flex">
-																<label class="form-label mb-1 me-5 mt-2">Doriti asigurare de pensie?</label>
-																<select class="default-select" id="healthOptSelect" style="width: 100px;">
-																	<option value="">Select</option>
-																	<option>Da</option>
-																	<option>Nu</option>
-																</select>
-															</div>
-														</div>
-														<div class="row mb-4" id="healthOptRow" style="display: none;">
-															<div class="col-md-6 col-xs-12">
-																<div class="form-group">
-																	<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
-																	<input type="number" class="form-control" name="health_opt_valoare" value="<?= $health_optional_block['valoare'] ?? '0' ?>" disabled>
+													<?php if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
+														if(!$health_mandatory_block['visible']) { ?>
+														<div class="row">
+															<div class="col-md-6">
+																<div class="form-group d-flex">
+																	<label class="form-label mb-1 me-5 mt-2">Doriti asigurare de pensie?</label>
+																	<select class="default-select" id="healthOptSelect" style="width: 100px;">
+																		<option value="">Select</option>
+																		<option>Da</option>
+																		<option>Nu</option>
+																	</select>
 																</div>
 															</div>
-															<div class="col-md-6 col-xs-12">
-																<div class="form-group">
-																	<label class="form-label mb-1">Taxa</label>
-																	<input type="text" class="form-control" name="health_opt_taxa" value="<?= $health_optional_block['taxa'] ?? '0' ?>" readonly disabled>
+															<div class="row mb-4" id="healthOptRow" style="display: none;">
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
+																		<input type="number" class="form-control" name="health_opt_valoare" value="<?= $health_optional_block['valoare'] ?? '0' ?>" disabled>
+																	</div>
+																</div>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Taxa</label>
+																		<input type="text" class="form-control" name="health_opt_taxa" value="<?= $health_optional_block['taxa'] ?? '0' ?>" readonly disabled>
+																	</div>
 																</div>
 															</div>
 														</div>
-													</div>
+													<?php }
+													} ?>
 
 												</div>
 											</div>
@@ -438,7 +454,7 @@
 					$(`#healthOptRow input[name="health_opt_valoare"]`).prop('disabled', true)
 					$(`#healthOptRow input[name="health_opt_taxa"]`).prop('disabled', true)
 					break;
-			
+
 				default:
 					break;
 			}
@@ -451,25 +467,23 @@
 		// console.log($(e.target).val());
 		let min = $(e.target).attr('data-min');
 		let value = $(e.target).val();
-		if(value < min) {
+		if (value < min) {
 			$(e.target).val(min)
 			$("#pfa_data_err").slideDown(300)
-		}
-		else {
+		} else {
 			increasePfaTax(value).then(tax => showNewTaxValue(tax))
 		}
 	}
-	
+
 	function checkPfaSpecInput(e) {
 		// alert($(e.target).val())
 		// console.log($(e.target).val());
 		let min = $(e.target).attr('data-min');
 		let value = $(e.target).val();
-		if(value < min) {
+		if (value < min) {
 			$(e.target).val(min)
 			$("#pfaSpecErr").slideDown(300)
-		}
-		else {
+		} else {
 			increasePfaTax(value).then(tax => showNewPfaSpecTaxValue(tax))
 		}
 	}
@@ -477,7 +491,7 @@
 	function showNewTaxValue(value) {
 		$(`input[name="pfa_data_block_taxa"]`).val(value.tax)
 	}
-	
+
 	function showNewPfaSpecTaxValue(value) {
 		$(`input[name="pfa_spec_taxa"]`).val(value.tax)
 	}

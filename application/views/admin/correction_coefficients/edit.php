@@ -129,7 +129,7 @@
 						<div class="col-md-4 col-sm-8 col-xs-12 check-cean-list">
 							<div class="from-group mb-3">
 								<div class="d-flex ">
-									<div class="">
+									<div class="" style="max-width: 250px;">
 										<label class="form-label me-3">CAEN list</label>
 										<select multiple name="caen_codes[]" id="caen_select" data-live-search="true" data-actions-box="true" class="default-select form-control wide">
 											<?php
@@ -352,7 +352,7 @@
 											}
 											?>
 										</td>
-										<td>
+										<td class="limit-text">
 											<?php
 											if (!empty($c['coeff_details']['caen_details'])) {
 												foreach ($c['coeff_details']['caen_details'] as $caen) {
@@ -435,6 +435,7 @@
 				}
 				$var_arr = json_encode($var_arr); ?>
 				// console.log(JSON.parse('<?= $var_arr ?>'));
+				variables = JSON.parse('<?= $var_arr ?>');
 				$("#varSelect").selectpicker('val', JSON.parse('<?= $var_arr ?>'));
 
 				JSON.parse('<?= $var_arr ?>').forEach(variable => {
@@ -513,9 +514,10 @@
 
 	$('#varSelect').on('change', function() {
 		let varblSelctd = $(this).val()
+		console.log("changed",varblSelctd);
 		if (varblSelctd.length > 0) {
 			if (variables.length == 0) {
-				// alert('first value')
+				alert('first value')
 				variables = varblSelctd
 				fetchVariables(variables[0]).then(data => {
 					renderVariants(data)
@@ -750,7 +752,7 @@
 
 	async function fetchVariables(var_id) {
 		const url = '<?= base_url() ?>admin/fetchVariants'
-		// console.log(var_id);
+		console.log("variable id",var_id);
 		let data = new FormData();
 		data.append('variable_id', var_id);
 

@@ -21,6 +21,7 @@ class InfoBlocks extends Admin
 		$data['health_mandatory'] = $this->admin_model->getHealthMandatory();
 		$data['health_optional'] = $this->admin_model->getHealthOptional();
 		$data['pfa_data'] = $this->admin_model->getPfaData();
+		// dd($data['pfa_data']);
 		$data['pfa_spec_data'] = $this->admin_model->getPfaSpecData();
 		// dd($data['pfa_spec_data']);
 		$this->load->view('admin/layout/header1');

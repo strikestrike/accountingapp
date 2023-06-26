@@ -815,7 +815,7 @@ class Admin_Model extends CI_Model
 			// Insert record
 			if (count($response) == 0) {
 				$caen = array(
-					"code" => trim($record[0]),
+					"code" => preg_replace('/[^0-9]/', '', $record[0]),
 					"description" => trim($record[1]),
 					"created_at" => date("Y-m-d H:i:s"),
 				);
@@ -824,6 +824,7 @@ class Admin_Model extends CI_Model
 			}
 		}
 	}
+	
 
 	public function updateCaenCSV($record)
 	{
@@ -1107,7 +1108,11 @@ class Admin_Model extends CI_Model
 
 	public function getVariantsByVariableId($variable_id)
 	{
-		$q = $this->db->query("SELECT variable_variants.id as vvid, variable_variants.variable_id, variable_variants.variant_id, variants.* FROM variable_variants RIGHT JOIN variants ON variable_variants.variant_id = variants.id WHERE variable_variants.variable_id = $variable_id");
+		// dd($variable_id);
+		$q = $this->db->query("SELECT variable_variants.id as vvid, variable_variants.variable_id, variable_variants.variant_id, variants.* FROM variable_variants 
+									INNER JOIN variants 
+										ON variable_variants.variant_id = variants.id 
+									WHERE variable_variants.variable_id = $variable_id");
 		if ($q->num_rows() > 0) {
 			return $q->result_array();
 		} else {
@@ -1132,10 +1137,10 @@ class Admin_Model extends CI_Model
 					foreach ($columnDetails as $column) {
 						foreach ($column->counties_cities as $c) {
 							if(is_array($c)){
-								array_push($insrtCols, ['county_name' => $c[0], 'city_name' => $c[1], 'column_name' => $column->column_name, 'created_at' => date('Y-m-d H:i:s')]);
+								array_push($insrtCols, ['county_name' => $c[0], 'city_name' => $c[1], 'column_name' => $column->column_name, 'template_id' => $inserted_id, 'created_at' => date('Y-m-d H:i:s')]);
 							}
 							else {
-								array_push($insrtCols, ['county_name' => $c->county_name, 'city_name' => $c->city_name, 'column_name' => $column->column_name, 'created_at' => date('Y-m-d H:i:s')]);
+								array_push($insrtCols, ['county_name' => $c->county_name, 'city_name' => $c->city_name, 'column_name' => $column->column_name, 'template_id' => $inserted_id, 'created_at' => date('Y-m-d H:i:s')]);
 							}
 						}
 					}
@@ -1169,10 +1174,9 @@ class Admin_Model extends CI_Model
 
 	public function getTemplatesList()
 	{
-		$query = 'SELECT column_details_template_map.id as tcid, income_norms_templates.id as templt_pkey, income_norms_templates.*, income_norms_column_details.id as col_detls_pkey, income_norms_column_details.* 
-					FROM column_details_template_map
-					INNER JOIN income_norms_templates ON column_details_template_map.template_id = income_norms_templates.id
-					INNER JOIN income_norms_column_details ON column_details_template_map.column_details_id = income_norms_column_details.id';
+		$query = 'SELECT income_norms_templates.id as templt_pkey, income_norms_templates.*, income_norms_column_details.id as col_detls_pkey, income_norms_column_details.* 
+					FROM income_norms_templates
+					INNER JOIN income_norms_column_details ON income_norms_templates.id = income_norms_column_details.template_id';
 		$q = $this->db->query($query);
 		if ($q->num_rows() > 0) {
 			$templates =  $q->result_array();
@@ -1191,9 +1195,7 @@ class Admin_Model extends CI_Model
 			$templateInfo = $q->row_array();
 			if($templateInfo) {
 				$temp_id = $templateInfo['id'];
-				$q2 = $this->db->query("SELECT * FROM column_details_template_map 
-											INNER JOIN income_norms_column_details
-												ON column_details_template_map.column_details_id = income_norms_column_details.id
+				$q2 = $this->db->query("SELECT * FROM income_norms_column_details
 											WHERE template_id = $temp_id
 												GROUP BY income_norms_column_details.column_name
 											");
@@ -1201,9 +1203,7 @@ class Admin_Model extends CI_Model
 					$temp_cols = $q2->result_array();
 					// dd($temp_cols);
 					foreach ($temp_cols as $t) {
-						$q3 = $this->db->query("SELECT income_norms_column_details.county_name, income_norms_column_details.city_name FROM column_details_template_map 
-													INNER JOIN income_norms_column_details
-														ON column_details_template_map.column_details_id = income_norms_column_details.id
+						$q3 = $this->db->query("SELECT income_norms_column_details.county_name, income_norms_column_details.city_name FROM income_norms_column_details 
 													WHERE template_id = $temp_id 
 													AND income_norms_column_details.column_name = ".$t['column_name']
 												);
@@ -1255,7 +1255,12 @@ class Admin_Model extends CI_Model
 						INNER JOIN coeff_county_cities 
 							ON coefficient_variables.id = coeff_county_cities.coeff_id
 						INNER JOIN coeff_caen 
-							ON coefficient_variables.id = coeff_caen.coeff_id';
+							ON coefficient_variables.id = coeff_caen.coeff_id
+						WHERE coeff_county_cities.county_name = "'.$data['county'].'"
+							AND coeff_county_cities.city_name = "'.$data['city'].'" 
+							AND coeff_caen.caen_code = '.$data['caen'].'
+						';
+						
 						// INNER JOIN coeff_variable_variants 
 						// 	ON coefficient_variables.id = coeff_variable_variants.coeff_id';
 						// WHERE template_columns.template_id = ' . $template_id;
@@ -1264,30 +1269,49 @@ class Admin_Model extends CI_Model
 			$templates =  $q->result_array();
 			$finalData['coeffDetails'] = $templates;
 			
-			$q2 = $this->db->query('SELECT * FROM coeff_variable_variants
+			$q2 = $this->db->query('SELECT * FROM coefficient_variables 
+						INNER JOIN coeff_variable_variants
+							ON coefficient_variables.id = coeff_variable_variants.coeff_id
 						INNER JOIN variables
 							ON coeff_variable_variants.variable_id = variables.id
+						WHERE coefficient_variables.coef_option = "Decrease"
 						GROUP BY variable_id
+						LIMIT 2
 					');
+			$finalData['dec_variables'] = [];
 			if($q2->num_rows() > 0) {
-				$variables = $q2->result_array();
-				$finalData['variables'] = $variables;
-			}
-			else {
-				return false;
+				$dec_variables = $q2->result_array();
+				$finalData['dec_variables'] = $dec_variables;
 			}
 			
-			$q3 = $this->db->query('SELECT * FROM coeff_variable_variants
+			$q21 = $this->db->query('SELECT * FROM coefficient_variables 
+						INNER JOIN coeff_variable_variants
+							ON coefficient_variables.id = coeff_variable_variants.coeff_id
+						INNER JOIN variables
+							ON coeff_variable_variants.variable_id = variables.id
+						WHERE coefficient_variables.coef_option = "Increase"
+						GROUP BY variable_id
+						LIMIT 2
+					');
+			$finalData['inc_variables'] =[];
+			if($q21->num_rows() > 0) {
+				$inc_variables = $q21->result_array();
+				$finalData['inc_variables'] = $inc_variables;
+			}
+			
+			$q3 = $this->db->query('SELECT * FROM coefficient_variables
+						INNER JOIN coeff_variable_variants
+							ON coefficient_variables.id = coeff_variable_variants.coeff_id
 						INNER JOIN variants
 							ON coeff_variable_variants.variant_id = variants.id
-						WHERE variants.display_on_frontend=\'Always_Yes\'
-						OR variants.display_on_frontend=\'Yes\'
-						GROUP BY variant_id
+						WHERE coefficient_variables.coef_option = "Decrease"
+							AND variants.display_on_frontend=\'Always_Yes\'
+							OR variants.display_on_frontend=\'Yes\'
+						ORDER BY coeff_variable_variants.variable_id, variants.name
 					');
 			if($q3->num_rows() > 0) {
-				$variants = $q3->row_array();
+				$variants = $q3->result_array();
 				$finalData['variants'] = $variants;
-				// dd($finalData);
 			}
 			else {
 				return false;
@@ -1328,14 +1352,12 @@ class Admin_Model extends CI_Model
 
 	public function deleteTemplateById($template_id)
 	{
-		$q = $this->db->get_where('column_details_template_map', ['template_id' => $template_id]);
-		if ($q->num_rows() > 0) {
-			$columns =  $q->result_array();
-			foreach ($columns as $c) {
-				$this->deleteColumnDetailsById($c['column_details_id']);
-			}
-		}
+		$this->db->where('template_id', $template_id);
+		$this->db->delete('column_details_template_map');
 
+		$this->db->where('template_id', $template_id);
+		return $this->db->delete('income_norms_column_details');
+		
 		$this->db->where('template_id', $template_id);
 		$this->db->delete('income_norms_tax');
 
@@ -1354,12 +1376,24 @@ class Admin_Model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function getAllCaenCodes()
+	{
+		$query = 'SELECT * FROM caen_codes ORDER BY code';
+		$q = $this->db->query($query);
+		if ($q->num_rows() > 0) {
+			$codes =  $q->result_array();
+			return $codes;
+		} else {
+			return FALSE;
+		}
+	}
 
 	public function getNormaIncome($data)
 	{
 		$data = (object)$data;
 		// dd($data);
-		$q = $this->db->query("SELECT * FROM `income_norms_tax_columns` 
+		$qn = $this->db->query("SELECT * FROM `income_norms_tax_columns` 
 									INNER JOIN income_norms_column_details 
 										ON income_norms_tax_columns.column_details_id = income_norms_column_details.id 
 									INNER JOIN income_norms_tax 
@@ -1368,10 +1402,11 @@ class Admin_Model extends CI_Model
 										AND income_norms_column_details.city_name='$data->city' 
 										AND income_norms_tax.caen_code='$data->caen' 
 										AND income_norms_tax.status='1'
+									LIMIT 1
 									");
-		if ($q->num_rows() > 0) {
-			$income =  $q->row_array();
-			return $income;
+		if ($qn->num_rows() > 0) {
+			$incomeN =  $qn->row_array();
+			return $incomeN;
 		} else {
 			return FALSE;
 		}
@@ -1397,9 +1432,11 @@ class Admin_Model extends CI_Model
 
 	function getCoeffCaen($coeff_id)
 	{
-		$q = $this->db->get_where('coeff_caen', ['coeff_id' => $coeff_id]);
+		// $q = $this->db->get_where('coeff_caen', ['coeff_id' => $coeff_id]);
+		$q = $this->db->query("SELECT coeff_caen.id, coeff_caen.coeff_id, LPAD(caen_code, 4, '0') AS caen_code, coeff_caen.status FROM coeff_caen WHERE coeff_id=$coeff_id");
 		if ($q->num_rows() > 0) {
 			$codes =  $q->result_array();
+			// dd($codes);
 			return $codes;
 		} else {
 			return FALSE;
@@ -1410,6 +1447,18 @@ class Admin_Model extends CI_Model
 	{
 		// $q = $this->db->get_where('coeff_county_cities', ['coeff_id' => $coeff_id]);
 		$q = $this->db->query("SELECT * FROM coeff_county_cities WHERE coeff_id = $coeff_id GROUP BY `county_name`");
+		if ($q->num_rows() > 0) {
+			$codes =  $q->result_array();
+			return $codes;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function getCoeffCities($coeff_id)
+	{
+		// $q = $this->db->get_where('coeff_county_cities', ['coeff_id' => $coeff_id]);
+		$q = $this->db->query("SELECT city_name FROM coeff_county_cities WHERE coeff_id = $coeff_id");
 		if ($q->num_rows() > 0) {
 			$codes =  $q->result_array();
 			return $codes;
@@ -1879,6 +1928,15 @@ class Admin_Model extends CI_Model
 			if ($q4->num_rows() > 0) {
 				$data['variants_dd_options'] = $q4->result_array();
 			}
+			
+			$q5 = $this->db->query('SELECT variant_id FROM pfa_data_variable_variants');
+			if ($q5->num_rows() > 0) {
+				$data['variants'] = [];
+				$variants = $q5->result_array();
+				foreach($variants as $v) {
+					$data['variants'][] = $v['variant_id'];
+				}				
+			}
 
 			return $data;
 			// dd($data);
@@ -1912,6 +1970,88 @@ class Admin_Model extends CI_Model
 			// dd($data);
 		} else {
 			return FALSE;
+		}
+	}
+
+	public function getPensionMandatoryIncomes()
+	{
+		$query = $this->db->query('SELECT income_name from pension_mandatory_income_types');
+		if ($query->num_rows() > 0) {
+			$data = $query->result_array();
+		}
+		return $data;
+	}
+	
+	public function getPensionOptionalIncomes()
+	{
+		$query = $this->db->query('SELECT income_name from pension_optional_income_types');
+		if ($query->num_rows() > 0) {
+			$data = $query->result_array();
+		}
+		return $data;
+	}
+	
+	public function getHealthMandatoryIncomes()
+	{
+		$query = $this->db->query('SELECT income_name from health_mandatory_income_types');
+		if ($query->num_rows() > 0) {
+			$data = $query->result_array();
+		}
+		return $data;
+	}
+	
+	public function getHealthOptionalIncomes()
+	{
+		$query = $this->db->query('SELECT income_name from health_optional_income_types');
+		if ($query->num_rows() > 0) {
+			$data = $query->result_array();
+		}
+		return $data;
+	}
+
+	public function getvarCAS($incomes, $personal_data_id, $venit_impozabil)
+	{
+		$varCAS = 0;
+		if(count($incomes) > 0) {
+			if(in_array('Rental', $incomes)) {
+				$query = $this->db->query('SELECT taxable_income_2022 from info_verification_rentals WHERE personal_data_id='.$personal_data_id);
+				if ($query->num_rows() > 0) {
+					$rentalData = $query->row_array();
+				}
+				$varCAS += $rentalData['taxable_income_2022'] ?? 0;
+			}
+			if(in_array('Divident', $incomes)) {
+				$query1 = $this->db->query('SELECT income_2022 from info_verification_dividents WHERE personal_data_id='.$personal_data_id);
+				if ($query1->num_rows() > 0) {
+					$divData = $query1->row_array();
+				}
+				$varCAS += $divData['income_2022'] ?? 0;
+			}
+			if(in_array('Stock', $incomes)) {
+				$query2 = $this->db->query('SELECT income_2022 from info_verification_stocks WHERE personal_data_id='.$personal_data_id);
+				if ($query2->num_rows() > 0) {
+					$divData = $query2->row_array();
+				}
+				$varCAS += $divData['income_2022'] ?? 0;
+			}
+			if(in_array('Crypto', $incomes)) {
+				$query3 = $this->db->query('SELECT income_2022 from info_verification_crypto WHERE personal_data_id='.$personal_data_id);
+				if ($query3->num_rows() > 0) {
+					$cryptoData = $query3->row_array();
+				}
+				$varCAS += $cryptoData['income_2022'] ?? 0;
+			}
+			if(in_array('Hotel', $incomes)) {
+				$query4 = $this->db->query('SELECT income_estimation_2022 from info_verification_hotels WHERE personal_data_id='.$personal_data_id);
+				if ($query4->num_rows() > 0) {
+					$hotelData = $query4->row_array();
+				}
+				$varCAS += $hotelData['income_estimation_2022'] ?? 0;
+			}
+
+			$varCAS += $venit_impozabil;
+			
+			return $varCAS;
 		}
 	}
 

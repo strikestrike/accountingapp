@@ -44,9 +44,11 @@ class Caen extends Admin
 			$config['max_size'] = '1000'; // max_size in kb 
 			$config['file_name'] = $_FILES['upload']['name'];
 
+			// dd("uploaded");
 			// Load upload library 
 			$this->load->library('upload', $config);
 			$upload_status =  $this->uploadCSV();
+			// dd($upload_status);
 			// File upload
 			if ($upload_status) {
 				// Get filename
@@ -59,14 +61,15 @@ class Caen extends Admin
 				$importData_arr = array();
 
 				while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+					// dd("here");
 					$num = count($filedata);
-
-					if ($numberOfFields == $num) {
-						
+					// dd($num);
+					// if ($numberOfFields == $num) {
+						// dd("in");
 						for ($c = 0; $c < $num; $c++) {
 							$importData_arr[$i][] = $filedata[$c];
 						}
-					}
+					// }
 					$i++;
 				}
 				fclose($file);
@@ -75,7 +78,7 @@ class Caen extends Admin
 
 				// insert import data
 				foreach ($importData_arr as $userdata) {
-
+					
 					// Skip first row
 					if ($skip != 0) {
 						$this->admin_model->importCaenCodes($userdata);

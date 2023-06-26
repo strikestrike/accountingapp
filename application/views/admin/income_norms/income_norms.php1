@@ -91,7 +91,7 @@
 						<div class="from-group mb-3">
 							<div class="">
 								<label class="form-label me-3">Cities list</label>
-								<select multiple name="city_name" id="city_select" data-live-search="true" class="default-select form-control wide">
+								<select multiple name="city_name" id="city_select" data-live-search="true" data-actions-box="true" class="default-select form-control wide">
 
 								</select>
 							</div>
@@ -156,7 +156,7 @@
 				</div>
 				<div class="row ">
 					<div class="col-sm-10">
-						<button type="submit" id="saveColBtn" class="btn btn-primary btn-square"> Save</button>
+						<!-- <button type="submit" id="saveColBtn" class="btn btn-primary btn-square"> Save</button> -->
 					</div>
 				</div>
 				<br>
@@ -232,7 +232,7 @@
 						</div>
 						<button class="btn uploadCancelBtn d-none">Cancel</button>
 						<div id="upload" class="atribute">
-							<button type="button" id="uploadExcelBtn" class="btn btn-primary btn-square me-2">Upload</button>
+							<!-- <button type="button" id="uploadExcelBtn" class="btn btn-primary btn-square me-2">Upload</button> -->
 						</div>
 						<p class="csv-file-uploaded mb-0 lh-35 fw-bold"></p>
 					</div>

@@ -18,6 +18,7 @@ class User extends CI_Controller
 		$this->load->library(['form_validation', 'session']);
 		$this->load->model('User_Model');
 		$this->load->helper('calculation');
+		$this->load->helper('evaluation');
 
 		$this->load->database();
 		$this->load->library('upload');
@@ -39,6 +40,12 @@ class User extends CI_Controller
 	public function index()
 	{
 		$this->load->view('user/auth/login');
+	}
+
+	public function test()
+	{
+		dd("here");
+		echo phpinfo();
 	}
 
 	public function register()
@@ -1038,6 +1045,12 @@ class User extends CI_Controller
 			$dataForCalculation['currency'] 			= $value['currency'];
 			$dataForCalculation['contract_end_date']	= $value['contract_end_date'];
 
+			$currYr = date('Y');
+
+			if(getDMY('y', $dataForCalculation['contract_start_date']) == $currYr) {
+				continue;
+			}
+
 
 			if($dataForCalculation['currency'] == 'EUR')
 			{
@@ -1124,25 +1137,38 @@ class User extends CI_Controller
 			$dataForCalculation['rent_value'] 			= $value['rent_value'];
 			$dataForCalculation['contract_start_date'] 	= $value['contract_start_date'];
 			$dataForCalculation['currency'] 			= $value['currency'];
+			
+			$currYr = date('Y');
+
 			if($value['contract_end_date'] == "0000-00-00")
 			{
 				$previous_year = date("Y",strtotime("-1 year"));
 				$dataForCalculation['contract_end_date']	= $previous_year."-12-31";
-			}else {
+			}
+			else {
 				$dataForCalculation['contract_end_date']	= $value['contract_end_date'];
+				if(getDMY('y', $dataForCalculation['contract_end_date']) < $currYr) {
+					continue;
+				}
 			}
 
+			$netIncome = 0;
 
-			$annualExchangeRate = $this->admin_model->fetchAnnualExchangeRate($dataForCalculation['currency'], getDMY('y', $dataForCalculation['contract_end_date']));
-			if ($annualExchangeRate == false) {
-				// echo "no rate found";die;
-				$error = "Annual exchange rate not found for for the year " . getDMY('y', $dataForCalculation['contract_end_date']) . " to calculate net income. Please contact admin.";
-				$this->session->set_flashdata('error', $error);
-				echo "<script>window.location.href='" . base_url('user/rentalIncome') . "';</script>";
-				die;
+			if($dataForCalculation['currency'] != "RON") {
+				$annualExchangeRate = $this->admin_model->fetchAnnualExchangeRate($dataForCalculation['currency'], getDMY('y', $dataForCalculation['contract_end_date']));
+				if ($annualExchangeRate == false) {
+					// echo "no rate found";die;
+					$error = "Annual exchange rate not found for for the year " . getDMY('y', $dataForCalculation['contract_end_date']) . " to calculate net income. Please contact admin.";
+					$this->session->set_flashdata('error', $error);
+					echo "<script>window.location.href='" . base_url('user/rentalIncome') . "';</script>";
+					die;
+				}
+				// echo $annualExchangeRate[0]['value']; die;
+				$netIncome = calculateIncome2022($dataForCalculation, $annualExchangeRate[0]['value']);
 			}
-			// echo $annualExchangeRate[0]['value']; die;
-			$netIncome = calculateIncome2022($dataForCalculation, $annualExchangeRate[0]['value']);
+			else {
+				$netIncome = $dataForCalculation['rent_value']*getDMY('m', $dataForCalculation['contract_end_date']) ;
+			}
 
 			// $this->dd($netIncome);
 			array_push($netIncomeData, $netIncome);
@@ -1588,9 +1614,17 @@ class User extends CI_Controller
 		$data['county'] = $this->admin_model->getCountiesNames();
 		$data['caen'] = $this->admin_model->getCaenCodesList();
 		$data['existing_income'] = $this->user_model->getNormaIncome($personal_data_id);
-		// dd($data['existing_income']);
-		// dd($_SESSION);
-		// dd($data['caen']);
+		$data['recommended_variables'] = $this->user_model->getRecommendedVariables();
+		$data['pfa_data_variables'] = $this->user_model->getPfaDataVariables('Norma');
+		// dd($data['pfa_data_variables']);
+		// dd($data['pfa_data_variables']);
+		$data['personalData'] = $this->user_model->getPersonalDataById($personal_data_id);
+		// dd($data['personalData']);
+		$age = age_evaluation($data['personalData']['personal_number']);
+		$genre = genre_evaluation($data['personalData']['personal_number']);
+		$data['age'] = $age;
+		$data['genre'] = $genre;
+
 		$this->load->view('user/layout/header');
 		$this->load->view('user/norma/income_type', $data);
 		$this->load->view('user/layout/footer');
@@ -1663,7 +1697,6 @@ class User extends CI_Controller
 	public function submitNormaIncome()
 	{
 		$data = $this->input->post();
-		// dd($data);
 		if($data) {
 			$res = $this->user_model->submitNormaIncome($data);
 			if($res) {
@@ -1683,29 +1716,67 @@ class User extends CI_Controller
 		// dd($norma_income_data);
 		$verificationData['county'] = $norma_income_data[0]['county'];
 		$verificationData['city'] = $norma_income_data[0]['city'];
+		$c_var = $norma_income_data[0]['cvar'] ?? null;
 
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personal_data_id);
 		$normaValue = 0;
-		// ----------------------------------------------------------
+		
 		foreach ($norma_income_data as $i) {
 			$normaValue += $i['norma_de_venit'];
 		}
-		$high_increase = 1;
-		$high_decrease = 0;
+		$high_increase = $norma_income_data[0]['high_increase'] ?? 0;
+		$high_decrease = $norma_income_data[0]['high_decrease'] ?? 0;
 		$current_year = date("Y");
 		$minWageCurrentYear = $this->user_model->getMinWageForCurrentYear($current_year);
-		// dd($minWageCurrentYear);
-		// ----------------------------------------------------------
+		$start_date = $norma_income_data[0]['start_date'];
+		$end_date = $norma_income_data[0]['end_date'];
+		if($end_date == "0000-00-00") $end_date = "";
 		
 		$verificationData['norma_venit_initiata'] = $normaValue;
 		$verificationData['norma_ajustata'] = compute_norma_ajustata($normaValue, $high_increase, $high_decrease);
-		$verificationData['venit_net_anual'] = compute_venit_net_anual($verificationData['norma_ajustata']);
+		$verificationData['venit_net_anual'] = compute_venit_net_anual($verificationData['norma_ajustata'], $start_date, $end_date, $c_var);
+		// dd($verificationData['venit_net_anual']);
 		$verificationData['venit_impozabil'] = compute_venit_impozabil($verificationData['venit_net_anual']);
 		$verificationData['impozit'] = compute_impozit($verificationData['venit_impozabil']);
-		$verificationData['pfa_block'] = compute_pfa_data_block($verificationData['venit_impozabil'], $minWageCurrentYear['value']);
-		$verificationData['pfa_spec_block'] = compute_pfa_specific_block($verificationData['venit_impozabil'], $minWageCurrentYear['value']);
-		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($verificationData['venit_impozabil'], $minWageCurrentYear['value']);
-		$verificationData['health_optional_block'] = compute_health_optional_block($verificationData['venit_impozabil'], $minWageCurrentYear['value']);
+
+		$pensionMandatoryIncomes = $this->admin_model->getPensionMandatoryIncomes();
+		$incomes = [];
+		foreach ($pensionMandatoryIncomes as $inc) {
+			$incomes[] = $inc['income_name'];
+		}
+		$varCASforPensionMandatory = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		// dd($varCASforPensionMandatory);
+		
+		$pensionOptionalIncomes = $this->admin_model->getPensionOptionalIncomes();
+		$incomes1 = [];
+		foreach ($pensionOptionalIncomes as $inc) {
+			$incomes1[] = $inc['income_name'];
+		}
+		$varCASforPensionOptional = $this->admin_model->getvarCAS($incomes1, $personal_data_id, $verificationData['venit_impozabil']);
+		// dd($varCASforPensionMandatory);
+		
+		$verificationData['pfa_block'] = compute_pension_mandatory($varCASforPensionMandatory, $minWageCurrentYear['value']);
+		$verificationData['pfa_spec_block'] = compute_pension_optional($varCASforPensionOptional, $minWageCurrentYear['value']);
+
+		$healthMandatoryIncomes = $this->admin_model->getHealthMandatoryIncomes();
+		$incomes2 = [];
+		foreach ($healthMandatoryIncomes as $inc) {
+			$incomes2[] = $inc['income_name'];
+		}
+		$varCASforHealthMandatory = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		// dd($varCASforHealthMandatory);
+		
+		$healthOptionalIncomes = $this->admin_model->getHealthOptionalIncomes();
+		$incomes3 = [];
+		foreach ($healthOptionalIncomes as $inc) {
+			$incomes3[] = $inc['income_name'];
+		}
+		$varCASforHealthOptional = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		// dd($varCASforHealthOptional);
+		
+
+		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
+		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
 		// dd($verificationData);
 		$this->load->view('user/layout/header');
 		$this->load->view('user/norma/info_verification', $verificationData);
@@ -3587,7 +3658,11 @@ class User extends CI_Controller
 
 
 			$this->db->select("count(*) AS cnt");
-			$this->db->where("personal_data_id=" . $personal_data_id);
+			if ($tablecolumns[0] == 'personal_data') {
+			    $this->db->where("id=" . $personal_data_id);
+			} else {	
+     			    $this->db->where("personal_data_id=" . $personal_data_id);
+			}
 			if ($condition['function'] == 'is') {
 				$this->db->where($tablecolumns[1] . '=\'' . $condition['value'] . '\'');
 			} else if ($condition['function'] == 'is not') {
@@ -3605,7 +3680,11 @@ class User extends CI_Controller
 			} else if ($condition['function'] == 'does not contain') {
 				$this->db->where($tablecolumns[1] . ' NOT LIKE \'%' . $condition['value']) . '%\'';
 			}
-			$this->db->group_by("personal_data_id");
+			if ($tablecolumns[0] == 'personal_data') {
+			    $this->db->group_by("personal_data.id");
+			} else {	
+     			    $this->db->group_by("personal_data_id");
+			}
 			$query = $this->db->get($tablecolumns[0], 1);
 			$result = $query->row_array();
 			$count = 0;

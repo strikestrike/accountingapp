@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |http://localhost:82/accountingapp/index.php/Welcome/createuser
 */
-// $config['base_url'] = 'http://3.67.98.72/accountingapp1/';
-$config['base_url'] = '/accountingapp/';
+// $config['base_url'] = 'http://3.64.185.40/accountingapp/';
+$config['base_url'] = '/';
 
 /*
 |--------------------------------------------------------------------------

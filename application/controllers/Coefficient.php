@@ -22,7 +22,7 @@ class Coefficient extends Admin
 	{
 
 		$data['county'] = $this->admin_model->getCountiesNames();
-		$data['caen'] = $this->admin_model->getCaenCodesList();
+		$data['caen'] = $this->admin_model->getAllCaenCodes();
 		$data['variables'] = $this->admin_model->getVariablesList();
 		$data['coefficients'] = $this->admin_model->getCoefficientsList();
 
@@ -57,7 +57,7 @@ class Coefficient extends Admin
 	public function editCoeff($id)
 	{
 		$data['county'] = $this->admin_model->getCountiesNames();
-		$data['caen'] = $this->admin_model->getCaenCodesList();
+		$data['caen'] = $this->admin_model->getAllCaenCodes();
 		$data['variables'] = $this->admin_model->getVariablesList();
 		$data['coefficients'] = $this->admin_model->getCoefficientsList();
 		$data['editCoeff'] = [];
@@ -66,8 +66,9 @@ class Coefficient extends Admin
 			foreach ($data['coefficients'] as $c) {
 				$arr = [];
 				$coeff_caen = $this->admin_model->getCoeffCaen($c['id']);
+				// dd($coeff_caen);
 				$coeff_county_cities = $this->admin_model->getCoeffCountyCities($c['id']);
-				$coeff_cities = $this->admin_model->getCoeffCountyCities($c['id']);
+				$coeff_cities = $this->admin_model->getCoeffCities($c['id']);
 				$variables = $this->admin_model->getCoeffVariables($c['id']);
 				$variants = $this->admin_model->getCoeffVariants($c['id']);
 
@@ -83,6 +84,7 @@ class Coefficient extends Admin
 				}
 			}
 		}
+		// dd($data['editCoeff']);	
 
 		$data['coefficients'] = $coeff_list;
 

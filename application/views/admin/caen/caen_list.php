@@ -94,9 +94,9 @@
 											<div class="d-flex align-items-center justify-content-center">
 												<div class='form-check form-switch me-3'>
 													<?php if ($value['status'] == 1) { ?>
-														<input class='form-check-input toggle-switch-red status-switch' type='checkbox' role='switch' data-id="<?= $value['id'] ?>" id='flexSwitchCheckChecked' checked>
+														<input class='form-check-input toggle-switch-red status-switch' type='checkbox' role='switch' data-id="<?= $value['id'] ?>" onchange="checkStatus(event)" checked>
 													<?php } else { ?>
-														<input class='form-check-input toggle-switch-red status-switch' type='checkbox' role='switch' data-id="<?= $value['id'] ?>" id='flexSwitchCheckChecked'>
+														<input class='form-check-input toggle-switch-red status-switch' type='checkbox' role='switch' data-id="<?= $value['id'] ?>" onchange="checkStatus(event)">
 													<?php } ?>
 												</div>
 											</div>
@@ -317,14 +317,22 @@
 		// 	table.search($(this).val()).draw();
 		// })
 
-		$(".status-switch").on('change', function() {
-			let id = $(this).data('id');
-			let value = $(this).prop('checked') == true ? 1 : 0;
-			// alert(id)
-			updateStatus(id, value)
-		})
+		// $(".status-switch").change(function() {
+		// 	let id = $(this).data('id');
+		// 	let value = $(this).prop('checked') == true ? 1 : 0;
+		// 	alert(id)
+		// 	// updateStatus(id, value)
+		// })
+
+		
 
 	});
+
+	function checkStatus(evt) {
+		let id = $(evt.target).data('id');
+		let value = $(evt.target).prop('checked') == true ? 1 : 0;
+		updateStatus(id, value)
+	}
 
 	async function updateStatus(id, value) {
 		let url = "<?= base_url('caen/updateStatus') ?>"
