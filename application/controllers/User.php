@@ -988,7 +988,8 @@ class User extends CI_Controller
 		$personalDataId = $this->session->userdata('personal_data_id');
 
 		// $this->dd($_SESSION);
-
+		
+		
 		$data['rentIncome'] = $this->user_model->fetchRentIncome($id, $personalDataId);
 
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personalDataId);
@@ -996,8 +997,6 @@ class User extends CI_Controller
 		$stepsCompleted = $this->checkSteps($steps);
 		$verificationData['personalData']['steps_completed'] = $stepsCompleted;
 		// $this->dd($stepsCompleted);
-
-
 
 
 		if (!empty($verificationData['personalData'])) {
@@ -1008,6 +1007,11 @@ class User extends CI_Controller
 				}
 				$verificationData['income2021'] = $this->getIncome2021($data);
 				$verificationData['income2022'] = $this->getIncome2022($data);
+
+				$health_data = $this->health();
+				$verificationData['health_mandatory_block'] = $health_data['health_mandatory_block'];
+				$verificationData['health_optional_block'] = $health_data['health_optional_block'];
+				
 				// $th\is->dd($verificationData);
 				$this->load->view('user/layout/header');
 				$this->load->view('user/rent_verification', $verificationData);
@@ -1710,6 +1714,16 @@ class User extends CI_Controller
 
 	public function normaInfoVerification()
 	{
+		
+		$verificationData = $this->health();
+		
+		// dd($verificationData);
+		$this->load->view('user/layout/header');
+		$this->load->view('user/norma/info_verification', $verificationData);
+		$this->load->view('user/layout/footer');
+	}
+
+	public function health() {
 		$this->user_auth();
 		$personal_data_id = $_SESSION['personal_data_id'];
 		$norma_income_data = $this->user_model->getNormaIncome($personal_data_id);
@@ -1777,11 +1791,11 @@ class User extends CI_Controller
 
 		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
 		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
-		// dd($verificationData);
-		$this->load->view('user/layout/header');
-		$this->load->view('user/norma/info_verification', $verificationData);
-		$this->load->view('user/layout/footer');
+		
+		return $verificationData;
 	}
+
+	
 
 	public function increasePfaTax()
 	{
@@ -3499,7 +3513,7 @@ class User extends CI_Controller
 					if (!empty($param)) {
 						array_push($xmlParams, $param);
 					}
-				} else if ($mapping_rules[$key]['rule_type'] == 'invoice') {
+				} else if ($mapping_rules[$key]['rule_type'] == ' 	') {
 					$param = $this->generateInvoiceParams($mapping_rules[$key]);
 					$invoiceParams = array_merge($invoiceParams, $param);
 				}

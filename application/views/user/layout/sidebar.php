@@ -1,4 +1,10 @@
 <!-----Start: Sidebar------>
+<style>
+	.hotel-regim:hover {
+		cursor: not-allowed;
+	}
+</style>
+
 <div class="deznav">
 	<div class="deznav-scroll-in"></div>
 
@@ -140,7 +146,8 @@
 					</a>
 				</li>
 				<li>
-					<a href="hotelRegimIncome" class="ai-icon" aria-expanded="false">
+					<!-- <a href="hotelRegimIncome" class="ai-icon" aria-expanded="false"> -->
+					<a href="#" class="ai-icon hotel-regim" aria-expanded="false">
 						<div class="form-check checkbox55">
 							<label class="form-check-label">
 								<input type="checkbox" class="form-check-input" value="">

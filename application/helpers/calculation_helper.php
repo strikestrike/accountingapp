@@ -16,6 +16,10 @@ if (!function_exists('calculateIncome2021')) {
 	{
 		$rent_value = $data['rent_value'];
 		$contract_start_date = $data['contract_start_date'];
+
+		$start_year = date('Y', strtotime($contract_start_date));
+		
+
 		$contract_end_date = '';
 
 		if (!empty($data['contract_end_date']))
@@ -30,22 +34,24 @@ if (!function_exists('calculateIncome2021')) {
 		$passed_days_in_CEDmonth = getDMY('d', $contract_end_date); // passed days in month of contract end date
 
 		$previous_year = date("Y", strtotime("-1 year"));
-
+		
 		$current_year = date("Y");
 
 		$no_of_months = '';
 
-		if (getDMY('y', $contract_end_date) > $previous_year) {
+		if ((getDMY('y', $contract_end_date) > $previous_year) || (getDMY('y', $contract_start_date) == $previous_year)) {
 			$no_of_months = 12 - getDMY('m', $contract_start_date);
-		} elseif (getDMY('y', $contract_end_date) == $previous_year) {
-			$no_of_months = getDMY('m', $contract_end_date) - getDMY('m', $contract_start_date);
+		} elseif ((getDMY('y', $contract_end_date) == $previous_year) || (getDMY('y', $contract_start_date) == $previous_year)) {
+			$no_of_months = getDMY('m', $contract_end_date) - getDMY('m', $contract_start_date) - 1;
 		} else {
 			$no_of_months = 12 - getDMY('m', $contract_start_date);
 		}
 
-		$result = $rent_value / $no_of_days_in_CSDmonth * $remaining_days_CSDmonth + $rent_value * $no_of_months + $rent_value / $no_of_days_in_CEDmonth * $passed_days_in_CEDmonth;
-
-		return abs(round($result));
+		if ($start_year <= $previous_year) {
+			$result = $rent_value / $no_of_days_in_CSDmonth * $remaining_days_CSDmonth + $rent_value * $no_of_months + $rent_value / $no_of_days_in_CEDmonth * $passed_days_in_CEDmonth;
+			var_dump($result);
+			return abs(round($result));
+		}
 	}
 }
 

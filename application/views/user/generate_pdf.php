@@ -95,16 +95,25 @@
                                         <p class="mb-4 small">Your document was generated. Please pay the invoice so you can download the file.</p>
                                         <?php if (!empty($final_cost)) {
                                             if ($final_cost['status'] == 0) { ?>
-                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="promptPayment()">
+                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="downloadPDF()" style="margin-right: 15px;">
                                                     <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
-                                                    <strong>Download</strong>
+                                                    <strong>Descarca declaratia unica</strong>
+                                                </a>
+                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="downloadPDF()">
+                                                    <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
+                                                    <strong>Descarca factura</strong>
                                                 </a>
                                             <?php } ?>
                                         <?php } else { ?>
-                                                <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadPDF();">
+                                                <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadPDF();" style="margin-right: 15px;">
                                                     <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
-                                                    <strong>Download</strong>
+                                                    <strong>Descarca declaratia unica</strong>
                                                 </a>
+                                                <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadInvoice();">
+                                                    <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
+                                                    <strong>Descarca factura</strong>
+                                                </a>
+                                                
                                         <?php } ?>
 
                                     </div>
@@ -233,13 +242,16 @@
 		});
 	}
 	function downloadPDF() {
+        
 		let getDownloadLinkUrl = '<?php echo site_url('user/getDownloadLink'); ?>'
+        console.log("getdownloadlinkurl", getDownloadLinkUrl);
+
 		$.get(getDownloadLinkUrl).done((resp) => {
 			let result = JSON.parse(resp);
+            console.log("result", result);
 			if (result.success) {
-
-
 				for (let link of result.links) {
+                    console.log("link", link);
 					if (!link) {
 						continue;
 					}
@@ -260,4 +272,7 @@
 		iframe.style.display = "none";
 		document.body.appendChild(iframe);
 	}
+    function downloadInvoice() {
+        console.log("this is invoice download");
+    }
 </script>
