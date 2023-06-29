@@ -299,7 +299,7 @@
 													</div>
 												</div>
 											</div>
-											<label>aaa</label>
+											
 											<!-- block for total income for health mandatory -->
 											<?php 
 													
@@ -323,7 +323,6 @@
 															</div>
 													<?php }
 													} ?>
-
 													<!-- block for total income for health optional -->
 													<?php if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
 														if(!$health_mandatory_block['visible']) { ?>

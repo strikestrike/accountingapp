@@ -411,6 +411,63 @@
                                                 </div>
                                             </div>
 
+
+                                            <!-- kangdo             -->
+                                            <!-- block for total income for health mandatory -->
+											<?php 
+													
+													if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
+														// var_dump($health_mandatory_block);
+														if(!$health_mandatory_block['visible']) { ?>
+															<div class="row mt-4 mb-4">
+																<h4 class="mx-lg-auto mb-3">Asigurare sanatate obligatorie</h4>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">	
+																		<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
+																		<input type="number" class="form-control" name="health_mandatory_valoare" value="<?= $health_mandatory_block['valoare'] ?>" readonly>
+																	</div>
+																</div>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Taxa</label>
+																		<input type="text" class="form-control" name="health_mandatory_taxa" value="<?= $health_mandatory_block['taxa'] ?>" readonly>
+																	</div>
+																</div>
+															</div>
+													<?php }
+													} ?>
+													<!-- block for total income for health optional -->
+													<?php if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
+														if(!$health_mandatory_block['visible']) { ?>
+														<div class="row">
+															<div class="col-md-6">
+																<div class="form-group d-flex">
+																	<label class="form-label mb-1 me-5 mt-2">Doriti asigurare de pensie?</label>
+																	<select class="default-select" id="healthOptSelect" style="width: 100px;">
+																		<option value="">Select</option>
+																		<option>Da</option>
+																		<option>Nu</option>
+																	</select>
+																</div>
+															</div>
+															<div class="row mb-4" id="healthOptRow" style="display: none;">
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
+																		<input type="number" class="form-control" name="health_opt_valoare" value="<?= $health_optional_block['valoare'] ?? '0' ?>" disabled>
+																	</div>
+																</div>
+																<div class="col-md-6 col-xs-12">
+																	<div class="form-group">
+																		<label class="form-label mb-1">Taxa</label>
+																		<input type="text" class="form-control" name="health_opt_taxa" value="<?= $health_optional_block['taxa'] ?? '0' ?>" readonly disabled>
+																	</div>
+																</div>
+															</div>
+														</div>
+													<?php }
+													} ?>
+
                                             <div class="row mb-3 align-items-center px-md-0 px-2" id="ifYesIncome" style="display: none;">
                                                 <label class="col-sm-3 col-form-label"> Income</label>
                                                 <div class="col-md-7 col-10">

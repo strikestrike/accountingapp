@@ -247,8 +247,9 @@
         console.log("getdownloadlinkurl", getDownloadLinkUrl);
 
 		$.get(getDownloadLinkUrl).done((resp) => {
+            
 			let result = JSON.parse(resp);
-            console.log("result", result);
+          
 			if (result.success) {
 				for (let link of result.links) {
                     console.log("link", link);

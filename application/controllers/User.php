@@ -984,9 +984,10 @@ class User extends CI_Controller
 	public function rentVerification()
 	{
 		$this->user_auth();
+		
 		$id = $this->session->userdata('id');
 		$personalDataId = $this->session->userdata('personal_data_id');
-
+		
 		// $this->dd($_SESSION);
 		
 		
@@ -999,6 +1000,11 @@ class User extends CI_Controller
 		// $this->dd($stepsCompleted);
 
 
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
+
 		if (!empty($verificationData['personalData'])) {
 			// if ($verificationData['personalData']['steps_completed'] == 2) {
 				$rentalVerification = $this->user_model->fetchVerifiedRentalByPersonalDataId($personalDataId);
@@ -1008,9 +1014,9 @@ class User extends CI_Controller
 				$verificationData['income2021'] = $this->getIncome2021($data);
 				$verificationData['income2022'] = $this->getIncome2022($data);
 
-				$health_data = $this->health();
-				$verificationData['health_mandatory_block'] = $health_data['health_mandatory_block'];
-				$verificationData['health_optional_block'] = $health_data['health_optional_block'];
+				// $health_data = $this->health();
+				// $verificationData['health_mandatory_block'] = $health_data['health_mandatory_block'];
+				// $verificationData['health_optional_block'] = $health_data['health_optional_block'];
 				
 				// $th\is->dd($verificationData);
 				$this->load->view('user/layout/header');
@@ -1714,16 +1720,6 @@ class User extends CI_Controller
 
 	public function normaInfoVerification()
 	{
-		
-		$verificationData = $this->health();
-		
-		// dd($verificationData);
-		$this->load->view('user/layout/header');
-		$this->load->view('user/norma/info_verification', $verificationData);
-		$this->load->view('user/layout/footer');
-	}
-
-	public function health() {
 		$this->user_auth();
 		$personal_data_id = $_SESSION['personal_data_id'];
 		$norma_income_data = $this->user_model->getNormaIncome($personal_data_id);
@@ -1787,12 +1783,51 @@ class User extends CI_Controller
 		}
 		$varCASforHealthOptional = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
 		// dd($varCASforHealthOptional);
-		
 
 		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
 		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
 		
-		return $verificationData;
+		// dd($verificationData);
+		$this->load->view('user/layout/header');
+		$this->load->view('user/norma/info_verification', $verificationData);
+		$this->load->view('user/layout/footer');
+	}
+
+	function health($personal_id) {
+
+		$pensionMandatoryIncomes = $this->admin_model->getPensionMandatoryIncomes();
+		$incomes = [];
+		foreach ($pensionMandatoryIncomes as $inc) {
+			$incomes[] = $inc['income_name'];
+		}
+		$personal_data_id = $personal_id;
+		$norma_income_data = $this->user_model->getNormaIncome($personal_data_id);
+
+		$c_var = $norma_income_data[0]['cvar'] ?? null;
+		$start_date = $norma_income_data[0]['start_date'];
+		$end_date = $norma_income_data[0]['end_date'];
+
+		$normaValue = 0;
+		
+		foreach ($norma_income_data as $i) {
+			$normaValue += $i['norma_de_venit'];
+		}
+		$high_increase = $norma_income_data[0]['high_increase'] ?? 0;
+		$high_decrease = $norma_income_data[0]['high_decrease'] ?? 0;
+
+		$verificationData['norma_ajustata'] = compute_norma_ajustata($normaValue, $high_increase, $high_decrease);
+		$verificationData['venit_net_anual'] = compute_venit_net_anual($verificationData['norma_ajustata'], $start_date, $end_date, $c_var);
+		$verificationData['venit_impozabil'] = compute_venit_impozabil($verificationData['venit_net_anual']);
+
+		$varCASforHealthMandatory = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		$varCASforHealthOptional = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		$current_year = date("Y");
+		$minWageCurrentYear = $this->user_model->getMinWageForCurrentYear($current_year);
+
+		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
+		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
+		
+		return array($verificationData['health_mandatory_block'], $verificationData['health_optional_block']);
 	}
 
 	
@@ -2026,7 +2061,10 @@ class User extends CI_Controller
 		$verificationData['personalData']['steps_completed'] = $stepsCompleted;
 		// $this->dd($stepsCompleted);
 
-
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
 
 
 		if (!empty($verificationData['personalData'])) 
@@ -2428,6 +2466,11 @@ class User extends CI_Controller
 
 		// $this->dd($_SESSION);
 
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
+
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personalDataId);
 		
 		// $this->dd($verificationData['personalData']);
@@ -2733,6 +2776,8 @@ class User extends CI_Controller
 		// $this->dd($steps);
 		// $this->dd($stepsCompleted);
 
+		
+
 		// $this->dd($stepsCompleted);
 		$data['personalData']['steps_completed'] = $stepsCompleted;
 
@@ -2869,6 +2914,12 @@ class User extends CI_Controller
 		$id = $this->session->userdata('id');
 		$personalDataId = $this->session->userdata('personal_data_id');
 
+
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
+
 		// $this->dd($_SESSION);
 
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personalDataId);
@@ -2876,6 +2927,8 @@ class User extends CI_Controller
 		$stepsCompleted = $this->checkCryptoSteps($steps);
 		$verificationData['personalData']['steps_completed'] = $stepsCompleted;
 		// $this->dd($stepsCompleted);
+
+		
 
 		if (!empty($verificationData['personalData'])) 
 		{
