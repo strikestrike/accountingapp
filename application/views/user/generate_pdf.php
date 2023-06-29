@@ -244,12 +244,12 @@
 	function downloadPDF() {
         
 		let getDownloadLinkUrl = '<?php echo site_url('user/getDownloadLink'); ?>'
-        console.log("getdownloadlinkurl", getDownloadLinkUrl);
+        console.log("getdownloadlin");
 
 		$.get(getDownloadLinkUrl).done((resp) => {
-            
+        
 			let result = JSON.parse(resp);
-          
+            
 			if (result.success) {
 				for (let link of result.links) {
                     console.log("link", link);

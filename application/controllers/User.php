@@ -1005,6 +1005,7 @@ class User extends CI_Controller
 		$verificationData['health_mandatory_block'] = $result1;
 		$verificationData['health_optional_block'] = $result2;
 
+		
 		if (!empty($verificationData['personalData'])) {
 			// if ($verificationData['personalData']['steps_completed'] == 2) {
 				$rentalVerification = $this->user_model->fetchVerifiedRentalByPersonalDataId($personalDataId);
@@ -1794,7 +1795,7 @@ class User extends CI_Controller
 	}
 
 	function health($personal_id) {
-
+		
 		$pensionMandatoryIncomes = $this->admin_model->getPensionMandatoryIncomes();
 		$incomes = [];
 		foreach ($pensionMandatoryIncomes as $inc) {
@@ -1802,6 +1803,10 @@ class User extends CI_Controller
 		}
 		$personal_data_id = $personal_id;
 		$norma_income_data = $this->user_model->getNormaIncome($personal_data_id);
+		
+		if ($norma_income_data == null) {
+			return array(0, 0);
+		}
 
 		$c_var = $norma_income_data[0]['cvar'] ?? null;
 		$start_date = $norma_income_data[0]['start_date'];
