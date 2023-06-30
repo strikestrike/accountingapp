@@ -3560,24 +3560,26 @@ class User extends CI_Controller
 		$mapping_rules = $this->admin_model->getMappingRulesByDocType($doc_type);
 		if (!empty($mapping_rules)) {
 			foreach ($mapping_rules as $key => $value) {
-				$param = [];
+				$params = [];
 				if ($mapping_rules[$key]['rule_type'] == 'pdf') {
 					if ($mapping_rules[$key]['component'] == 'button') {
-						$param = $this->generateButtonParams($mapping_rules[$key]);
+						$params = $this->generateButtonParams($mapping_rules[$key]);
 					} else if ($mapping_rules[$key]['component'] == 'checkbox') {
-						$param = $this->generateCheckboxParams($mapping_rules[$key]);
+						$params = $this->generateCheckboxParams($mapping_rules[$key]);
 					}
-					if (!empty($param)) {
-						array_push($pdfParams, $param);
+					if (!empty($params)) {
+						$pdfParams = array_merge($pdfParams, $params);
 					}
 				} else if ($mapping_rules[$key]['rule_type'] == 'xml') {
-					$param = $this->generateXMLParams($mapping_rules[$key]);
-					if (!empty($param)) {
-						array_push($xmlParams, $param);
+					$params = $this->generateXMLParams($mapping_rules[$key]);
+					if (!empty($params)) {
+						$xmlParams = array_merge($xmlParams, $params);
 					}
-				} else if ($mapping_rules[$key]['rule_type'] == ' 	') {
-					$param = $this->generateInvoiceParams($mapping_rules[$key]);
-					$invoiceParams = array_merge($invoiceParams, $param);
+				} else if ($mapping_rules[$key]['rule_type'] == 'invoice') {
+					$params = $this->generateInvoiceParams($mapping_rules[$key]);
+					if (!empty($params)) {
+						$invoiceParams = array_merge($invoiceParams, $params);
+					}
 				}
 			}
 		}
@@ -3620,7 +3622,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3642,7 +3644,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3660,14 +3662,16 @@ class User extends CI_Controller
 		}
 
 		$value = '';
-		if ($rule['action_type'] == 'copy') {
+		if ($rule['action_type'] == 'value') {
+			$value = $rule['field_mappings_ids'];
+		} else if ($rule['action_type'] == 'copy') {
 			$value = $this->getDataSourceValue($rule['field_mappings_ids']);
 		} else if ($rule['action_type'] == 'concat') {
 			$ids = explode(",", $rule['field_mappings_ids']);
 			foreach ($ids as $id) {
 				$ret = $this->getDataSourceValue($id);
 				if (isset($ret)) {
-					$value = (empty($value) ? '' : ' ') . $ret;
+					$value .= (empty($value) ? '' : ' ') . $ret;
 				}
 			}
 		} else if ($rule['action_type'] == 'value') {
@@ -3681,7 +3685,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3700,7 +3704,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					$path['pdf_field_path'] => $value,
@@ -3711,7 +3715,7 @@ class User extends CI_Controller
 	}
 
 	private function checkConditions($rule) {
-		$minMatchingCount = 0;
+		$minMatchingCount = -1;
 
 		$personal_data_id = $this->session->userdata('personal_data_id');
 		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule['id']);
@@ -3731,7 +3735,6 @@ class User extends CI_Controller
 			if (count($tablecolumns) < 2 && $condition['matching_mode'] == 'all') {
 				return 0;
 			}
-
 
 			$this->db->select("count(*) AS cnt");
 			if ($tablecolumns[0] == 'personal_data') {
@@ -3759,7 +3762,7 @@ class User extends CI_Controller
 			if ($tablecolumns[0] == 'personal_data') {
 			    $this->db->group_by("personal_data.id");
 			} else {	
-     			    $this->db->group_by("personal_data_id");
+				$this->db->group_by("personal_data_id");
 			}
 			$query = $this->db->get($tablecolumns[0], 1);
 			$result = $query->row_array();
@@ -3767,7 +3770,9 @@ class User extends CI_Controller
 			if (isset($result['cnt']) && !empty($result['cnt'])) {
 				$count = (int)$result['cnt'];
 				if ($rule['component'] == 'button') {
-					if ($minMatchingCount > $count && $count > 0) {
+					if ($minMatchingCount == -1) {
+						$minMatchingCount = $count;
+					} else if ($minMatchingCount > $count) {
 						$minMatchingCount = $count;
 					}
 				} else {
@@ -3789,6 +3794,8 @@ class User extends CI_Controller
 		if ($any_condition_type_exists && !$matching_exists) {
 			return 0;
 		}
+
+		$minMatchingCount = $minMatchingCount == -1 ? 0 : $minMatchingCount;
 
 		return $minMatchingCount;
 	}

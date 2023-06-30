@@ -251,7 +251,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' && $action_type != 'concat' ? '' : 'd-none'; ?>" id="copy_field_wrap">
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' && $action_type != 'concat' && $action_type != 'value' ? '' : 'd-none'; ?>" id="copy_field_wrap">
 									<div class="form-group">
 										<label class="form-label">Web Field</label>
 										<select class="default-select form-control" id="copy_field">
@@ -271,12 +271,19 @@
 										</select>
 									</div>
 								</div>
+								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' && $action_type == 'value' ? '' : 'd-none'; ?>" id="value_field_wrap">
+									<div class="form-group">
+										<label class="form-label">Value</label>
+										<input type="text" class="form-control" id="value_field" value="<?php echo (isset($mappingrule) ? $mappingrule['field_mappings_ids'] : ''); ?>">
+									</div>
+								</div>
 								<div class="col-md-4 col-sm-6 col-xs-12 <?php echo $component != 'radio' ? '' : 'd-none'; ?>" id="xml_action_type_wrap">
 									<div class="form-group">
 										<label class="form-label">Action Type</label>
 										<select class="default-select form-control" id="xml_action_type">
 											<option value="copy" <?php echo $action_type != 'concat' ? 'selected' : ''; ?> >Copy</option>
 											<option value="concat" <?php echo $action_type == 'concat' ? 'selected' : ''; ?> >Concat</option>
+											<option value="value" <?php echo $action_type == 'value' ? 'selected' : ''; ?> >Value</option>
 										</select>
 									</div>
 								</div>
@@ -587,6 +594,7 @@
 	$("input[name=xml_component_type]").change(function() {
 		$('.xml-rule-wrap #copy_field_wrap').addClass('d-none');
 		$('.xml-rule-wrap #concat_fields_wrap').addClass('d-none');
+		$('.xml-rule-wrap #value_field_wrap').addClass('d-none');
 		$('.xml-rule-wrap #xml_action_type_wrap').addClass('d-none');
 		$('.xml-rule-wrap .textbox_path_wrap').addClass('d-none');
 		$('.xml-rule-wrap .radio_path_wrap').addClass('d-none');
@@ -595,23 +603,15 @@
 		if (val == 'textbox') {
 			$('.xml-rule-wrap #xml_action_type_wrap').removeClass('d-none');
 			$('.xml-rule-wrap .textbox_path_wrap').removeClass('d-none');
-			if ($('#xml_action_type_wrap').val() == 'copy') {
-				$('.xml-rule-wrap #copy_field_wrap').removeClass('d-none');
-			} else {
+			if ($('#xml_action_type').val() == 'concat') {
 				$('.xml-rule-wrap #concat_fields_wrap').removeClass('d-none');
+			} else if ($('#xml_action_type').val() == 'value') {
+				$('.xml-rule-wrap #value_field_wrap').removeClass('d-none');
+			} else {
+				$('.xml-rule-wrap #copy_field_wrap').removeClass('d-none');
 			}
 		} else if (val == 'radio') {
 			$('.xml-rule-wrap .radio_path_wrap').removeClass('d-none');
-		}
-	});
-
-	$("#xml_action_type_wrap").change(function() {
-		$('.xml-rule-wrap #copy_field_wrap').addClass('d-none');
-		$('.xml-rule-wrap #concat_fields_wrap').removeClass('d-none');
-		if($("#xml_action_type_wrap").val() == 'copy') {
-			$('.xml-rule-wrap #copy_field_wrap').removeClass('d-none');
-		} else if($("#xml_action_type_wrap").val() == 'concat') {
-			$('.xml-rule-wrap #concat_fields_wrap').addClass('d-none');
 		}
 	});
 
@@ -642,6 +642,8 @@
 				if (concat_fields) {
 					web_field = concat_fields.join();
 				}
+			} else if (action_type == 'value') {
+				web_field = $('#value_field').val();
 			}
 			for (let i = 0; i < textbox_path_wrappers.length; i++) {
 				let path = $(textbox_path_wrappers[i]).find('input[name=pdf-path-field]').val();
@@ -783,44 +785,20 @@
 			initAddRemoveHandlers();
 		});
 
-		$('.xml_component_type').change(function() {
-			let val = $(this).val();
-			let actionType = $('#xml_action_type').val();
-
-			if (val) {
-				$('.default-select').selectpicker('refresh');
-
-				$('.copy_field_wrap').addClass('d-none');
-				$('.concat_fields_wrap').addClass('d-none');
-				$('#xml_action_type_wrap').addClass('d-none');
-				$('.textbox_path_wrap').addClass('d-none');
-				$('.radio_path_wrap').addClass('d-none');
-
-				if (val == 'radio') {
-					$('.radio_path_wrap').removeClass('d-none');
-				} else if (val == 'textbox') {
-					$('#xml_action_type_wrap').removeClass('d-none');
-					$('.textbox_path_wrap').removeClass('d-none');
-					if (actionType == 'copy') {
-						$('.copy_field_wrap').removeClass('d-none');
-					} else if (actionType == 'concat') {
-						$('.concat_fields_wrap').removeClass('d-none');
-					}
-				}
-			}
-		});
-
 		$('#xml_action_type').change(function() {
 			let val = $(this).val();
 			if (val) {
 				$('.default-select').selectpicker('refresh');
 
-				$('.copy_field_wrap').addClass('d-none');
-				$('.concat_fields_wrap').addClass('d-none');
+				$('#copy_field_wrap').addClass('d-none');
+				$('#concat_fields_wrap').addClass('d-none');
+				$('#value_field_wrap').addClass('d-none');
 				if (val == 'copy') {
-					$('.copy_field_wrap').removeClass('d-none');
+					$('#copy_field_wrap').removeClass('d-none');
 				} else if (val == 'concat') {
-					$('.concat_fields_wrap').removeClass('d-none');
+					$('#concat_fields_wrap').removeClass('d-none');
+				} else if (val == 'value') {
+					$('#value_field_wrap').removeClass('d-none');
 				}
 			}
 		});
