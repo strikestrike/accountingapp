@@ -21,7 +21,7 @@
             <div class="card-action card-tabs card-tabs2 w-100">
                 <ul class="nav nav-tabs style-2 w-100" id="ListViewTabLink">
                     <li class="nav-item">
-                        <a href="<?= base_url('user/verifyPersonalData/'.$personal_data_id) ?>" class="nav-link">Personal Data </a>
+                        <a href="<?= base_url('user/verifyPersonalData/' . $personal_data_id) ?>" class="nav-link">Personal Data </a>
                     </li>
                     <li class="nav-item">
                         <a href="<?= base_url('user/chooseIncome') ?>" class="nav-link ">Income Type</a>

@@ -159,6 +159,7 @@
 													$i = 0;
 													// die;
 													foreach ($rentIncome as $key => $value) {
+														
 														// echo $value['rented_space_address']
 												?>
 														<input type="hidden" name="income_type[<?= $i ?>][id]" value="<?= $value['id'] ?>">

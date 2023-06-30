@@ -984,11 +984,13 @@ class User extends CI_Controller
 	public function rentVerification()
 	{
 		$this->user_auth();
+		
 		$id = $this->session->userdata('id');
 		$personalDataId = $this->session->userdata('personal_data_id');
-
+		
 		// $this->dd($_SESSION);
-
+		
+		
 		$data['rentIncome'] = $this->user_model->fetchRentIncome($id, $personalDataId);
 
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personalDataId);
@@ -1003,7 +1005,7 @@ class User extends CI_Controller
 		$verificationData['health_mandatory_block'] = $result1;
 		$verificationData['health_optional_block'] = $result2;
 
-
+		
 		if (!empty($verificationData['personalData'])) {
 			// if ($verificationData['personalData']['steps_completed'] == 2) {
 				$rentalVerification = $this->user_model->fetchVerifiedRentalByPersonalDataId($personalDataId);
@@ -1782,10 +1784,10 @@ class User extends CI_Controller
 		}
 		$varCASforHealthOptional = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
 		// dd($varCASforHealthOptional);
-		
 
 		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
 		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
+		
 		// dd($verificationData);
 		$this->load->view('user/layout/header');
 		$this->load->view('user/norma/info_verification', $verificationData);
@@ -2779,6 +2781,8 @@ class User extends CI_Controller
 		// $this->dd($steps);
 		// $this->dd($stepsCompleted);
 
+		
+
 		// $this->dd($stepsCompleted);
 		$data['personalData']['steps_completed'] = $stepsCompleted;
 
@@ -2928,6 +2932,8 @@ class User extends CI_Controller
 		$stepsCompleted = $this->checkCryptoSteps($steps);
 		$verificationData['personalData']['steps_completed'] = $stepsCompleted;
 		// $this->dd($stepsCompleted);
+
+		
 
 		if (!empty($verificationData['personalData'])) 
 		{
@@ -3545,6 +3551,7 @@ class User extends CI_Controller
 
 	private function generatePDFParams($doc_type)
 	{
+		
 		$apiParams =  [];
 		$pdfParams = [];
 		$xmlParams = [];

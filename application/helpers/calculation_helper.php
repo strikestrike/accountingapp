@@ -87,14 +87,14 @@ if (!function_exists('calculateIncome2022')) {
 		$rent_value = $data['rent_value'];
 		$contract_start_date = $data['contract_start_date'];
 		$contract_end_date = '';
-
+		
 		if (!empty($data['contract_end_date']))
 			$contract_end_date = $data['contract_end_date'];
 
 		$n = '';
 
 		$no_of_days_in_CSDmonth = cal_days_in_month(CAL_GREGORIAN, getDMY('m', $contract_start_date), getDMY('y', $contract_start_date)); //number of days that the selected month has (month found in “Contract start date”) 
-		
+
 		$no_of_days_in_CEDmonth = cal_days_in_month(CAL_GREGORIAN, getDMY('m', $contract_end_date), getDMY('y', $contract_end_date)); //number of days that the selected month has (month found in “Contract End date”) 
 
 		$previous_year = date("Y", strtotime("-1 year"));
@@ -116,7 +116,17 @@ if (!function_exists('calculateIncome2022')) {
 			$n = getDMY('m', $contract_end_date) - getDMY('m', $contract_start_date) - 1;
 		}
 		if (getDMY('y', $contract_start_date) < $current_year) {
+			$contract_start_date = explode('-', $contract_start_date);
+			$contract_start_date[2] = $no_of_days_in_CSDmonth - 1;
+			$contract_start_date = implode('-', $contract_start_date);
+		}
+		if (getDMY('y', $contract_end_date) > $previous_year) {
 			
+			$contract_end_date = explode('-', $contract_end_date);
+			$contract_end_date[2] = 0;
+			$contract_end_date = implode('-', $contract_end_date);
+			var_dump($contract_end_date);
+			var_dump(getDMY('d', $contract_end_date));
 		}
 		else {
 			$n = getDMY('m', $contract_end_date) - 1;

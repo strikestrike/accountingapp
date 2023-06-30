@@ -308,7 +308,7 @@
 
 
                                         <div class="row form-group">
-                                            <label class="col-sm-3 col-form-label">To be paid until May 2022</label>
+                                            <label class="col-sm-3 col-form-label">To be paid until May 202</label>
                                             <div class="col-sm-7">
                                                 <div class="row">
                                                     <div class="col-sm-6">

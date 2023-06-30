@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |http://localhost:82/accountingapp/index.php/Welcome/createuser
 */
 // $config['base_url'] = 'http://3.64.185.40/accountingapp/';
-$config['base_url'] = '/';
+$config['base_url'] = '/accountingapp';
 
 /*
 |--------------------------------------------------------------------------

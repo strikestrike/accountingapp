@@ -295,12 +295,15 @@
 													} ?>
 
 													<!-- block for total income for health mandatory -->
-													<?php if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
-														if($health_mandatory_block['visible']) { ?>
+													<?php 
+													
+													if(!empty($health_mandatory_block) && count($health_mandatory_block) > 0) {
+														// var_dump($health_mandatory_block);
+														if(!$health_mandatory_block['visible']) { ?>
 															<div class="row mt-4 mb-4">
 																<h4 class="mx-lg-auto mb-3">Asigurare sanatate obligatorie</h4>
 																<div class="col-md-6 col-xs-12">
-																	<div class="form-group">
+																	<div class="form-group">	
 																		<label class="form-label mb-1">Valoare impozabila pentru sanatate</label>
 																		<input type="number" class="form-control" name="health_mandatory_valoare" value="<?= $health_mandatory_block['valoare'] ?>" readonly>
 																	</div>
