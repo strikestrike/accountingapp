@@ -30,7 +30,7 @@ class Admin extends CI_Controller
 	public function admin_auth()
 	{
 		// dd($_SESSION);
-		if (isset($_SESSION['role'])) {
+		if (isset($_SESSION['role'])) {z
 			if ($_SESSION['role'] == 1) {
 			}
 			if($_SESSION['role'] == 2) {

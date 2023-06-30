@@ -3482,17 +3482,20 @@ class User extends CI_Controller
 	}
 
 	public function getDownloadLink() {
+		$kind_param = $_GET['name'];
+		
 		$this->user_auth();
 
 		$links = [];
-
+		
 		$payload = $this->generatePDFParams('212');
 		$payload['doc_type'] = '212';
 		$response = $this->fetchPDFLink(json_encode($payload));
-		if ($response['success'] && !empty($response['pdf_link'])) {
+
+		if ($response['success'] && !empty($response['pdf_link']) && $kind_param == "212_168") {
 			array_push($links, $response['pdf_link']);
 		}
-		if ($response['success'] && !empty($response['invoice_link'])) {
+		if ($response['success'] && !empty($response['invoice_link']) && $kind_param == "invoice") {
 			array_push($links, $response['invoice_link']);
 		}
 
@@ -3501,7 +3504,7 @@ class User extends CI_Controller
 			$payload_168 = $this->generatePDFParams('168');
 			$payload_168['doc_type'] = '168';
 			$response = $this->fetchPDFLink(json_encode($payload_168));
-			if ($response['success'] && !empty($response['pdf_link'])) {
+			if ($response['success'] && !empty($response['pdf_link']) && $kind_param == "212_168") {
 				array_push($links, $response['pdf_link']);
 			}
 		}
@@ -3548,6 +3551,7 @@ class User extends CI_Controller
 
 	private function generatePDFParams($doc_type)
 	{
+		
 		$apiParams =  [];
 		$pdfParams = [];
 		$xmlParams = [];
@@ -3581,7 +3585,7 @@ class User extends CI_Controller
 		$apiParams['pdfs'] = $pdfParams;
 		$apiParams['xmls'] = $xmlParams;
 //		if ($doc_type == 212) {
-			$apiParams['invoice'] = (object)$invoiceParams;
+		$apiParams['invoice'] = (object)$invoiceParams;
 //		}
 
 		return $apiParams;
