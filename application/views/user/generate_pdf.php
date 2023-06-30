@@ -95,28 +95,37 @@
                                         <p class="mb-4 small">Your document was generated. Please pay the invoice so you can download the file.</p>
                                         <?php if (!empty($final_cost)) {
                                             if ($final_cost['status'] == 0) { ?>
-                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="promptPayment()">
+                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="downloadPDF()" style="margin-right: 15px;">
                                                     <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
-                                                    <strong>Download</strong>
+                                                    <strong>Descarca declaratia unica</strong>
+                                                </a>
+                                                <a class="video-btn btn-sm shadow" href="javascript:void(0)" onclick="downloadInvoice()">
+                                                    <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
+                                                    <strong>Descarca factura</strong>
                                                 </a>
                                             <?php } ?>
                                         <?php } else { ?>
-                                                <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadPDF();">
-                                                    <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
-                                                    <strong>Download</strong>
-                                                </a>
+                                            <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadPDF();" style="margin-right: 15px;">
+                                                <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
+                                                <strong>Descarca declaratia unica</strong>
+                                            </a>
+                                            <a class="video-btn btn-sm mb-5 shadow" href="javascript:void(0)" onclick="downloadInvoice();">
+                                                <img src="<?= base_url() ?>assets/img/download.png" alt="play btn">
+                                                <strong>Descarca factura</strong>
+                                            </a>
+
                                         <?php } ?>
 
                                     </div>
-									
+
                                     <?php if (!empty($final_cost)) {
-											// print_r($final_cost);	
-									?>
+                                        // print_r($final_cost);	
+                                    ?>
                                         <form action="<?= base_url('StripeController/checkoutSession') ?>" method="POST">
-											<!-- <input type="hidden" value="<?= $final_cost['price'] ?>" id="costFinal"> -->
-											<button class="btn btn-primary" type="button" id="checkout-button">Checkout</button>
-										</form>
-                                    <?php }?>
+                                            <!-- <input type="hidden" value="<?= $final_cost['price'] ?>" id="costFinal"> -->
+                                            <button class="btn btn-primary" type="button" id="checkout-button">Checkout</button>
+                                        </form>
+                                    <?php } ?>
 
                                 </div>
                             </div>
@@ -190,74 +199,111 @@
 <!-- End: Main wrapper -->
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-	window.addEventListener('load', function() {
-		var cost = "<?= $final_cost['price'] ?>";
-		$("#checkout-button").click(function(){
-			let data = {
-                    "Content-Type": "application/json",
-					"price": cost,
-                }
-			const stripe = Stripe('<?= $this->config->item('stripe_key') ?>');
-			stripeCheckout(data, stripe)
-		})
+    window.addEventListener('load', function() {
+        var cost = "<?= $final_cost['price'] ?>";
+        $("#checkout-button").click(function() {
+            let data = {
+                "Content-Type": "application/json",
+                "price": cost,
+            }
+            const stripe = Stripe('<?= $this->config->item('stripe_key') ?>');
+            stripeCheckout(data, stripe)
+        })
     });
 </script>
 
 <script>
-	function stripeCheckout(data, stripe){
-		let makePaymentURL = '<?= base_url('StripeController/checkoutSession') ?>'
-		let payloadData = data
-		$.post(makePaymentURL, payloadData).done((result) => {
-			let sessionId = result.id;
-			console.log(result)
-			stripe.redirectToCheckout({
-				sessionId: sessionId,
-			}).then(function(result) {
-				$(this).html('Make Featured').removeClass('disabled');
-				manageAjaxErrors(result);
-			});
-		}).catch(error => {
-			$(this).html('Make Featured').removeClass('disabled');
-			manageAjaxErrors(error);
-		});
-	}
-	function promptPayment() {
-		Swal.fire({
-			title: 'Warning',
-			text: "Please make payment before download!",
-			icon: 'warning',
-			showCancelButton: false,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Ok'
-		});
-	}
-	function downloadPDF() {
-		let getDownloadLinkUrl = '<?php echo site_url('user/getDownloadLink'); ?>'
-		$.get(getDownloadLinkUrl).done((resp) => {
-			let result = JSON.parse(resp);
-			if (result.success) {
+    function stripeCheckout(data, stripe) {
+        let makePaymentURL = '<?= base_url('StripeController/checkoutSession') ?>'
+        let payloadData = data
+        $.post(makePaymentURL, payloadData).done((result) => {
+            let sessionId = result.id;
+            console.log(result)
+            stripe.redirectToCheckout({
+                sessionId: sessionId,
+            }).then(function(result) {
+                $(this).html('Make Featured').removeClass('disabled');
+                manageAjaxErrors(result);
+            });
+        }).catch(error => {
+            $(this).html('Make Featured').removeClass('disabled');
+            manageAjaxErrors(error);
+        });
+    }
+
+    function promptPayment() {
+        Swal.fire({
+            title: 'Warning',
+            text: "Please make payment before download!",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        });
+    }
+
+    function downloadPDF() {
+
+        $.ajax({
+            url: '/accountingapp/user/getDownloadLink',
+            method: 'GET',
+            data: {
+                name: '212_168'
+            },
+            success: function(res) {
+                let result = JSON.parse(res);
+
+                if (result.success) {
+                    for (let link of result.links) {
+                        if (!link) {
+                            continue;
+                        }
+                        downloadUrl(link);
+                    }
+                } else {
+                    toastr.error(result.message);
+                }
+            }
+        })
+        // $.get(getDownloadLinkUrl).done((resp) => {
 
 
-				for (let link of result.links) {
-					if (!link) {
-						continue;
-					}
-					downloadUrl(link);
-				}
-			} else {
-				toastr.error(result.message);
-			}
-		}).catch(error => {
-			$(this).html('Make Featured').removeClass('disabled');
-			manageAjaxErrors(error);
-		});
-	}
+        // }).catch(error => {
+        // 	$(this).html('Make Featured').removeClass('disabled');
+        // 	manageAjaxErrors(error);
+        // });
+    }
 
-	function downloadUrl(url) {
-		var iframe = document.createElement("iframe");
-		iframe.src = url;
-		iframe.style.display = "none";
-		document.body.appendChild(iframe);
-	}
+    function downloadUrl(url) {
+        var iframe = document.createElement("iframe");
+        iframe.src = url;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+    }
+
+    function downloadInvoice() {
+        $.ajax({
+            url: '/accountingapp/user/getDownloadLink',
+            method: 'GET',
+            data: {
+                name: 'invoice'
+            },
+            success: function(res) {
+                let result = JSON.parse(res);
+
+                if (result.success) {
+                    for (let link of result.links) {
+                        if (!link) {
+                            continue;
+                        }
+                        downloadUrl(link);
+                    }
+                } else {
+                    toastr.error(result.message);
+                }
+            }
+        })
+        
+    }
 </script>

@@ -998,6 +998,10 @@ class User extends CI_Controller
 		// $this->dd($stepsCompleted);
 
 
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
 
 
 		if (!empty($verificationData['personalData'])) {
@@ -1008,6 +1012,11 @@ class User extends CI_Controller
 				}
 				$verificationData['income2021'] = $this->getIncome2021($data);
 				$verificationData['income2022'] = $this->getIncome2022($data);
+
+				// $health_data = $this->health();
+				// $verificationData['health_mandatory_block'] = $health_data['health_mandatory_block'];
+				// $verificationData['health_optional_block'] = $health_data['health_optional_block'];
+				
 				// $th\is->dd($verificationData);
 				$this->load->view('user/layout/header');
 				$this->load->view('user/rent_verification', $verificationData);
@@ -1783,6 +1792,49 @@ class User extends CI_Controller
 		$this->load->view('user/layout/footer');
 	}
 
+	function health($personal_id) {
+		
+		$pensionMandatoryIncomes = $this->admin_model->getPensionMandatoryIncomes();
+		$incomes = [];
+		foreach ($pensionMandatoryIncomes as $inc) {
+			$incomes[] = $inc['income_name'];
+		}
+		$personal_data_id = $personal_id;
+		$norma_income_data = $this->user_model->getNormaIncome($personal_data_id);
+		
+		if ($norma_income_data == null) {
+			return array(0, 0);
+		}
+
+		$c_var = $norma_income_data[0]['cvar'] ?? null;
+		$start_date = $norma_income_data[0]['start_date'];
+		$end_date = $norma_income_data[0]['end_date'];
+
+		$normaValue = 0;
+		
+		foreach ($norma_income_data as $i) {
+			$normaValue += $i['norma_de_venit'];
+		}
+		$high_increase = $norma_income_data[0]['high_increase'] ?? 0;
+		$high_decrease = $norma_income_data[0]['high_decrease'] ?? 0;
+
+		$verificationData['norma_ajustata'] = compute_norma_ajustata($normaValue, $high_increase, $high_decrease);
+		$verificationData['venit_net_anual'] = compute_venit_net_anual($verificationData['norma_ajustata'], $start_date, $end_date, $c_var);
+		$verificationData['venit_impozabil'] = compute_venit_impozabil($verificationData['venit_net_anual']);
+
+		$varCASforHealthMandatory = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		$varCASforHealthOptional = $this->admin_model->getvarCAS($incomes, $personal_data_id, $verificationData['venit_impozabil']);
+		$current_year = date("Y");
+		$minWageCurrentYear = $this->user_model->getMinWageForCurrentYear($current_year);
+
+		$verificationData['health_mandatory_block'] = compute_health_mandatory_block($varCASforHealthMandatory, $minWageCurrentYear['value']);
+		$verificationData['health_optional_block'] = compute_health_optional_block($varCASforHealthOptional, $minWageCurrentYear['value']);
+		
+		return array($verificationData['health_mandatory_block'], $verificationData['health_optional_block']);
+	}
+
+	
+
 	public function increasePfaTax()
 	{
 		$data = $this->input->post();
@@ -2012,7 +2064,10 @@ class User extends CI_Controller
 		$verificationData['personalData']['steps_completed'] = $stepsCompleted;
 		// $this->dd($stepsCompleted);
 
-
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
 
 
 		if (!empty($verificationData['personalData'])) 
@@ -2413,6 +2468,11 @@ class User extends CI_Controller
 		$personalDataId = $this->session->userdata('personal_data_id');
 
 		// $this->dd($_SESSION);
+
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
 
 		$verificationData['personalData'] = $this->user_model->getPersonalDataById($personalDataId);
 		
@@ -2854,6 +2914,12 @@ class User extends CI_Controller
 
 		$id = $this->session->userdata('id');
 		$personalDataId = $this->session->userdata('personal_data_id');
+
+
+		$personal_data_id = $_SESSION['personal_data_id'];
+		list($result1, $result2) = 	$this->health($personal_data_id);
+		$verificationData['health_mandatory_block'] = $result1;
+		$verificationData['health_optional_block'] = $result2;
 
 		// $this->dd($_SESSION);
 
@@ -3410,17 +3476,20 @@ class User extends CI_Controller
 	}
 
 	public function getDownloadLink() {
+		$kind_param = $_GET['name'];
+		
 		$this->user_auth();
 
 		$links = [];
-
+		
 		$payload = $this->generatePDFParams('212');
 		$payload['doc_type'] = '212';
 		$response = $this->fetchPDFLink(json_encode($payload));
-		if ($response['success'] && !empty($response['pdf_link'])) {
+
+		if ($response['success'] && !empty($response['pdf_link']) && $kind_param == "212_168") {
 			array_push($links, $response['pdf_link']);
 		}
-		if ($response['success'] && !empty($response['invoice_link'])) {
+		if ($response['success'] && !empty($response['invoice_link']) && $kind_param == "invoice") {
 			array_push($links, $response['invoice_link']);
 		}
 
@@ -3429,7 +3498,7 @@ class User extends CI_Controller
 			$payload_168 = $this->generatePDFParams('168');
 			$payload_168['doc_type'] = '168';
 			$response = $this->fetchPDFLink(json_encode($payload_168));
-			if ($response['success'] && !empty($response['pdf_link'])) {
+			if ($response['success'] && !empty($response['pdf_link']) && $kind_param == "212_168") {
 				array_push($links, $response['pdf_link']);
 			}
 		}
@@ -3484,24 +3553,26 @@ class User extends CI_Controller
 		$mapping_rules = $this->admin_model->getMappingRulesByDocType($doc_type);
 		if (!empty($mapping_rules)) {
 			foreach ($mapping_rules as $key => $value) {
-				$param = [];
+				$params = [];
 				if ($mapping_rules[$key]['rule_type'] == 'pdf') {
 					if ($mapping_rules[$key]['component'] == 'button') {
-						$param = $this->generateButtonParams($mapping_rules[$key]);
+						$params = $this->generateButtonParams($mapping_rules[$key]);
 					} else if ($mapping_rules[$key]['component'] == 'checkbox') {
-						$param = $this->generateCheckboxParams($mapping_rules[$key]);
+						$params = $this->generateCheckboxParams($mapping_rules[$key]);
 					}
-					if (!empty($param)) {
-						array_push($pdfParams, $param);
+					if (!empty($params)) {
+						$pdfParams = array_merge($pdfParams, $params);
 					}
 				} else if ($mapping_rules[$key]['rule_type'] == 'xml') {
-					$param = $this->generateXMLParams($mapping_rules[$key]);
-					if (!empty($param)) {
-						array_push($xmlParams, $param);
+					$params = $this->generateXMLParams($mapping_rules[$key]);
+					if (!empty($params)) {
+						$xmlParams = array_merge($xmlParams, $params);
 					}
 				} else if ($mapping_rules[$key]['rule_type'] == 'invoice') {
-					$param = $this->generateInvoiceParams($mapping_rules[$key]);
-					$invoiceParams = array_merge($invoiceParams, $param);
+					$params = $this->generateInvoiceParams($mapping_rules[$key]);
+					if (!empty($params)) {
+						$invoiceParams = array_merge($invoiceParams, $params);
+					}
 				}
 			}
 		}
@@ -3509,7 +3580,7 @@ class User extends CI_Controller
 		$apiParams['pdfs'] = $pdfParams;
 		$apiParams['xmls'] = $xmlParams;
 //		if ($doc_type == 212) {
-			$apiParams['invoice'] = (object)$invoiceParams;
+		$apiParams['invoice'] = (object)$invoiceParams;
 //		}
 
 		return $apiParams;
@@ -3544,7 +3615,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3566,7 +3637,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3584,14 +3655,16 @@ class User extends CI_Controller
 		}
 
 		$value = '';
-		if ($rule['action_type'] == 'copy') {
+		if ($rule['action_type'] == 'value') {
+			$value = $rule['field_mappings_ids'];
+		} else if ($rule['action_type'] == 'copy') {
 			$value = $this->getDataSourceValue($rule['field_mappings_ids']);
 		} else if ($rule['action_type'] == 'concat') {
 			$ids = explode(",", $rule['field_mappings_ids']);
 			foreach ($ids as $id) {
 				$ret = $this->getDataSourceValue($id);
 				if (isset($ret)) {
-					$value = (empty($value) ? '' : ' ') . $ret;
+					$value .= (empty($value) ? '' : ' ') . $ret;
 				}
 			}
 		} else if ($rule['action_type'] == 'value') {
@@ -3605,7 +3678,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					'path' => $path['pdf_field_path'],
@@ -3624,7 +3697,7 @@ class User extends CI_Controller
 
 		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
 		foreach ($pdf_rule_paths as $key => $path) {
-			$params = array_merge(
+			array_push(
 				$params,
 				array(
 					$path['pdf_field_path'] => $value,
@@ -3635,7 +3708,7 @@ class User extends CI_Controller
 	}
 
 	private function checkConditions($rule) {
-		$minMatchingCount = 0;
+		$minMatchingCount = -1;
 
 		$personal_data_id = $this->session->userdata('personal_data_id');
 		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule['id']);
@@ -3655,7 +3728,6 @@ class User extends CI_Controller
 			if (count($tablecolumns) < 2 && $condition['matching_mode'] == 'all') {
 				return 0;
 			}
-
 
 			$this->db->select("count(*) AS cnt");
 			if ($tablecolumns[0] == 'personal_data') {
@@ -3683,7 +3755,7 @@ class User extends CI_Controller
 			if ($tablecolumns[0] == 'personal_data') {
 			    $this->db->group_by("personal_data.id");
 			} else {	
-     			    $this->db->group_by("personal_data_id");
+				$this->db->group_by("personal_data_id");
 			}
 			$query = $this->db->get($tablecolumns[0], 1);
 			$result = $query->row_array();
@@ -3691,7 +3763,9 @@ class User extends CI_Controller
 			if (isset($result['cnt']) && !empty($result['cnt'])) {
 				$count = (int)$result['cnt'];
 				if ($rule['component'] == 'button') {
-					if ($minMatchingCount > $count && $count > 0) {
+					if ($minMatchingCount == -1) {
+						$minMatchingCount = $count;
+					} else if ($minMatchingCount > $count) {
 						$minMatchingCount = $count;
 					}
 				} else {
@@ -3713,6 +3787,8 @@ class User extends CI_Controller
 		if ($any_condition_type_exists && !$matching_exists) {
 			return 0;
 		}
+
+		$minMatchingCount = $minMatchingCount == -1 ? 0 : $minMatchingCount;
 
 		return $minMatchingCount;
 	}

@@ -207,8 +207,10 @@
 																		<div class="col-sm-4">
 																			<label class="form-label">Sign date <span style="color:red; font-size: 12px"> *</span></label>
 																			<div class="date-select">
+																				
 																				<!-- <input class="sign-date" type="hidden" name="sign_date" data-name="sign_date"> -->
-																				<input type="date" id="rentalIncome_sign_date" name="income_type[<?= $i ?>][sign_date]" value="<?= $value['sign_date'] ?>" data-name="sign_date">
+																				
+																				<input type="text" id="rentalIncome_sign_date" name="income_type[<?= $i ?>][sign_date]" value=<?= date("d/m/Y", strtotime($value['sign_date'])) ?>>
 																			</div>
 																		</div>
 																		<div class="col-sm-4 mt-2 mt-sm-0">
@@ -223,7 +225,7 @@
 																			<label class="form-label">Contract start date <span style="color:red; font-size: 12px"> *</span></label>
 																			<div class="date-select">
 																				<!-- <input class="contract-start-date" type="hidden" name="contract_start_date" data-name="contract_start_date"> -->
-																				<input type="date" id="rentalIncome_contract_start_date" name="income_type[<?= $i ?>][contract_start_date]" value="<?= $value['contract_start_date'] ?>" data-name="contract_start_date">
+																				<input type="text" id="rentalIncome_contract_start_date" name="income_type[<?= $i ?>][contract_start_date]" value="<?= date("d/m/Y", strtotime($value['contract_start_date'])) ?>" data-name="contract_start_date">
 																			</div>
 																		</div>
 																		<div class="col-sm-4 mt-2 mt-sm-0">
@@ -238,7 +240,7 @@
 																			<label class="form-label">Contract end date <span style="color:red; font-size: 12px"> *</span></label>
 																			<div class="date-select">
 																				<!-- <input class="contract-end-date" type="hidden" name="contract_end_date" data-name="contract_end_date"> -->
-																				<input type="date" id="rentalIncome_contract_end_date" name="income_type[<?= $i ?>][contract_end_date]" value="<?= $value['contract_end_date'] ?>" data-name="contract_end_date" min="01-01-<?= date("Y", strtotime("-1 Year")) ?>">
+																				<input type="text" id="rentalIncome_contract_end_date" name="income_type[<?= $i ?>][contract_end_date]" value="<?= date("d/m/Y", strtotime($value['contract_end_date']))  ?>" data-name="contract_end_date" min="01-01-<?= date("Y", strtotime("-1 Year")) ?>">
 																			</div>
 																			<span style="color:red; font-size: 12px">
 																		</div>
