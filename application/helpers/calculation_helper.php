@@ -47,7 +47,6 @@ if (!function_exists('calculateIncome2021')) {
 		}
 		if ((getDMY('y', $contract_end_date) == $previous_year) || (getDMY('y', $contract_start_date) == $previous_year)) {
 			$no_of_months = getDMY('m', $contract_end_date) - getDMY('m', $contract_start_date) - 1;
-			var_dump($no_of_months);
 		}
 		if ($start_year < $previous_year) {
 			$remaining_days_CSDmonth = -1;
@@ -116,7 +115,15 @@ if (!function_exists('calculateIncome2022')) {
 			$n = getDMY('m', $contract_end_date) - getDMY('m', $contract_start_date) - 1;
 		}
 		if (getDMY('y', $contract_start_date) < $current_year) {
+			$contract_start_date = explode('-', $contract_start_date);
+			$contract_start_date[2] = $no_of_days_in_CSDmonth - 1;
+			$contract_start_date = implode('-', $contract_start_date);
+		}
+		if (getDMY('y', $contract_end_date) > $previous_year) {
 			
+			$contract_end_date = explode('-', $contract_end_date);
+			$contract_end_date[2] = 0;
+			$contract_end_date = implode('-', $contract_end_date);
 		}
 		else {
 			$n = getDMY('m', $contract_end_date) - 1;

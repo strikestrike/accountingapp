@@ -246,7 +246,7 @@
     function downloadPDF() {
 
         $.ajax({
-            url: '/accountingapp/user/getDownloadLink',
+            url: '/user/getDownloadLink',
             method: 'GET',
             data: {
                 name: '212_168'
@@ -284,7 +284,7 @@
 
     function downloadInvoice() {
         $.ajax({
-            url: '/accountingapp/user/getDownloadLink',
+            url: '/user/getDownloadLink',
             method: 'GET',
             data: {
                 name: 'invoice'

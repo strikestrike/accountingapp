@@ -3606,8 +3606,8 @@ class User extends CI_Controller
 	}
 
 	private function generateButtonParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule);
-		if ($minMatchingCount == 0) {
+		$filteredFields = $this->getFieldsFilteredByConditions($rule);
+		if (empty($filteredFields)) {
 			return [];
 		}
 
@@ -3620,7 +3620,7 @@ class User extends CI_Controller
 				array(
 					'path' => $path['pdf_field_path'],
 					'type' => 'button',
-					'times' => $minMatchingCount.''
+					'times' => count($filteredFields).''
 				)
 			);
 		}
@@ -3628,8 +3628,8 @@ class User extends CI_Controller
 	}
 
 	private function generateCheckboxParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule);
-		if ($minMatchingCount == 0) {
+		$filteredFields = $this->getFieldsFilteredByConditions($rule);
+		if (empty($filteredFields)) {
 			return [];
 		}
 
@@ -3649,44 +3649,105 @@ class User extends CI_Controller
 	}
 
 	private function generateXMLParams($rule) {
-		$minMatchingCount = $this->checkConditions($rule);
-		if ($minMatchingCount == 0) {
-			return [];
-		}
-
+		$filteredFields = $this->getFieldsFilteredByConditions($rule);
+		
+		$params = [];
 		$value = '';
-		if ($rule['action_type'] == 'value') {
-			$value = $rule['field_mappings_ids'];
-		} else if ($rule['action_type'] == 'copy') {
-			$value = $this->getDataSourceValue($rule['field_mappings_ids']);
-		} else if ($rule['action_type'] == 'concat') {
-			$ids = explode(",", $rule['field_mappings_ids']);
-			foreach ($ids as $id) {
-				$ret = $this->getDataSourceValue($id);
-				if (isset($ret)) {
-					$value .= (empty($value) ? '' : ' ') . $ret;
+		
+		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
+		log_message('error', 'rule:'.$rule['id'].' filteredFields:'.count($filteredFields));
+
+		if ($rule['component'] == 'textbox') {
+			if ($rule['action_type'] == 'value') {
+				$value = $rule['field_mappings_ids'];
+				if (!empty($value)) {
+					foreach ($pdf_rule_paths as $key => $path) {
+						array_push(
+							$params,
+							array(
+								'path' => $path['pdf_field_path'],
+								'type' => $rule['component'],
+								'value' => $value
+							)
+						);
+					}
+				}
+			} else if ($rule['action_type'] == 'copy') {
+				$columnNames = $this->getColumnNames(($rule['field_mappings_ids']));
+				if (empty($columnNames)) {
+					return [];
+				}
+
+				foreach ($pdf_rule_paths as $key => $path) {
+					$value = '';
+					if (count($filteredFields) == 1) {
+						$value = $filteredFields[0][$columnNames[0]];
+					} else if (count($filteredFields) > $key) {
+						$value = $filteredFields[$key][$columnNames[0]];
+					}
+					if (!empty($value)) {
+						$dateVal = $this->getDateFormatString($value);
+						if (!empty($dateVal)) {
+							$value = $dateVal;
+						}
+						array_push(
+							$params,
+							array(
+								'path' => $path['pdf_field_path'],
+								'type' => $rule['component'],
+								'value' => $value
+							)
+						);
+					}
+				}
+			} else if ($rule['action_type'] == 'concat') {
+				$columnNames = $this->getColumnNames(($rule['field_mappings_ids']));
+				if (empty($columnNames)) {
+					return [];
+				}
+
+				foreach ($pdf_rule_paths as $key => $path) {
+					$value = '';
+					if (count($filteredFields) == 1) {
+						foreach ($columnNames as $column) {
+							if (isset($filteredFields[0][$column])) {
+								$value .= (empty($value) ? '' : ' ') . $filteredFields[0][$column];
+							}
+						}
+					} else if (count($filteredFields) > $key) {
+						foreach ($columnNames as $column) {
+							if (isset($filteredFields[$key][$column])) {
+								$value .= (empty($value) ? '' : ' ') . $filteredFields[$key][$column];
+							}
+						}
+					}
+					if (!empty($value)) {
+						array_push(
+							$params,
+							array(
+								'path' => $path['pdf_field_path'],
+								'type' => $rule['component'],
+								'value' => $value
+							)
+						);
+					}
 				}
 			}
-		} else if ($rule['action_type'] == 'value') {
-			$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
-			if (!empty($pdf_rule_paths)) {
-				$value = $pdf_rule_paths[0]['value'];
+		} else if ($rule['component'] == 'radio') {
+			foreach ($pdf_rule_paths as $key => $path) {
+				if (!empty($path['value'])) {
+					array_push(
+						$params,
+						array(
+							'path' => $path['pdf_field_path'],
+							'type' => $rule['component'],
+							'value' => $path['value']
+						)
+					);
+				}
 			}
 		}
 
-		$params = [];
-
-		$pdf_rule_paths = $this->admin_model->fetchPathsByRuleId($rule['id']);
-		foreach ($pdf_rule_paths as $key => $path) {
-			array_push(
-				$params,
-				array(
-					'path' => $path['pdf_field_path'],
-					'type' => $rule['component'],
-					'value' => $value
-				)
-			);
-		}
 		return $params;
 	}
 
@@ -3707,33 +3768,50 @@ class User extends CI_Controller
 		return $params;
 	}
 
-	private function checkConditions($rule) {
-		$minMatchingCount = -1;
+	private function getFieldsFilteredByConditions($rule) {
+		$results = [];
 
 		$personal_data_id = $this->session->userdata('personal_data_id');
 		$rule_conditions = $this->admin_model->fetchConditionsByRuleId($rule['id']);
+
 		if (empty($rule_conditions)) {
-			return 1;
+			if (empty($rule['field_mappings_ids'])) {
+				return [];
+			}
+			$ids = explode(",", $rule['field_mappings_ids']);
+			$fieldMapping = $this->admin_model->fetchMappingById($ids[0]);
+			$tablecolumns = explode(".", $fieldMapping['data_source']);
+			
+			$this->db->select("*");
+			if ($tablecolumns[0] == 'personal_data') {
+				$this->db->where("id=" . $personal_data_id);
+			} else {	
+				$this->db->where("personal_data_id=" . $personal_data_id);
+			}
+			$query = $this->db->get($tablecolumns[0]);
+			$results = $query->result_array();
+			
+			return $results;
 		}
 
-		$matching_exists = false;
 		$any_condition_type_exists = false;
-		foreach ($rule_conditions as $condition) {
+		foreach ($rule_conditions as $key => $condition) {
 			$fieldMapping = $this->admin_model->fetchMappingById($condition['field_mappings_id']);
 			if (empty($fieldMapping) && $condition['matching_mode'] == 'all') {
-				return 0;
+				return [];
 			}
 
 			$tablecolumns = explode(".", $fieldMapping['data_source']);
 			if (count($tablecolumns) < 2 && $condition['matching_mode'] == 'all') {
-				return 0;
+				return [];
 			}
 
-			$this->db->select("count(*) AS cnt");
+			$this->db->select("*");
+			
 			if ($tablecolumns[0] == 'personal_data') {
 			    $this->db->where("id=" . $personal_data_id);
 			} else {	
-     			    $this->db->where("personal_data_id=" . $personal_data_id);
+				$this->db->where("personal_data_id=" . $personal_data_id);
 			}
 			if ($condition['function'] == 'is') {
 				$this->db->where($tablecolumns[1] . '=\'' . $condition['value'] . '\'');
@@ -3752,45 +3830,44 @@ class User extends CI_Controller
 			} else if ($condition['function'] == 'does not contain') {
 				$this->db->where($tablecolumns[1] . ' NOT LIKE \'%' . $condition['value']) . '%\'';
 			}
-			if ($tablecolumns[0] == 'personal_data') {
-			    $this->db->group_by("personal_data.id");
-			} else {	
-				$this->db->group_by("personal_data_id");
-			}
-			$query = $this->db->get($tablecolumns[0], 1);
-			$result = $query->row_array();
-			$count = 0;
-			if (isset($result['cnt']) && !empty($result['cnt'])) {
-				$count = (int)$result['cnt'];
-				if ($rule['component'] == 'button') {
-					if ($minMatchingCount == -1) {
-						$minMatchingCount = $count;
-					} else if ($minMatchingCount > $count) {
-						$minMatchingCount = $count;
-					}
-				} else {
-					$minMatchingCount = $count;
-				}
-			}
+			
+			$query = $this->db->get($tablecolumns[0]);
+			$rows = $query->result_array();
 
-			if ($count == 0 && $condition['matching_mode'] == 'all') {
-				return 0;
-			}
 			if ($condition['matching_mode'] == 'any') {
-				if ($count > 0) {
-					$matching_exists = true;
+				foreach ($rows as $row) {
+					$itemExists = false;
+
+					foreach ($results as $field) {
+						if ($row[id] == $field['id']) {
+							$itemExists = true;
+							break;
+						}
+					}
+
+					if (!$itemExists) {
+						$results[] = $row;
+					}
 				}
-				$any_condition_type_exists = true;
+			} else if ($condition['matching_mode'] == 'all') {
+				if (empty($rows)) {
+					return [];
+				}
+
+				if ($key == 0) {
+					$results = $rows;
+					continue;
+				}
+
+				$idArray = array_column($rows, 'id');
+
+				$results = array_filter($results, function ($item) use ($idArray) {
+					return in_array($item['id'], $idArray);
+				});
 			}
 		}
 
-		if ($any_condition_type_exists && !$matching_exists) {
-			return 0;
-		}
-
-		$minMatchingCount = $minMatchingCount == -1 ? 0 : $minMatchingCount;
-
-		return $minMatchingCount;
+		return $results;
 	}
 
 	private function getDataSourceValue($field_mappings_id) {
@@ -3815,4 +3892,43 @@ class User extends CI_Controller
 
 		return $value;
 	}
+
+	private function getColumnNames($field_mappings_id) {
+		$results = [];
+
+		if (empty($field_mappings_id)) {
+			return $results;
+		}
+
+		$ids = explode(",", $field_mappings_id);
+		foreach ($ids as $id) {
+			$fieldMapping = $this->admin_model->fetchMappingById($id);
+			if (empty($fieldMapping)) {
+				continue;
+			}
+
+			$tablecolumns = explode(".", $fieldMapping['data_source']);
+			if (count($tablecolumns) != 2) {
+				continue;
+			}
+
+			$results[] = $tablecolumns[1];
+		}
+
+		return $results;
+	}
+
+	private function getDateFormatString($value) {
+		if (DateTime::createFromFormat('Y-m-d', $value) !== false) {
+			log_message('error', 'getDateFormatString:'.$value);
+			// Convert the value to the format 'DD.MM.YYYY'
+			$date = DateTime::createFromFormat('Y-m-d', $value);
+			$formattedDate = $date->format('d.m.Y');
+		
+			// Now $formattedDate contains the converted date in the format 'DD.MM.YYYY'
+			return $formattedDate;
+		}
+		return '';
+	}
+
 }
